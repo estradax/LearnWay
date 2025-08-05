@@ -237,24 +237,24 @@ export default function TutorsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-white sticky top-0 z-50">
+      <header className="border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-5 h-5" />
             </div>
-            <span className="text-xl font-bold text-gray-900">TutorHome</span>
+            <span className="text-xl font-bold">TutorHome</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tutors" className="text-blue-600 font-medium">
+            <Link href="/tutors" className="font-medium">
               Find Tutors
             </Link>
-            <Link href="/become-tutor" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/become-tutor" className="transition-colors">
               Become a Tutor
             </Link>
-            <Link href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/how-it-works" className="transition-colors">
               How it Works
             </Link>
           </nav>
@@ -270,7 +270,7 @@ export default function TutorsPage() {
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
               <Input placeholder="Search by subject, tutor name, or keyword..." className="pl-10 h-12 text-lg" />
             </div>
             <div className="flex gap-2">
@@ -288,13 +288,13 @@ export default function TutorsPage() {
               </Select>
               <Button
                 variant="outline"
-                className="h-12 px-4 bg-transparent"
+                className="h-12 px-4"
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <SlidersHorizontal className="w-5 h-5 mr-2" />
                 Filters
               </Button>
-              <Button className="h-12 px-8 bg-blue-600 hover:bg-blue-700">Search</Button>
+              <Button className="h-12 px-8">Search</Button>
             </div>
           </div>
 
@@ -313,7 +313,7 @@ export default function TutorsPage() {
                       step={5}
                       className="w-full"
                     />
-                    <div className="flex justify-between text-sm text-gray-600">
+                    <div className="flex justify-between text-sm">
                       <span>${priceRange[0]}</span>
                       <span>${priceRange[1]}</span>
                     </div>
@@ -357,8 +357,8 @@ export default function TutorsPage() {
         {/* Results Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Available Tutors</h1>
-            <p className="text-gray-600">{tutors.length} tutors found</p>
+            <h1 className="text-2xl font-bold">Available Tutors</h1>
+            <p>{tutors.length} tutors found</p>
           </div>
           <Select defaultValue="rating">
             <SelectTrigger className="w-48">
@@ -379,13 +379,13 @@ export default function TutorsPage() {
           {tutors.map((tutor) => (
             <Card
               key={tutor.id}
-              className="hover:shadow-xl transition-all duration-300 group cursor-pointer overflow-hidden border-0 bg-white rounded-2xl"
+              className="hover:shadow-xl transition-all duration-300 group cursor-pointer overflow-hidden border-0 rounded-2xl"
             >
               <CardContent className="p-6">
                 <div className="flex gap-6 min-h-[280px]">
                   {/* Profile Image with spacing */}
                   <div className="relative w-36 flex-shrink-0">
-                    <div className="w-full h-48 rounded-xl overflow-hidden bg-gray-100">
+                    <div className="w-full h-48 rounded-xl overflow-hidden">
                       <img
                         src={tutor.image || "/placeholder.svg"}
                         alt={tutor.name}
@@ -393,8 +393,8 @@ export default function TutorsPage() {
                       />
                     </div>
                     {tutor.verified && (
-                      <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-                        <span className="text-white text-sm font-bold">✓</span>
+                      <div className="absolute -bottom-2 -left-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                        <span className="text-sm font-bold">✓</span>
                       </div>
                     )}
                   </div>
@@ -404,15 +404,15 @@ export default function TutorsPage() {
                     <div>
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                          <h3 className="text-xl font-bold transition-colors">
                             {tutor.name}
                           </h3>
-                          <p className="text-blue-600 font-semibold text-lg">{tutor.subject}</p>
+                          <p className="font-semibold text-lg">{tutor.subject}</p>
                         </div>
                         <div className="text-right ml-4 flex-shrink-0">
-                          <div className="text-2xl font-bold text-gray-900">
+                          <div className="text-2xl font-bold">
                             ${tutor.price}
-                            <span className="text-base text-gray-500">/hr</span>
+                            <span className="text-base">/hr</span>
                           </div>
                           <Badge variant="secondary" className="text-xs mt-1">
                             {tutor.availability}
@@ -420,9 +420,9 @@ export default function TutorsPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mb-3 text-sm text-gray-600">
+                      <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mb-3 text-sm">
                         <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="w-4 h-4" />
                           <span className="font-semibold">{tutor.rating}</span>
                           <span>({tutor.reviews} reviews)</span>
                         </div>
@@ -436,7 +436,7 @@ export default function TutorsPage() {
                         </div>
                       </div>
 
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed">{tutor.description}</p>
+                      <p className="text-sm mb-4 leading-relaxed">{tutor.description}</p>
 
                       <div className="flex flex-wrap gap-2 mb-6">
                         {tutor.subjects.map((subject, index) => (
@@ -451,13 +451,13 @@ export default function TutorsPage() {
                     <div className="flex space-x-3">
                       <Button
                         variant="outline"
-                        className="flex-1 bg-transparent border-gray-300 hover:bg-gray-50"
+                        className="flex-1"
                         onClick={() => handleViewProfile(tutor)}
                       >
                         View Profile
                       </Button>
                       <Button
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        className="flex-1"
                         onClick={() => handleContactTutor(tutor)}
                       >
                         Contact Tutor

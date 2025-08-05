@@ -299,18 +299,18 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
   const getMessageStatusIcon = (status: string) => {
     switch (status) {
       case "sent":
-        return <Check className="w-3 h-3 text-gray-400" />
+        return <Check className="w-3 h-3" />
       case "delivered":
-        return <CheckCheck className="w-3 h-3 text-gray-400" />
+        return <CheckCheck className="w-3 h-3" />
       case "read":
-        return <CheckCheck className="w-3 h-3 text-blue-500" />
+        return <CheckCheck className="w-3 h-3" />
       default:
-        return <Clock className="w-3 h-3 text-gray-400" />
+        return <Clock className="w-3 h-3" />
     }
   }
 
   const defaultTriggerButton = (
-    <Button className="bg-blue-600 hover:bg-blue-700">
+    <Button>
       <MessageCircle className="w-4 h-4 mr-2" />
       Messages
     </Button>
@@ -326,11 +326,11 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
 
         <div className="flex h-[80vh]">
           {/* Conversations Sidebar */}
-          <div className="w-1/3 border-r bg-gray-50 flex flex-col">
+          <div className="w-1/3 border-r flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b bg-white">
+            <div className="p-4 border-b">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+                <h2 className="text-lg font-semibold">Messages</h2>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="rounded-full">
                   <X className="h-4 w-4" />
                 </Button>
@@ -338,12 +338,12 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
 
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
                 <Input
                   placeholder="Search conversations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-gray-100 border-0"
+                  className="pl-10 border-0"
                 />
               </div>
             </div>
@@ -356,8 +356,8 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                     key={conversation.id}
                     className={`p-3 rounded-lg cursor-pointer transition-colors mb-2 ${
                       selectedChat?.id === conversation.id
-                        ? "bg-blue-100 border border-blue-200"
-                        : "bg-white hover:bg-gray-100"
+                        ? "border"
+                        : "hover:bg-gray-100"
                     }`}
                     onClick={() => setSelectedChat(conversation)}
                   >
@@ -376,14 +376,14 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                           </AvatarFallback>
                         </Avatar>
                         {conversation.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 border-2 border-white rounded-full"></div>
                         )}
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <h3 className="font-medium text-gray-900 truncate">{conversation.participantName}</h3>
-                          <span className="text-xs text-gray-500">{conversation.lastMessageTime}</span>
+                          <h3 className="font-medium truncate">{conversation.participantName}</h3>
+                          <span className="text-xs">{conversation.lastMessageTime}</span>
                         </div>
 
                         {conversation.subject && (
@@ -393,9 +393,9 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                         )}
 
                         <div className="flex items-center justify-between">
-                          <p className="text-sm text-gray-600 truncate flex-1">{conversation.lastMessage}</p>
+                          <p className="text-sm truncate flex-1">{conversation.lastMessage}</p>
                           {conversation.unreadCount > 0 && (
-                            <Badge className="bg-blue-600 text-white text-xs ml-2">{conversation.unreadCount}</Badge>
+                            <Badge className="text-xs ml-2">{conversation.unreadCount}</Badge>
                           )}
                         </div>
                       </div>
@@ -411,7 +411,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
             {selectedChat ? (
               <>
                 {/* Chat Header */}
-                <div className="p-4 border-b bg-white">
+                <div className="p-4 border-b">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="relative">
@@ -428,12 +428,12 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                           </AvatarFallback>
                         </Avatar>
                         {selectedChat.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                          <div className="absolute -bottom-1 -right-1 w-3 h-3 border-2 border-white rounded-full"></div>
                         )}
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">{selectedChat.participantName}</h3>
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                        <h3 className="font-medium">{selectedChat.participantName}</h3>
+                        <div className="flex items-center space-x-2 text-sm">
                           {selectedChat.subject && (
                             <Badge variant="outline" className="text-xs">
                               {selectedChat.subject}
@@ -469,8 +469,8 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                         <div
                           className={`max-w-[70%] ${
                             message.senderId === currentUserId
-                              ? "bg-blue-600 text-white rounded-l-2xl rounded-tr-2xl"
-                              : "bg-gray-100 text-gray-900 rounded-r-2xl rounded-tl-2xl"
+                              ? "rounded-l-2xl rounded-tr-2xl"
+                              : "rounded-r-2xl rounded-tl-2xl"
                           } p-3`}
                         >
                           {message.type === "file" ? (
@@ -483,9 +483,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                           )}
 
                           <div
-                            className={`flex items-center justify-end space-x-1 mt-1 ${
-                              message.senderId === currentUserId ? "text-blue-100" : "text-gray-500"
-                            }`}
+                            className={`flex items-center justify-end space-x-1 mt-1`}
                           >
                             <span className="text-xs">{message.timestamp}</span>
                             {message.senderId === currentUserId && getMessageStatusIcon(message.status)}
@@ -498,7 +496,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                 </ScrollArea>
 
                 {/* Message Input */}
-                <div className="p-4 border-t bg-white">
+                <div className="p-4 border-t">
                   <div className="flex items-end space-x-2">
                     <Button variant="ghost" size="sm" className="rounded-full">
                       <Paperclip className="w-4 h-4" />
@@ -509,13 +507,12 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className="resize-none border-gray-300 focus:border-blue-500"
                       />
                     </div>
                     <Button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim()}
-                      className="bg-blue-600 hover:bg-blue-700 rounded-full p-2"
+                      className="rounded-full p-2"
                     >
                       <Send className="w-4 h-4" />
                     </Button>
@@ -524,11 +521,11 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
               </>
             ) : (
               /* No Chat Selected */
-              <div className="flex-1 flex items-center justify-center bg-gray-50">
+              <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
-                  <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Select a conversation</h3>
-                  <p className="text-gray-500">Choose a conversation from the sidebar to start messaging</p>
+                  <MessageCircle className="w-16 h-16 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Select a conversation</h3>
+                  <p>Choose a conversation from the sidebar to start messaging</p>
                 </div>
               </div>
             )}

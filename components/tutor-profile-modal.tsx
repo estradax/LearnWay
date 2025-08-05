@@ -23,7 +23,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
   if (!tutor) return null
 
   const defaultTriggerButton = (
-    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-semibold py-3">
+    <Button className="w-full rounded-2xl font-semibold py-3">
       View Profile
     </Button>
   )
@@ -59,19 +59,19 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                         className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
                       />
                       {tutor.verified && (
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm">✓</span>
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center">
+                          <span className="text-sm">✓</span>
                         </div>
                       )}
                     </div>
 
                     <div className="flex-1 text-center md:text-left">
-                      <h1 className="text-3xl font-bold text-gray-900 mb-2">{tutor.name}</h1>
-                      <p className="text-xl text-blue-600 font-medium mb-3">{tutor.subject} Tutor</p>
+                      <h1 className="text-3xl font-bold mb-2">{tutor.name}</h1>
+                      <p className="text-xl font-medium mb-3">{tutor.subject} Tutor</p>
 
-                      <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mb-4 text-sm text-gray-600">
+                      <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mb-4 text-sm">
                         <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="w-4 h-4" />
                           <span className="font-medium">{tutor.rating}</span>
                           <span>({tutor.reviews} reviews)</span>
                         </div>
@@ -110,8 +110,8 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed mb-4">{tutor.bio}</p>
-                  <p className="text-gray-700 leading-relaxed">{tutor.teachingStyle}</p>
+                  <p className="leading-relaxed mb-4">{tutor.bio}</p>
+                  <p className="leading-relaxed">{tutor.teachingStyle}</p>
                 </CardContent>
               </Card>
 
@@ -127,7 +127,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                   <CardContent>
                     <ul className="space-y-2">
                       {tutor.education.map((edu, index) => (
-                        <li key={index} className="text-gray-700">
+                        <li key={index}>
                           {edu}
                         </li>
                       ))}
@@ -145,8 +145,8 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                   <CardContent>
                     <ul className="space-y-2">
                       {tutor.achievements.map((achievement, index) => (
-                        <li key={index} className="text-gray-700 flex items-center space-x-2">
-                          <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                        <li key={index} className="flex items-center space-x-2">
+                          <span className="w-2 h-2 rounded-full"></span>
                           <span>{achievement}</span>
                         </li>
                       ))}
@@ -166,22 +166,22 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                 <CardContent>
                   <div className="space-y-4">
                     {tutor.reviews_data.map((review, index) => (
-                      <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
+                      <div key={index} className="border-b pb-4 last:border-b-0">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
-                            <span className="font-medium text-gray-900">{review.name}</span>
+                            <span className="font-medium">{review.name}</span>
                             <div className="flex">
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                                  className={`w-4 h-4 ${i < review.rating ? "" : ""}`}
                                 />
                               ))}
                             </div>
                           </div>
-                          <span className="text-sm text-gray-500">{review.date}</span>
+                          <span className="text-sm">{review.date}</span>
                         </div>
-                        <p className="text-gray-700">{review.comment}</p>
+                        <p>{review.comment}</p>
                       </div>
                     ))}
                   </div>
@@ -197,9 +197,9 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                   <CardTitle className="flex items-center justify-between">
                     <span>Book a Lesson</span>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-blue-600">
+                      <div className="text-2xl font-bold">
                         ${tutor.price}
-                        <span className="text-sm text-gray-500">/hour</span>
+                        <span className="text-sm">/hour</span>
                       </div>
                     </div>
                   </CardTitle>
@@ -207,7 +207,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Button
-                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      className="w-full"
                       onClick={() => {
                         setIsOpen(false)
                         setShowContactModal(true)
@@ -219,7 +219,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                       currentUserId={1}
                       currentUserType="student"
                       triggerButton={
-                        <Button variant="outline" className="w-full bg-transparent">
+                        <Button variant="outline" className="w-full">
                           <MessageCircle className="w-4 h-4 mr-2" />
                           send message
                         </Button>
@@ -227,7 +227,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                     />
                   </div>
 
-                  <div className="text-xs text-gray-500 text-center">
+                  <div className="text-xs text-center">
                     You won't be charged until the tutor accepts your request
                   </div>
                 </CardContent>
@@ -253,9 +253,9 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
               <Card>
                 <CardContent className="p-4">
                   <div className="text-center">
-                    <Clock className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                    <div className="font-medium text-gray-900">Quick Response</div>
-                    <div className="text-sm text-gray-600">Usually responds within 2 hours</div>
+                    <Clock className="w-8 h-8 mx-auto mb-2" />
+                    <div className="font-medium">Quick Response</div>
+                    <div className="text-sm">Usually responds within 2 hours</div>
                   </div>
                 </CardContent>
               </Card>

@@ -31,18 +31,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+              <BookOpen className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">TutorHome</span>
+            <span className="text-2xl font-bold">TutorHome</span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">welcome back</h1>
-          <p className="text-gray-600">sign in to your account to continue learning</p>
+          <h1 className="text-3xl font-bold mb-2">welcome back</h1>
+          <p>sign in to your account to continue learning</p>
         </div>
 
         {/* Login Form */}
@@ -53,7 +53,7 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email" className="text-sm font-medium">
                   email address
                 </Label>
                 <Input
@@ -68,7 +68,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password" className="text-sm font-medium">
                   password
                 </Label>
                 <div className="relative mt-1">
@@ -100,24 +100,24 @@ export default function LoginPage() {
                     checked={formData.rememberMe}
                     onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
                   />
-                  <Label htmlFor="remember" className="text-sm text-gray-600">
+                  <Label htmlFor="remember" className="text-sm">
                     remember me
                   </Label>
                 </div>
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+                <Link href="/forgot-password" className="text-sm">
                   forgot password?
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3">
+              <Button type="submit" className="w-full py-3">
                 sign in
               </Button>
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-gray-600">
+              <p>
                 don't have an account?{" "}
-                <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+                <Link href="/register" className="font-medium">
                   sign up here
                 </Link>
               </p>
@@ -127,15 +127,15 @@ export default function LoginPage() {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
+                  <div className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">or continue with</span>
+                  <span className="px-2 bg-white">or continue with</span>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <Button variant="outline" className="bg-transparent">
+                <Button variant="outline">
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -156,7 +156,7 @@ export default function LoginPage() {
                   </svg>
                   google
                 </Button>
-                <Button variant="outline" className="bg-transparent">
+                <Button variant="outline">
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
@@ -168,14 +168,14 @@ export default function LoginPage() {
         </Card>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm">
           <p>
             by signing in, you agree to our{" "}
-            <Link href="/terms" className="text-blue-600 hover:text-blue-800">
+            <Link href="/terms">
               terms of service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-blue-600 hover:text-blue-800">
+            <Link href="/privacy">
               privacy policy
             </Link>
           </p>

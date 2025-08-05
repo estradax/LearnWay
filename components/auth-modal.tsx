@@ -114,10 +114,10 @@ export default function AuthModal() {
     >
       <DialogTrigger asChild>
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" className="text-gray-700 hover:text-orange-500">
+          <Button variant="ghost">
             Sign In
           </Button>
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6">Sign Up</Button>
+          <Button className="rounded-full px-6">Sign Up</Button>
         </div>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -138,8 +138,8 @@ export default function AuthModal() {
           {authMode === "login" && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-                <p className="text-gray-600">Sign in to your TutorHome account</p>
+                <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>
+                <p>Sign in to your TutorHome account</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -181,26 +181,26 @@ export default function AuthModal() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Checkbox id="remember" />
-                    <label htmlFor="remember" className="text-sm text-gray-600">
+                    <label htmlFor="remember" className="text-sm">
                       Remember me
                     </label>
                   </div>
-                  <Button variant="link" className="text-sm text-blue-600 hover:text-blue-800 p-0">
+                  <Button variant="link" className="text-sm p-0">
                     Forgot password?
                   </Button>
                 </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                <Button type="submit" className="w-full">
                   Sign In
                 </Button>
               </form>
 
               <div className="text-center">
-                <p className="text-gray-600">
+                <p>
                   Don't have an account?{" "}
                   <Button
                     variant="link"
-                    className="text-blue-600 hover:text-blue-800 p-0"
+                    className="p-0"
                     onClick={() => setAuthMode("register-type")}
                   >
                     Sign up here
@@ -214,23 +214,23 @@ export default function AuthModal() {
           {authMode === "register-type" && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Join TutorHome</h2>
-                <p className="text-gray-600">Choose how you'd like to get started</p>
+                <h2 className="text-3xl font-bold mb-2">Join TutorHome</h2>
+                <p>Choose how you'd like to get started</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    userType === "student" ? "ring-2 ring-blue-500 bg-blue-50" : ""
+                    userType === "student" ? "ring-2" : ""
                   }`}
                   onClick={() => setUserType("student")}
                 >
                   <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <User className="w-8 h-8 text-blue-600" />
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <User className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">I'm a Student</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-xl font-bold mb-2">I'm a Student</h3>
+                    <p className="text-sm">
                       Looking for tutors to help me learn new skills and improve my knowledge
                     </p>
                   </CardContent>
@@ -238,16 +238,16 @@ export default function AuthModal() {
 
                 <Card
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    userType === "tutor" ? "ring-2 ring-orange-500 bg-orange-50" : ""
+                    userType === "tutor" ? "ring-2" : ""
                   }`}
                   onClick={() => setUserType("tutor")}
                 >
                   <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <GraduationCap className="w-8 h-8 text-orange-600" />
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <GraduationCap className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">I'm a Tutor</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-xl font-bold mb-2">I'm a Tutor</h3>
+                    <p className="text-sm">
                       Ready to share my expertise and help students achieve their learning goals
                     </p>
                   </CardContent>
@@ -261,7 +261,7 @@ export default function AuthModal() {
                 <Button
                   onClick={() => setAuthMode("register")}
                   disabled={!userType}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                  className="flex-1"
                 >
                   Continue
                 </Button>
@@ -273,10 +273,10 @@ export default function AuthModal() {
           {authMode === "register" && userType && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 className="text-3xl font-bold mb-2">
                   Create Your {userType === "student" ? "Student" : "Tutor"} Account
                 </h2>
-                <p className="text-gray-600">Fill in your details to get started</p>
+                <p>Fill in your details to get started</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -393,7 +393,7 @@ export default function AuthModal() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs mt-2">
                         Select subjects you're interested in learning (minimum 1 required)
                       </p>
                     </div>
@@ -430,7 +430,7 @@ export default function AuthModal() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs mt-2">
                         Select all subjects you can teach (minimum 1 required)
                       </p>
                     </div>
@@ -508,13 +508,13 @@ export default function AuthModal() {
 
                 <div className="flex items-center space-x-2">
                   <Checkbox id="terms" required />
-                  <label htmlFor="terms" className="text-sm text-gray-600">
+                  <label htmlFor="terms" className="text-sm">
                     I agree to the{" "}
-                    <Button variant="link" className="text-blue-600 hover:text-blue-800 p-0 h-auto">
+                    <Button variant="link" className="p-0 h-auto">
                       Terms of Service
                     </Button>{" "}
                     and{" "}
-                    <Button variant="link" className="text-blue-600 hover:text-blue-800 p-0 h-auto">
+                    <Button variant="link" className="p-0 h-auto">
                       Privacy Policy
                     </Button>
                   </label>
@@ -526,9 +526,7 @@ export default function AuthModal() {
                   </Button>
                   <Button
                     type="submit"
-                    className={`flex-1 text-white ${
-                      userType === "student" ? "bg-blue-600 hover:bg-blue-700" : "bg-orange-600 hover:bg-orange-700"
-                    }`}
+                    className="flex-1"
                   >
                     Create {userType === "student" ? "Student" : "Tutor"} Account
                   </Button>
@@ -536,11 +534,11 @@ export default function AuthModal() {
               </form>
 
               <div className="text-center">
-                <p className="text-gray-600">
+                <p>
                   Already have an account?{" "}
                   <Button
                     variant="link"
-                    className="text-blue-600 hover:text-blue-800 p-0"
+                    className="p-0"
                     onClick={() => setAuthMode("login")}
                   >
                     Sign in here

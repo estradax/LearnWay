@@ -182,18 +182,18 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-white sticky top-0 z-50">
+      <header className="border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-orange-500">TutorHome</div>
+            <div className="text-2xl font-bold">TutorHome</div>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tutors" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <Link href="/tutors" className="transition-colors">
               find tutors
             </Link>
-            <Link href="/dashboard" className="text-orange-500 font-medium">
+            <Link href="/dashboard" className="font-medium">
               dashboard
             </Link>
           </nav>
@@ -209,10 +209,10 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold mb-2">
             {userType === "student" ? "student dashboard" : "tutor dashboard"}
           </h1>
-          <p className="text-gray-600">
+          <p>
             {userType === "student"
               ? "manage your bookings and track your learning progress"
               : "manage your student bookings and schedule"}
@@ -233,24 +233,24 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       {studentBookings.filter((b) => b.status === "approved").length}
                     </div>
-                    <div className="text-sm text-gray-600">approved lessons</div>
+                    <div className="text-sm">approved lessons</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-yellow-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       {studentBookings.filter((b) => b.status === "pending").length}
                     </div>
-                    <div className="text-sm text-gray-600">pending requests</div>
+                    <div className="text-sm">pending requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">{studentBookings.length}</div>
-                    <div className="text-sm text-gray-600">total bookings</div>
+                    <div className="text-3xl font-bold mb-2">{studentBookings.length}</div>
+                    <div className="text-sm">total bookings</div>
                   </CardContent>
                 </Card>
               </div>
@@ -273,8 +273,8 @@ export default function DashboardPage() {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">{booking.tutor.name}</h3>
-                              <Badge className={`${getStatusColor(booking.status)} border`}>
+                              <h3 className="text-lg font-semibold">{booking.tutor.name}</h3>
+                              <Badge className="border">
                                 <div className="flex items-center space-x-1">
                                   {getStatusIcon(booking.status)}
                                   <span className="capitalize">{booking.status}</span>
@@ -282,9 +282,9 @@ export default function DashboardPage() {
                               </Badge>
                             </div>
 
-                            <p className="text-blue-600 font-medium mb-2">{booking.tutor.subject}</p>
+                            <p className="font-medium mb-2">{booking.tutor.subject}</p>
 
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
+                            <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
                               <div className="flex items-center space-x-1">
                                 <Calendar className="w-4 h-4" />
                                 <span>{new Date(booking.date).toLocaleDateString()}</span>
@@ -300,22 +300,22 @@ export default function DashboardPage() {
                                 <span>${booking.price}/hr</span>
                               </div>
                               <div className="flex items-center space-x-1">
-                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                <Star className="w-4 h-4" />
                                 <span>{booking.tutor.rating}</span>
                               </div>
                             </div>
 
                             {booking.message && (
-                              <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                                <p className="text-sm text-gray-700">
+                              <div className="rounded-lg p-3 mb-3">
+                                <p className="text-sm">
                                   <span className="font-medium">your message:</span> {booking.message}
                                 </p>
                               </div>
                             )}
 
                             {booking.status === "canceled" && booking.cancelReason && (
-                              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                                <p className="text-sm text-red-700">
+                              <div className="border rounded-lg p-3">
+                                <p className="text-sm">
                                   <span className="font-medium">cancellation reason:</span> {booking.cancelReason}
                                 </p>
                               </div>
@@ -326,20 +326,20 @@ export default function DashboardPage() {
                         <div className="flex flex-col space-y-2 lg:w-48">
                           {booking.status === "approved" && (
                             <>
-                              <Button className="w-full bg-green-600 hover:bg-green-700">join lesson</Button>
-                              <Button variant="outline" className="w-full bg-transparent">
+                              <Button className="w-full">join lesson</Button>
+                              <Button variant="outline" className="w-full">
                                 <MessageCircle className="w-4 h-4 mr-2" />
                                 message tutor
                               </Button>
                             </>
                           )}
                           {booking.status === "pending" && (
-                            <Button variant="outline" className="w-full bg-transparent" disabled>
+                            <Button variant="outline" className="w-full" disabled>
                               waiting for approval
                             </Button>
                           )}
                           {booking.status === "canceled" && (
-                            <Button variant="outline" className="w-full bg-transparent">
+                            <Button variant="outline" className="w-full">
                               book again
                             </Button>
                           )}
@@ -354,8 +354,8 @@ export default function DashboardPage() {
             <TabsContent value="messages" className="space-y-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">messages</h2>
-                  <p className="text-gray-600">
+                  <h2 className="text-2xl font-bold">messages</h2>
+                  <p>
                     communicate with your {userType === "student" ? "tutors" : "students"}
                   </p>
                 </div>
@@ -363,7 +363,7 @@ export default function DashboardPage() {
                   currentUserId={1}
                   currentUserType={userType}
                   triggerButton={
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button>
                       <MessageCircle className="w-4 h-4 mr-2" />
                       open chat
                     </Button>
@@ -373,9 +373,9 @@ export default function DashboardPage() {
 
               <Card>
                 <CardContent className="p-8 text-center">
-                  <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">start messaging</h3>
-                  <p className="text-gray-600 mb-4">
+                  <MessageCircle className="w-16 h-16 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">start messaging</h3>
+                  <p className="mb-4">
                     click "open chat" above to start conversations with your{" "}
                     {userType === "student" ? "tutors" : "students"}
                   </p>
@@ -389,7 +389,7 @@ export default function DashboardPage() {
                   <CardTitle>learning progress</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">learning progress tracking coming soon...</p>
+                  <p>learning progress tracking coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -400,7 +400,7 @@ export default function DashboardPage() {
                   <CardTitle>profile settings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">profile management coming soon...</p>
+                  <p>profile management coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -421,37 +421,37 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-yellow-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       {tutorBookings.filter((b) => b.status === "pending").length}
                     </div>
-                    <div className="text-sm text-gray-600">pending requests</div>
+                    <div className="text-sm">pending requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       {tutorBookings.filter((b) => b.status === "approved").length}
                     </div>
-                    <div className="text-sm text-gray-600">approved lessons</div>
+                    <div className="text-sm">approved lessons</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-red-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       {tutorBookings.filter((b) => b.status === "rejected").length}
                     </div>
-                    <div className="text-sm text-gray-600">rejected requests</div>
+                    <div className="text-sm">rejected requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                    <div className="text-3xl font-bold mb-2">
                       $
                       {tutorBookings
                         .filter((b) => b.status === "approved")
                         .reduce((sum, b) => sum + b.proposedPrice, 0)}
                     </div>
-                    <div className="text-sm text-gray-600">total earnings</div>
+                    <div className="text-sm">total earnings</div>
                   </CardContent>
                 </Card>
               </div>
@@ -478,8 +478,8 @@ export default function DashboardPage() {
 
                             <div className="flex-1">
                               <div className="flex items-center space-x-2 mb-2">
-                                <h3 className="text-lg font-semibold text-gray-900">{booking.student.name}</h3>
-                                <Badge className={`${getStatusColor(booking.status)} border`}>
+                                <h3 className="text-lg font-semibold">{booking.student.name}</h3>
+                                <Badge className="border">
                                   <div className="flex items-center space-x-1">
                                     {getStatusIcon(booking.status)}
                                     <span className="capitalize">{booking.status}</span>
@@ -487,7 +487,7 @@ export default function DashboardPage() {
                                 </Badge>
                               </div>
 
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
+                              <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
                                 <div className="flex items-center space-x-1">
                                   <Mail className="w-4 h-4" />
                                   <span>{booking.student.email}</span>
@@ -501,20 +501,20 @@ export default function DashboardPage() {
                           </div>
 
                           <div className="text-right">
-                            <div className="text-sm text-gray-500 mb-1">requested on</div>
+                            <div className="text-sm mb-1">requested on</div>
                             <div className="text-sm font-medium">
                               {new Date(booking.createdAt).toLocaleDateString()}
                             </div>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-lg">
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">subject</div>
-                            <div className="font-medium text-blue-600">{booking.subject}</div>
+                            <div className="text-sm mb-1">subject</div>
+                            <div className="font-medium">{booking.subject}</div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">date & time</div>
+                            <div className="text-sm mb-1">date & time</div>
                             <div className="font-medium">
                               {new Date(booking.date).toLocaleDateString()}
                               <br />
@@ -522,49 +522,49 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">duration</div>
+                            <div className="text-sm mb-1">duration</div>
                             <div className="font-medium">{booking.duration} minutes</div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">price offer</div>
+                            <div className="text-sm mb-1">price offer</div>
                             <div className="font-medium">
                               {booking.proposedPrice !== booking.originalPrice ? (
                                 <>
-                                  <span className="line-through text-gray-400">${booking.originalPrice}</span>
-                                  <span className="text-green-600 ml-2">${booking.proposedPrice}/hr</span>
+                                  <span className="line-through">${booking.originalPrice}</span>
+                                  <span className="ml-2">${booking.proposedPrice}/hr</span>
                                 </>
                               ) : (
-                                <span className="text-green-600">${booking.proposedPrice}/hr</span>
+                                <span>${booking.proposedPrice}/hr</span>
                               )}
                             </div>
                           </div>
                         </div>
 
                         {booking.message && (
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-blue-900 mb-2">student message:</div>
-                            <p className="text-sm text-blue-800">{booking.message}</p>
+                          <div className="border rounded-lg p-4">
+                            <div className="text-sm font-medium mb-2">student message:</div>
+                            <p className="text-sm">{booking.message}</p>
                           </div>
                         )}
 
                         {booking.priceReason && booking.proposedPrice !== booking.originalPrice && (
-                          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-orange-900 mb-2">price negotiation reason:</div>
-                            <p className="text-sm text-orange-800">{booking.priceReason}</p>
+                          <div className="border rounded-lg p-4">
+                            <div className="text-sm font-medium mb-2">price negotiation reason:</div>
+                            <p className="text-sm">{booking.priceReason}</p>
                           </div>
                         )}
 
                         {booking.status === "rejected" && booking.rejectionReason && (
-                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-red-900 mb-2">rejection reason:</div>
-                            <p className="text-sm text-red-800">{booking.rejectionReason}</p>
+                          <div className="border rounded-lg p-4">
+                            <div className="text-sm font-medium mb-2">rejection reason:</div>
+                            <p className="text-sm">{booking.rejectionReason}</p>
                           </div>
                         )}
 
                         {booking.status === "pending" && (
                           <div className="flex space-x-3 pt-4 border-t">
                             <Button
-                              className="flex-1 bg-green-600 hover:bg-green-700"
+                              className="flex-1"
                               onClick={() => handleApproveBooking(booking.id)}
                             >
                               <CheckCircle className="w-4 h-4 mr-2" />
@@ -572,13 +572,13 @@ export default function DashboardPage() {
                             </Button>
                             <Button
                               variant="outline"
-                              className="flex-1 border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
+                              className="flex-1"
                               onClick={() => handleRejectBooking(booking.id)}
                             >
                               <XCircle className="w-4 h-4 mr-2" />
                               reject booking
                             </Button>
-                            <Button variant="outline" className="px-6 bg-transparent">
+                            <Button variant="outline" className="px-6">
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message
                             </Button>
@@ -587,8 +587,8 @@ export default function DashboardPage() {
 
                         {booking.status === "approved" && (
                           <div className="flex space-x-3 pt-4 border-t">
-                            <Button className="flex-1 bg-blue-600 hover:bg-blue-700">start lesson</Button>
-                            <Button variant="outline" className="px-6 bg-transparent">
+                            <Button className="flex-1">start lesson</Button>
+                            <Button variant="outline" className="px-6">
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message student
                             </Button>
@@ -604,8 +604,8 @@ export default function DashboardPage() {
             <TabsContent value="messages" className="space-y-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">messages</h2>
-                  <p className="text-gray-600">
+                  <h2 className="text-2xl font-bold">messages</h2>
+                  <p>
                     communicate with your {userType === "student" ? "tutors" : "students"}
                   </p>
                 </div>
@@ -613,7 +613,7 @@ export default function DashboardPage() {
                   currentUserId={1}
                   currentUserType={userType}
                   triggerButton={
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button>
                       <MessageCircle className="w-4 h-4 mr-2" />
                       open chat
                     </Button>
@@ -623,9 +623,9 @@ export default function DashboardPage() {
 
               <Card>
                 <CardContent className="p-8 text-center">
-                  <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">start messaging</h3>
-                  <p className="text-gray-600 mb-4">
+                  <MessageCircle className="w-16 h-16 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">start messaging</h3>
+                  <p className="mb-4">
                     click "open chat" above to start conversations with your{" "}
                     {userType === "student" ? "tutors" : "students"}
                   </p>
@@ -639,7 +639,7 @@ export default function DashboardPage() {
                   <CardTitle>my schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">schedule management coming soon...</p>
+                  <p>schedule management coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -650,7 +650,7 @@ export default function DashboardPage() {
                   <CardTitle>profile settings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">profile management coming soon...</p>
+                  <p>profile management coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>

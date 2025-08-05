@@ -209,32 +209,32 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-blue-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+      <header className="border-b sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-orange-500">TutorHome</div>
+            <div className="text-2xl font-bold">TutorHome</div>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/tutors" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+            <Link href="/tutors" className="transition-colors font-medium">
               find tutors
             </Link>
-            <Link href="/become-tutor" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+            <Link href="/become-tutor" className="transition-colors font-medium">
               become a tutor
             </Link>
-            <Link href="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+            <Link href="/how-it-works" className="transition-colors font-medium">
               how it works
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
             <Link href="/login">
-              <Button variant="ghost" className="text-gray-700 hover:text-orange-500">
+              <Button variant="ghost">
                 sign in
               </Button>
             </Link>
             <Link href="/register">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6">sign up</Button>
+              <Button className="rounded-full px-6">sign up</Button>
             </Link>
           </div>
         </div>
@@ -243,36 +243,36 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            Find Your Perfect <span className="text-orange-500">Tutor</span>
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+            Find Your Perfect <span>Tutor</span>
             <br />
-            <span className="text-4xl md:text-5xl text-gray-600">Learn Anything, Anywhere</span>
+            <span className="text-4xl md:text-5xl">Learn Anything, Anywhere</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
             Connect with qualified tutors for personalized learning experiences. From academic subjects to creative
             skills, find the perfect match for your learning journey.
           </p>
 
           {/* Enhanced Search Bar */}
           <div className="max-w-3xl mx-auto mb-16">
-            <div className="flex flex-col md:flex-row gap-4 p-3 bg-white rounded-3xl shadow-2xl border border-gray-100">
+            <div className="flex flex-col md:flex-row gap-4 p-3 rounded-3xl shadow-2xl border">
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6" />
                 <Input
                   placeholder="What do you want to learn?"
-                  className="pl-12 border-0 focus-visible:ring-0 text-lg h-14 bg-transparent"
+                  className="pl-12 border-0 focus-visible:ring-0 text-lg h-14"
                 />
               </div>
               <div className="flex-1 relative">
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6" />
                 <Input
                   placeholder="Your location"
-                  className="pl-12 border-0 focus-visible:ring-0 text-lg h-14 bg-transparent"
+                  className="pl-12 border-0 focus-visible:ring-0 text-lg h-14"
                 />
               </div>
               <Button
                 size="lg"
-                className="h-14 px-10 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-semibold"
+                className="h-14 px-10 rounded-2xl font-semibold"
               >
                 Find Tutors
               </Button>
@@ -281,17 +281,17 @@ export default function HomePage() {
 
           {/* Enhanced Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center p-6 rounded-2xl bg-white/60 backdrop-blur-sm">
-              <div className="text-4xl font-bold text-orange-500 mb-2">15,000+</div>
-              <div className="text-gray-600 font-medium">Expert Tutors</div>
+            <div className="text-center p-6 rounded-2xl">
+              <div className="text-4xl font-bold mb-2">15,000+</div>
+              <div className="font-medium">Expert Tutors</div>
             </div>
-            <div className="text-center p-6 rounded-2xl bg-white/60 backdrop-blur-sm">
-              <div className="text-4xl font-bold text-orange-500 mb-2">100,000+</div>
-              <div className="text-gray-600 font-medium">Happy Students</div>
+            <div className="text-center p-6 rounded-2xl">
+              <div className="text-4xl font-bold mb-2">100,000+</div>
+              <div className="font-medium">Happy Students</div>
             </div>
-            <div className="text-center p-6 rounded-2xl bg-white/60 backdrop-blur-sm">
-              <div className="text-4xl font-bold text-orange-500 mb-2">200+</div>
-              <div className="text-gray-600 font-medium">Subjects Available</div>
+            <div className="text-center p-6 rounded-2xl">
+              <div className="text-4xl font-bold mb-2">200+</div>
+              <div className="font-medium">Subjects Available</div>
             </div>
           </div>
         </div>
@@ -300,8 +300,8 @@ export default function HomePage() {
       {/* Enhanced Categories */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Popular Categories</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6">Popular Categories</h2>
+          <p className="text-xl max-w-3xl mx-auto">
             Explore our wide range of subjects from academic to creative skills
           </p>
         </div>
@@ -310,16 +310,16 @@ export default function HomePage() {
           {categories.map((category, index) => (
             <Card
               key={index}
-              className="hover:shadow-2xl transition-all duration-300 cursor-pointer group border-0 bg-white/80 backdrop-blur-sm"
+              className="hover:shadow-2xl transition-all duration-300 cursor-pointer group border-0"
             >
               <CardContent className="p-8 text-center">
                 <div
-                  className={`w-20 h-20 rounded-3xl ${category.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                  className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                 >
                   <category.icon className="w-10 h-10" />
                 </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{category.name}</h3>
-                <p className="text-sm text-gray-500">{category.count}</p>
+                <h3 className="font-bold text-lg mb-2">{category.name}</h3>
+                <p className="text-sm">{category.count}</p>
               </CardContent>
             </Card>
           ))}
@@ -327,10 +327,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Tutors - Superprof Style */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Featured Piano Tutors</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6">Featured Piano Tutors</h2>
+          <p className="text-xl max-w-3xl mx-auto">
             Meet our top-rated piano tutors ready to help you master the keys
           </p>
         </div>
@@ -338,7 +338,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {featuredTutors.map((tutor) => (
             <div key={tutor.id} className="group cursor-pointer">
-              <Card className="overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 bg-white rounded-3xl">
+              <Card className="overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 rounded-3xl">
                 <div className="relative h-80">
                   <img
                     src={tutor.image || "/placeholder.svg"}
@@ -348,15 +348,15 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                   {/* Heart Icon */}
-                  <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
-                    <Heart className="w-5 h-5 text-gray-600" />
+                  <button className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                    <Heart className="w-5 h-5" />
                   </button>
 
                   {/* Tutor Info Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                     <h3 className="text-2xl font-bold mb-1">{tutor.name}</h3>
                     <p className="text-white/90 text-sm mb-3">{tutor.location}</p>
-                    {tutor.online && <Badge className="bg-green-500 text-white border-0 mb-2">Online Available</Badge>}
+                    {tutor.online && <Badge className="border-0 mb-2">Online Available</Badge>}
                   </div>
                 </div>
 
@@ -364,24 +364,24 @@ export default function HomePage() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-bold text-gray-900">{tutor.rating}</span>
-                        <span className="text-gray-500 text-sm">({tutor.reviews} reviews)</span>
+                        <Star className="w-4 h-4" />
+                        <span className="font-bold">{tutor.rating}</span>
+                        <span className="text-sm">({tutor.reviews} reviews)</span>
                       </div>
                     </div>
                     {tutor.ambassador && (
-                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4">
+                      <Button size="sm" className="rounded-full px-4">
                         Ambassador
                       </Button>
                     )}
                   </div>
 
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{tutor.description}</p>
+                  <p className="text-sm leading-relaxed mb-4">{tutor.description}</p>
 
                   <TutorProfileModal
                     tutor={tutor}
                     triggerButton={
-                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-semibold py-3">
+                      <Button className="w-full rounded-2xl font-semibold py-3">
                         View Profile
                       </Button>
                     }
@@ -396,7 +396,7 @@ export default function HomePage() {
           <Button
             variant="outline"
             size="lg"
-            className="border-2 border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent rounded-full px-8 py-3 font-semibold"
+            className="border-2 rounded-full px-8 py-3 font-semibold"
           >
             View All Piano Tutors
           </Button>
@@ -406,8 +406,8 @@ export default function HomePage() {
       {/* Student Reviews Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">What Our Students Say</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6">What Our Students Say</h2>
+          <p className="text-xl max-w-3xl mx-auto">
             Real feedback from students who've transformed their learning journey with us
           </p>
         </div>
@@ -416,7 +416,7 @@ export default function HomePage() {
           {studentReviews.map((review, index) => (
             <Card
               key={index}
-              className="border-0 shadow-xl bg-white rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300"
+              className="border-0 shadow-xl rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300"
             >
               <CardContent className="p-8">
                 <div className="flex items-center space-x-4 mb-6">
@@ -426,23 +426,23 @@ export default function HomePage() {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900">{review.name}</h4>
-                    <p className="text-orange-500 font-medium">{review.subject}</p>
+                    <h4 className="font-bold">{review.name}</h4>
+                    <p className="font-medium">{review.subject}</p>
                     <div className="flex items-center space-x-1 mt-1">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${i < Math.floor(review.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                          className={`w-4 h-4 ${i < Math.floor(review.rating) ? "" : ""}`}
                         />
                       ))}
-                      <span className="text-sm text-gray-500 ml-2">{review.rating}</span>
+                      <span className="text-sm ml-2">{review.rating}</span>
                     </div>
                   </div>
                 </div>
 
-                <Quote className="w-8 h-8 text-orange-200 mb-4" />
-                <p className="text-gray-700 leading-relaxed mb-4 italic">"{review.comment}"</p>
-                <p className="text-sm text-gray-500">{review.date}</p>
+                <Quote className="w-8 h-8 mb-4" />
+                <p className="leading-relaxed mb-4 italic">"{review.comment}"</p>
+                <p className="text-sm">{review.date}</p>
               </CardContent>
             </Card>
           ))}
@@ -450,10 +450,10 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-gray-50 to-blue-50">
+      <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6">Frequently Asked Questions</h2>
+          <p className="text-xl max-w-3xl mx-auto">
             Everything you need to know about finding and working with tutors
           </p>
         </div>
@@ -462,18 +462,18 @@ export default function HomePage() {
           {faqs.map((faq, index) => (
             <Collapsible key={index}>
               <CollapsibleTrigger className="w-full">
-                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white rounded-2xl">
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900 text-left">{faq.question}</h3>
-                      <ChevronDown className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+                      <h3 className="text-lg font-semibold text-left">{faq.question}</h3>
+                      <ChevronDown className="w-5 h-5 transition-transform duration-200" />
                     </div>
                   </CardContent>
                 </Card>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="px-6 pb-6 pt-2">
-                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  <p className="leading-relaxed">{faq.answer}</p>
                 </div>
               </CollapsibleContent>
             </Collapsible>
@@ -484,39 +484,39 @@ export default function HomePage() {
       {/* How It Works */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">How It Works</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6">How It Works</h2>
+          <p className="text-xl max-w-3xl mx-auto">
             Getting started with TutorHome is simple and straightforward
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
           <div className="text-center group">
-            <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <Search className="w-12 h-12 text-orange-600" />
+            <div className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <Search className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Search & Browse</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <h3 className="text-2xl font-bold mb-4">1. Search & Browse</h3>
+            <p className="leading-relaxed">
               Find tutors by subject, location, and price range. Read reviews and compare profiles to find your perfect
               match.
             </p>
           </div>
           <div className="text-center group">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <Users className="w-12 h-12 text-blue-600" />
+            <div className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <Users className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Connect & Book</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <h3 className="text-2xl font-bold mb-4">2. Connect & Book</h3>
+            <p className="leading-relaxed">
               Contact your chosen tutor, discuss your learning goals, and schedule your first lesson at your
               convenience.
             </p>
           </div>
           <div className="text-center group">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-green-200 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <BookOpen className="w-12 h-12 text-green-600" />
+            <div className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <BookOpen className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Start Learning</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <h3 className="text-2xl font-bold mb-4">3. Start Learning</h3>
+            <p className="leading-relaxed">
               Begin your personalized learning journey with expert guidance and achieve your educational goals.
             </p>
           </div>
@@ -524,46 +524,46 @@ export default function HomePage() {
       </section>
 
       {/* Enhanced Footer */}
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div>
-              <div className="text-3xl font-bold text-orange-500 mb-6">TutorHome</div>
-              <p className="text-gray-400 leading-relaxed mb-6">
+              <div className="text-3xl font-bold mb-6">TutorHome</div>
+              <p className="leading-relaxed mb-6">
                 Connecting students with qualified tutors for personalized learning experiences that transform lives.
               </p>
               <div className="flex space-x-4">
-                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer">
                   <span className="text-sm">f</span>
                 </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer">
                   <span className="text-sm">t</span>
                 </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer">
                   <span className="text-sm">in</span>
                 </div>
               </div>
             </div>
             <div>
               <h4 className="font-bold mb-6 text-lg">For Students</h4>
-              <ul className="space-y-3 text-gray-400">
+              <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Find Tutors
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     How it Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Pricing
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Success Stories
                   </Link>
                 </li>
@@ -571,24 +571,24 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="font-bold mb-6 text-lg">For Tutors</h4>
-              <ul className="space-y-3 text-gray-400">
+              <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Become a Tutor
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Tutor Resources
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Ambassador Program
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Tutor Guidelines
                   </Link>
                 </li>
@@ -596,31 +596,31 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="font-bold mb-6 text-lg">Support</h4>
-              <ul className="space-y-3 text-gray-400">
+              <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Help Center
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Safety & Trust
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-orange-500 transition-colors">
+                  <Link href="#" className="transition-colors">
                     Terms of Service
                   </Link>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          <div className="border-t mt-12 pt-8 text-center">
             <p>&copy; 2024 TutorHome. All rights reserved. Made with ❤️ for learners everywhere.</p>
           </div>
         </div>
