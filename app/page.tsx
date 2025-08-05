@@ -18,7 +18,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import TutorProfileModal from "@/components/tutor-profile-modal"
-import AuthModal from "@/components/auth-modal"
 
 export default function HomePage() {
   const categories = [
@@ -219,17 +218,24 @@ export default function HomePage() {
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/tutors" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              Find Tutors
+              find tutors
             </Link>
             <Link href="/become-tutor" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              Become a Tutor
+              become a tutor
             </Link>
             <Link href="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              How it Works
+              how it works
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
-            <AuthModal />
+            <Link href="/login">
+              <Button variant="ghost" className="text-gray-700 hover:text-orange-500">
+                sign in
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6">sign up</Button>
+            </Link>
           </div>
         </div>
       </header>
