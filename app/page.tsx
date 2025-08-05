@@ -17,6 +17,8 @@ import {
   Quote,
 } from "lucide-react"
 import Link from "next/link"
+import TutorProfileModal from "@/components/tutor-profile-modal"
+import AuthModal from "@/components/auth-modal"
 
 export default function HomePage() {
   const categories = [
@@ -60,6 +62,23 @@ export default function HomePage() {
       ambassador: true,
       description: "Asah otak si kecil dengan belajar piano! private piano lesson di kelapa gading :)",
       online: false,
+      bio: "I'm a passionate piano educator with over 5 years of experience helping students achieve their musical goals.",
+      education: ["M.Mus. Piano Performance - Jakarta Institute of Arts", "B.Mus. Piano - University of Indonesia"],
+      achievements: ["Concert Pianist", "200+ Students Taught", "Music Competition Judge"],
+      languages: ["English", "Indonesian"],
+      teachingStyle: "I focus on building strong technical foundations while keeping lessons fun and engaging.",
+      reviews_data: [
+        {
+          name: "Sarah Kim",
+          rating: 5,
+          comment: "Loissa is an amazing piano teacher! Very patient with children.",
+          date: "1 week ago",
+        },
+      ],
+      subjects: ["Classical Piano", "Jazz Piano", "Music Theory"],
+      experience: "5+ years",
+      price: 35,
+      availability: "Available today",
     },
     {
       id: 2,
@@ -74,6 +93,23 @@ export default function HomePage() {
       ambassador: true,
       description: "Belajar piano private online untuk pemula, fleksibel & interaktif khusus anak dan dewasa",
       online: true,
+      bio: "Online piano instructor specializing in beginner-friendly interactive lessons for all ages.",
+      education: ["B.Mus. Piano Pedagogy - Berklee Online", "Piano Teaching Certificate - ABRSM"],
+      achievements: ["Online Teaching Expert", "300+ Students Taught", "Curriculum Developer"],
+      languages: ["English", "Indonesian"],
+      teachingStyle: "I use interactive online tools and personalized approaches for effective remote learning.",
+      reviews_data: [
+        {
+          name: "Lisa Wang",
+          rating: 5,
+          comment: "Great online piano lessons! Very interactive and engaging.",
+          date: "2 weeks ago",
+        },
+      ],
+      subjects: ["Beginner Piano", "Online Piano", "Piano for Adults"],
+      experience: "4+ years",
+      price: 30,
+      availability: "Available today",
     },
     {
       id: 3,
@@ -88,6 +124,23 @@ export default function HomePage() {
       ambassador: true,
       description: "Siapapun bisa belajar piano! jadwal fleksibel & bisa pilih lagu yang kamu suka dan atur...",
       online: true,
+      bio: "Flexible piano instructor who believes anyone can learn piano with the right approach and favorite songs.",
+      education: ["M.Mus. Piano Performance - Royal College of Music", "B.A. Music - University of Indonesia"],
+      achievements: ["Flexible Teaching Award", "150+ Students Taught", "Popular Music Specialist"],
+      languages: ["English", "Indonesian"],
+      teachingStyle: "I let students choose their favorite songs and adapt lessons to their musical preferences.",
+      reviews_data: [
+        {
+          name: "Tommy Lee",
+          rating: 5,
+          comment: "Daniel makes learning piano so much fun! Love that I can play my favorite songs.",
+          date: "1 month ago",
+        },
+      ],
+      subjects: ["Popular Piano", "Flexible Learning", "Song-based Piano"],
+      experience: "6+ years",
+      price: 40,
+      availability: "Available this week",
     },
   ]
 
@@ -162,24 +215,21 @@ export default function HomePage() {
       <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-orange-500">LearnWay</div>
+            <div className="text-2xl font-bold text-orange-500">TutorHome</div>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/tutors" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              Temukan Guru
+              Find Tutors
             </Link>
             <Link href="/become-tutor" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              Cara Menjadi Guru
+              Become a Tutor
             </Link>
             <Link href="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
-              Bagaimana Ini bekerja
+              How it Works
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" className="text-gray-700 hover:text-orange-500">
-              Sign In
-            </Button>
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6">Sign Up</Button>
+            <AuthModal />
           </div>
         </div>
       </header>
@@ -188,12 +238,13 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            Temukan Kesempurnaan dalam <span className="text-orange-500">Belajar</span>
+            Find Your Perfect <span className="text-orange-500">Tutor</span>
             <br />
-            <span className="text-4xl md:text-5xl text-gray-600">Belajar apa saja dan dimana saja</span>
+            <span className="text-4xl md:text-5xl text-gray-600">Learn Anything, Anywhere</span>
           </h1>
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Terhubung dengan Guru berkualifikasi untuk pengalaman belajar yang personal. Dari mata pelajaran akademik hingga keterampilan kreatif, temukan yang paling cocok untuk perjalanan belajar Anda.
+            Connect with qualified tutors for personalized learning experiences. From academic subjects to creative
+            skills, find the perfect match for your learning journey.
           </p>
 
           {/* Enhanced Search Bar */}
@@ -321,9 +372,14 @@ export default function HomePage() {
 
                   <p className="text-gray-600 text-sm leading-relaxed mb-4">{tutor.description}</p>
 
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-semibold py-3">
-                    View Profile
-                  </Button>
+                  <TutorProfileModal
+                    tutor={tutor}
+                    triggerButton={
+                      <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-semibold py-3">
+                        View Profile
+                      </Button>
+                    }
+                  />
                 </CardContent>
               </Card>
             </div>
