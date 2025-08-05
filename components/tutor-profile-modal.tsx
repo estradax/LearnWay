@@ -1,73 +1,88 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star, MapPin, Clock, Users, BookOpen, Award, MessageCircle, X } from "lucide-react"
-import ContactTutorModal from "@/components/contact-tutor-modal"
-import ChatSystem from "@/components/chat-system"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Star,
+  MapPin,
+  Clock,
+  Users,
+  BookOpen,
+  Award,
+  MessageCircle,
+  Check,
+} from "lucide-react";
+import ContactTutorModal from "@/components/contact-tutor-modal";
+import ChatSystem from "@/components/chat-system";
 
 interface TutorProfileModalProps {
-  tutor: any
-  triggerButton?: React.ReactNode
+  tutor: any;
+  triggerButton?: React.ReactNode;
 }
 
-export default function TutorProfileModal({ tutor, triggerButton }: TutorProfileModalProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [showContactModal, setShowContactModal] = useState(false)
+export default function TutorProfileModal({
+  tutor,
+  triggerButton,
+}: TutorProfileModalProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
 
-  if (!tutor) return null
+  if (!tutor) return null;
 
   const defaultTriggerButton = (
     <Button className="w-full rounded-2xl font-semibold py-3">
       View Profile
     </Button>
-  )
+  );
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>{triggerButton || defaultTriggerButton}</DialogTrigger>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogTrigger asChild>
+          {triggerButton || defaultTriggerButton}
+        </DialogTrigger>
+        <DialogContent className="min-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="sr-only">Tutor Profile</DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute right-4 top-4 rounded-full"
-              onClick={() => setIsOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </DialogHeader>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-6">
             {/* Main Profile */}
             <div className="lg:col-span-2 space-y-6">
               {/* Header Card */}
-              <Card>
-                <CardContent className="p-6">
+              <Card className="border shadow-xs">
+                <CardContent>
                   <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
                     <div className="relative flex-shrink-0">
                       <img
                         src={tutor.image || "/placeholder.svg"}
                         alt={tutor.name}
-                        className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
+                        className="w-32 h-32 rounded object-cover mx-auto md:mx-0"
                       />
                       {tutor.verified && (
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center">
-                          <span className="text-sm">✓</span>
-                        </div>
+                        <Badge className="mt-4">
+                          <Check className="w-5 h-5" />
+                          Verified
+                        </Badge>
                       )}
                     </div>
 
                     <div className="flex-1 text-center md:text-left">
                       <h1 className="text-3xl font-bold mb-2">{tutor.name}</h1>
-                      <p className="text-xl font-medium mb-3">{tutor.subject} Tutor</p>
+                      <p className="text-xl font-medium mb-3">
+                        {tutor.subject} Tutor
+                      </p>
 
                       <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mb-4 text-sm">
                         <div className="flex items-center space-x-1">
@@ -102,7 +117,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
               </Card>
 
               {/* About */}
-              <Card>
+              <Card className="border shadow-xs">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <BookOpen className="w-5 h-5" />
@@ -117,7 +132,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
 
               {/* Education & Achievements */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
+                <Card className="border shadow-xs">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                       <Award className="w-5 h-5" />
@@ -125,17 +140,15 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 list-disc list-inside">
                       {tutor.education.map((edu, index) => (
-                        <li key={index}>
-                          {edu}
-                        </li>
+                        <li key={index}>{edu}</li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border shadow-xs">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                       <Star className="w-5 h-5" />
@@ -143,12 +156,9 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 list-disc list-inside">
                       {tutor.achievements.map((achievement, index) => (
-                        <li key={index} className="flex items-center space-x-2">
-                          <span className="w-2 h-2 rounded-full"></span>
-                          <span>{achievement}</span>
-                        </li>
+                        <li key={index}>{achievement}</li>
                       ))}
                     </ul>
                   </CardContent>
@@ -156,7 +166,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
               </div>
 
               {/* Reviews */}
-              <Card>
+              <Card className="border shadow-xs">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <MessageCircle className="w-5 h-5" />
@@ -166,7 +176,10 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                 <CardContent>
                   <div className="space-y-4">
                     {tutor.reviews_data.map((review, index) => (
-                      <div key={index} className="border-b pb-4 last:border-b-0">
+                      <div
+                        key={index}
+                        className="border-b pb-4 last:border-b-0"
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
                             <span className="font-medium">{review.name}</span>
@@ -174,7 +187,9 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${i < review.rating ? "" : ""}`}
+                                  className={`w-4 h-4 ${
+                                    i < review.rating ? "" : ""
+                                  }`}
                                 />
                               ))}
                             </div>
@@ -192,7 +207,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Price & Contact */}
-              <Card className="sticky top-4">
+              <Card className="border shadow-xs">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span>Book a Lesson</span>
@@ -209,11 +224,11 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
                     <Button
                       className="w-full"
                       onClick={() => {
-                        setIsOpen(false)
-                        setShowContactModal(true)
+                        setIsOpen(false);
+                        setShowContactModal(true);
                       }}
                     >
-                      Contact Tutor
+                      contact tutor
                     </Button>
                     <ChatSystem
                       currentUserId={1}
@@ -234,7 +249,7 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
               </Card>
 
               {/* Languages */}
-              <Card>
+              <Card className="border shadow-xs">
                 <CardHeader>
                   <CardTitle className="text-lg">Languages</CardTitle>
                 </CardHeader>
@@ -250,12 +265,14 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
               </Card>
 
               {/* Response Time */}
-              <Card>
+              <Card className="border shadow-xs">
                 <CardContent className="p-4">
                   <div className="text-center">
                     <Clock className="w-8 h-8 mx-auto mb-2" />
                     <div className="font-medium">Quick Response</div>
-                    <div className="text-sm">Usually responds within 2 hours</div>
+                    <div className="text-sm">
+                      Usually responds within 2 hours
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -265,7 +282,11 @@ export default function TutorProfileModal({ tutor, triggerButton }: TutorProfile
       </Dialog>
 
       {/* Contact Modal */}
-      <ContactTutorModal tutor={tutor} isOpen={showContactModal} onClose={() => setShowContactModal(false)} />
+      <ContactTutorModal
+        tutor={tutor}
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+      />
     </>
-  )
+  );
 }
