@@ -249,40 +249,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-50 bg-background border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="text-2xl font-bold">LearnWay</div>
-          </div>
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/tutors" className="transition-colors font-medium">
-              find tutors
-            </Link>
-            <Link
-              href="/become-tutor"
-              className="transition-colors font-medium"
-            >
-              become a tutor
-            </Link>
-            <Link
-              href="/how-it-works"
-              className="transition-colors font-medium"
-            >
-              how it works
-            </Link>
-          </nav>
-          <div className="flex items-center space-x-3">
-            <Link href="/login">
-              <Button variant="ghost">sign in</Button>
-            </Link>
-            <Link href="/register">
-              <Button className="px-6">sign up</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <>
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-5xl mx-auto">
@@ -668,6 +635,6 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

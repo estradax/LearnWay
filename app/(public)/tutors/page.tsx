@@ -1,24 +1,38 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Star, MapPin, Clock, BookOpen, SlidersHorizontal } from "lucide-react"
-import Link from "next/link"
-import TutorProfileModal from "@/components/tutor-profile-modal"
-import ContactTutorModal from "@/components/contact-tutor-modal"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  Star,
+  MapPin,
+  Clock,
+  BookOpen,
+  SlidersHorizontal,
+  Check,
+} from "lucide-react";
+import Link from "next/link";
+import TutorProfileModal from "@/components/tutor-profile-modal";
+import ContactTutorModal from "@/components/contact-tutor-modal";
 
 export default function TutorsPage() {
-  const [priceRange, setPriceRange] = useState([10, 100])
-  const [showFilters, setShowFilters] = useState(false)
-  const [selectedTutor, setSelectedTutor] = useState(null)
-  const [showProfileModal, setShowProfileModal] = useState(false)
-  const [showContactModal, setShowContactModal] = useState(false)
+  const [priceRange, setPriceRange] = useState([10, 100]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedTutor, setSelectedTutor] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   const tutors = [
     {
@@ -30,14 +44,23 @@ export default function TutorsPage() {
       reviews: 127,
       price: 25,
       location: "Jakarta",
-      image: "/professional-teacher-woman.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "5+ years",
-      description: "Experienced math tutor specializing in high school and college level mathematics.",
+      description:
+        "Experienced math tutor specializing in high school and college level mathematics.",
       availability: "Available today",
       bio: "I'm a passionate mathematics educator with over 5 years of experience helping students achieve their academic goals. I believe in making math accessible and enjoyable for everyone, regardless of their starting level.",
-      education: ["M.S. Mathematics - University of Indonesia", "B.S. Applied Mathematics - ITB"],
-      achievements: ["Top 1% Math Tutor on Platform", "500+ Students Taught", "95% Success Rate"],
+      education: [
+        "M.S. Mathematics - University of Indonesia",
+        "B.S. Applied Mathematics - ITB",
+      ],
+      achievements: [
+        "Top 1% Math Tutor on Platform",
+        "500+ Students Taught",
+        "95% Success Rate",
+      ],
       languages: ["English", "Indonesian", "Mandarin"],
       teachingStyle:
         "I use a personalized approach that adapts to each student's learning style. My lessons are interactive and focus on building strong foundational understanding before moving to advanced concepts.",
@@ -52,7 +75,8 @@ export default function TutorsPage() {
         {
           name: "Maria Rodriguez",
           rating: 5,
-          comment: "Excellent tutor! Made statistics much easier to understand. Highly recommended!",
+          comment:
+            "Excellent tutor! Made statistics much easier to understand. Highly recommended!",
           date: "1 month ago",
         },
       ],
@@ -66,14 +90,23 @@ export default function TutorsPage() {
       reviews: 89,
       price: 30,
       location: "Surabaya",
-      image: "/professional-teacher-man.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "3+ years",
-      description: "Native English speaker with expertise in literature and creative writing.",
+      description:
+        "Native English speaker with expertise in literature and creative writing.",
       availability: "Available tomorrow",
       bio: "As a native English speaker with a passion for literature, I help students develop their writing skills and appreciate the beauty of English literature.",
-      education: ["M.A. English Literature - University of Cambridge", "B.A. English - Oxford University"],
-      achievements: ["Published Author", "300+ Students Taught", "98% Pass Rate"],
+      education: [
+        "M.A. English Literature - University of Cambridge",
+        "B.A. English - Oxford University",
+      ],
+      achievements: [
+        "Published Author",
+        "300+ Students Taught",
+        "98% Pass Rate",
+      ],
       languages: ["English", "Indonesian"],
       teachingStyle:
         "I focus on developing critical thinking skills through literature analysis and creative writing exercises.",
@@ -81,7 +114,8 @@ export default function TutorsPage() {
         {
           name: "Lisa Wang",
           rating: 5,
-          comment: "David helped me improve my essay writing significantly. Great teacher!",
+          comment:
+            "David helped me improve my essay writing significantly. Great teacher!",
           date: "1 week ago",
         },
       ],
@@ -95,14 +129,23 @@ export default function TutorsPage() {
       reviews: 45,
       price: 35,
       location: "Bandung",
-      image: "/piano-teacher-woman.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "7+ years",
-      description: "Professional pianist offering lessons for all skill levels and ages.",
+      description:
+        "Professional pianist offering lessons for all skill levels and ages.",
       availability: "Available this week",
       bio: "I'm a professional pianist with 7 years of teaching experience. I love sharing my passion for music and helping students discover their musical potential.",
-      education: ["Master of Music - Berklee College of Music", "Bachelor of Music - Jakarta Institute of Arts"],
-      achievements: ["Concert Pianist", "200+ Students Taught", "Music Competition Judge"],
+      education: [
+        "Master of Music - Berklee College of Music",
+        "Bachelor of Music - Jakarta Institute of Arts",
+      ],
+      achievements: [
+        "Concert Pianist",
+        "200+ Students Taught",
+        "Music Competition Judge",
+      ],
       languages: ["English", "Indonesian", "Spanish"],
       teachingStyle:
         "I believe in making music fun and accessible while maintaining proper technique and musical understanding.",
@@ -110,7 +153,8 @@ export default function TutorsPage() {
         {
           name: "Tommy Lee",
           rating: 5,
-          comment: "Maria is an amazing piano teacher! Very patient and encouraging.",
+          comment:
+            "Maria is an amazing piano teacher! Very patient and encouraging.",
           date: "3 weeks ago",
         },
       ],
@@ -124,21 +168,29 @@ export default function TutorsPage() {
       reviews: 156,
       price: 28,
       location: "Jakarta",
-      image: "/physics-teacher-man.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "6+ years",
-      description: "PhD in Physics with extensive teaching experience in universities.",
+      description:
+        "PhD in Physics with extensive teaching experience in universities.",
       availability: "Available today",
       bio: "With a PhD in Physics and 6 years of university teaching experience, I specialize in making complex physics concepts understandable and engaging.",
       education: ["Ph.D. Physics - MIT", "M.S. Physics - ITB"],
-      achievements: ["Published Researcher", "University Professor", "600+ Students Taught"],
+      achievements: [
+        "Published Researcher",
+        "University Professor",
+        "600+ Students Taught",
+      ],
       languages: ["English", "Indonesian", "Arabic"],
-      teachingStyle: "I use real-world examples and hands-on experiments to make physics concepts come alive.",
+      teachingStyle:
+        "I use real-world examples and hands-on experiments to make physics concepts come alive.",
       reviews_data: [
         {
           name: "Sarah Kim",
           rating: 5,
-          comment: "Dr. Ahmad makes physics so much easier to understand. Excellent teacher!",
+          comment:
+            "Dr. Ahmad makes physics so much easier to understand. Excellent teacher!",
           date: "2 weeks ago",
         },
       ],
@@ -152,19 +204,26 @@ export default function TutorsPage() {
       reviews: 78,
       price: 32,
       location: "Jakarta",
-      image: "/chinese-teacher-woman.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "4+ years",
-      description: "Native Mandarin speaker with certification in teaching Chinese as a foreign language.",
+      description:
+        "Native Mandarin speaker with certification in teaching Chinese as a foreign language.",
       availability: "Available tomorrow",
       bio: "As a native Mandarin speaker with teaching certification, I help students master Chinese language skills for personal and professional growth.",
       education: [
         "M.A. Chinese Language Teaching - Beijing University",
         "B.A. Chinese Literature - Tsinghua University",
       ],
-      achievements: ["HSK Examiner", "400+ Students Taught", "Language School Director"],
+      achievements: [
+        "HSK Examiner",
+        "400+ Students Taught",
+        "Language School Director",
+      ],
       languages: ["Mandarin", "English", "Indonesian"],
-      teachingStyle: "I focus on practical communication skills while building strong grammar foundations.",
+      teachingStyle:
+        "I focus on practical communication skills while building strong grammar foundations.",
       reviews_data: [
         {
           name: "John Smith",
@@ -183,17 +242,23 @@ export default function TutorsPage() {
       reviews: 92,
       price: 40,
       location: "Bandung",
-      image: "/placeholder-cr19i.png",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
       experience: "8+ years",
-      description: "Professional guitarist and music producer with studio experience.",
+      description:
+        "Professional guitarist and music producer with studio experience.",
       availability: "Available this week",
       bio: "I'm a professional guitarist and music producer with 8 years of experience. I've worked in studios and performed in various bands.",
       education: [
         "Diploma in Music Production - SAE Institute",
         "Guitar Performance Certificate - Musicians Institute",
       ],
-      achievements: ["Studio Musician", "Band Performer", "300+ Students Taught"],
+      achievements: [
+        "Studio Musician",
+        "Band Performer",
+        "300+ Students Taught",
+      ],
       languages: ["English", "Indonesian"],
       teachingStyle:
         "I teach both technical skills and creative expression, helping students find their unique musical voice.",
@@ -201,12 +266,13 @@ export default function TutorsPage() {
         {
           name: "Mike Johnson",
           rating: 5,
-          comment: "Robert is an excellent guitar teacher. Learned so much in just a few months!",
+          comment:
+            "Robert is an excellent guitar teacher. Learned so much in just a few months!",
           date: "2 weeks ago",
         },
       ],
     },
-  ]
+  ];
 
   const subjects = [
     "Mathematics",
@@ -224,58 +290,34 @@ export default function TutorsPage() {
     "Photography",
     "Programming",
     "Languages",
-  ]
+  ];
 
   const handleViewProfile = (tutor) => {
-    setSelectedTutor(tutor)
-    setShowProfileModal(true)
-  }
+    setSelectedTutor(tutor);
+    setShowProfileModal(true);
+  };
 
   const handleContactTutor = (tutor) => {
-    setSelectedTutor(tutor)
-    setShowContactModal(true)
-  }
+    setSelectedTutor(tutor);
+    setShowContactModal(true);
+  };
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <span className="text-xl font-bold">TutorHome</span>
-          </Link>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tutors" className="font-medium">
-              Find Tutors
-            </Link>
-            <Link href="/become-tutor" className="transition-colors">
-              Become a Tutor
-            </Link>
-            <Link href="/how-it-works" className="transition-colors">
-              How it Works
-            </Link>
-          </nav>
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost">Sign In</Button>
-            <Button>Sign Up</Button>
-          </div>
-        </div>
-      </header>
-
+    <>
       <div className="container mx-auto px-4 py-8">
         {/* Search and Filters */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-              <Input placeholder="Search by subject, tutor name, or keyword..." className="pl-10 h-12 text-lg" />
+              <Input
+                placeholder="Search by subject, tutor name, or keyword..."
+                className="pl-10 text-lg"
+              />
             </div>
             <div className="flex gap-2">
               <Select>
-                <SelectTrigger className="w-48 h-12">
+                <SelectTrigger className="w-48">
                   <SelectValue placeholder="All Subjects" />
                 </SelectTrigger>
                 <SelectContent>
@@ -288,68 +330,83 @@ export default function TutorsPage() {
               </Select>
               <Button
                 variant="outline"
-                className="h-12 px-4"
+                className="px-4"
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <SlidersHorizontal className="w-5 h-5 mr-2" />
-                Filters
+                filters
               </Button>
-              <Button className="h-12 px-8">Search</Button>
+              <Button className="px-8">search</Button>
             </div>
           </div>
 
           {/* Advanced Filters */}
           {showFilters && (
-            <Card className="p-6 mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h4 className="font-semibold mb-3">Price Range (per hour)</h4>
-                  <div className="space-y-3">
-                    <Slider
-                      value={priceRange}
-                      onValueChange={setPriceRange}
-                      max={100}
-                      min={10}
-                      step={5}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-sm">
-                      <span>${priceRange[0]}</span>
-                      <span>${priceRange[1]}</span>
+            <Card className="mb-6 border shadow-xs bg-background">
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3">
+                      Price Range (per hour)
+                    </h4>
+                    <div className="space-y-3">
+                      <Slider
+                        value={priceRange}
+                        onValueChange={setPriceRange}
+                        max={100}
+                        min={10}
+                        step={5}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-sm">
+                        <span>${priceRange[0]}</span>
+                        <span>${priceRange[1]}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <h4 className="font-semibold mb-3">Experience Level</h4>
-                  <div className="space-y-2">
-                    {["1-2 years", "3-5 years", "5+ years", "10+ years"].map((exp) => (
-                      <div key={exp} className="flex items-center space-x-2">
-                        <Checkbox id={exp} />
-                        <label htmlFor={exp} className="text-sm">
-                          {exp}
-                        </label>
-                      </div>
-                    ))}
+                  <div>
+                    <h4 className="font-semibold mb-3">Experience Level</h4>
+                    <div className="space-y-2">
+                      {["1-2 years", "3-5 years", "5+ years", "10+ years"].map(
+                        (exp) => (
+                          <div
+                            key={exp}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox id={exp} />
+                            <label htmlFor={exp} className="text-sm">
+                              {exp}
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <h4 className="font-semibold mb-3">Availability</h4>
-                  <div className="space-y-2">
-                    {["Available today", "Available tomorrow", "Available this week", "Flexible schedule"].map(
-                      (avail) => (
-                        <div key={avail} className="flex items-center space-x-2">
+                  <div>
+                    <h4 className="font-semibold mb-3">Availability</h4>
+                    <div className="space-y-2">
+                      {[
+                        "Available today",
+                        "Available tomorrow",
+                        "Available this week",
+                        "Flexible schedule",
+                      ].map((avail) => (
+                        <div
+                          key={avail}
+                          className="flex items-center space-x-2"
+                        >
                           <Checkbox id={avail} />
                           <label htmlFor={avail} className="text-sm">
                             {avail}
                           </label>
                         </div>
-                      ),
-                    )}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </CardContent>
             </Card>
           )}
         </div>
@@ -379,13 +436,13 @@ export default function TutorsPage() {
           {tutors.map((tutor) => (
             <Card
               key={tutor.id}
-              className="hover:shadow-xl transition-all duration-300 group cursor-pointer overflow-hidden border-0 rounded-2xl"
+              className="hover:shadow-sm transition-all duration-300 group cursor-pointer overflow-hidden border shadow-xs"
             >
-              <CardContent className="p-6">
+              <CardContent>
                 <div className="flex gap-6 min-h-[280px]">
                   {/* Profile Image with spacing */}
                   <div className="relative w-36 flex-shrink-0">
-                    <div className="w-full h-48 rounded-xl overflow-hidden">
+                    <div className="w-full h-48 rounded overflow-hidden">
                       <img
                         src={tutor.image || "/placeholder.svg"}
                         alt={tutor.name}
@@ -393,9 +450,10 @@ export default function TutorsPage() {
                       />
                     </div>
                     {tutor.verified && (
-                      <div className="absolute -bottom-2 -left-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-                        <span className="text-sm font-bold">✓</span>
-                      </div>
+                      <Badge className="mt-4">
+                        <Check className="w-5 h-5" />
+                        Verified
+                      </Badge>
                     )}
                   </div>
 
@@ -407,7 +465,9 @@ export default function TutorsPage() {
                           <h3 className="text-xl font-bold transition-colors">
                             {tutor.name}
                           </h3>
-                          <p className="font-semibold text-lg">{tutor.subject}</p>
+                          <p className="font-semibold text-lg">
+                            {tutor.subject}
+                          </p>
                         </div>
                         <div className="text-right ml-4 flex-shrink-0">
                           <div className="text-2xl font-bold">
@@ -436,11 +496,17 @@ export default function TutorsPage() {
                         </div>
                       </div>
 
-                      <p className="text-sm mb-4 leading-relaxed">{tutor.description}</p>
+                      <p className="text-sm mb-4 leading-relaxed">
+                        {tutor.description}
+                      </p>
 
                       <div className="flex flex-wrap gap-2 mb-6">
                         {tutor.subjects.map((subject, index) => (
-                          <Badge key={index} variant="outline" className="text-xs px-3 py-1">
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs px-3 py-1"
+                          >
                             {subject}
                           </Badge>
                         ))}
@@ -454,13 +520,13 @@ export default function TutorsPage() {
                         className="flex-1"
                         onClick={() => handleViewProfile(tutor)}
                       >
-                        View Profile
+                        view profile
                       </Button>
                       <Button
                         className="flex-1"
                         onClick={() => handleContactTutor(tutor)}
                       >
-                        Contact Tutor
+                        contact tutor
                       </Button>
                     </div>
                   </div>
@@ -486,8 +552,8 @@ export default function TutorsPage() {
             isOpen={showProfileModal}
             onClose={() => setShowProfileModal(false)}
             onContactTutor={() => {
-              setShowProfileModal(false)
-              setShowContactModal(true)
+              setShowProfileModal(false);
+              setShowContactModal(true);
             }}
           />
           <ContactTutorModal
@@ -497,6 +563,6 @@ export default function TutorsPage() {
           />
         </>
       )}
-    </div>
-  )
+    </>
+  );
 }
