@@ -6,20 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Calendar,
-  Clock,
-  DollarSign,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  MessageCircle,
-  Star,
-  Phone,
-  Mail,
-} from "lucide-react"
 import Link from "next/link"
+import { Calendar, Clock, DollarSign, CheckCircle, XCircle, AlertCircle, MessageCircle, Star, Phone, Mail, User, Settings, BookOpen, TrendingUp, Award, Target, Edit, Camera, Bell, Shield, CreditCard, Globe, Trash2, Download, BarChart3, CalendarIcon, ClockIcon } from 'lucide-react'
 import ChatSystem from "@/components/chat-system"
+import { Input } from "@/components/ui/input"
 
 export default function DashboardPage() {
   // Mock user data - in real app this would come from authentication context
@@ -143,6 +133,201 @@ export default function DashboardPage() {
     },
   ]
 
+  // Mock messages data
+  const conversations = [
+    {
+      id: 1,
+      participant: {
+        name: "Sarah Johnson",
+        image: "/professional-teacher-woman.png",
+        role: "tutor",
+        subject: "Mathematics",
+        online: true,
+      },
+      lastMessage: {
+        content: "Great progress on derivatives! Let's work on integration next session.",
+        timestamp: "2 hours ago",
+        sender: "Sarah Johnson",
+        unread: false,
+      },
+      totalMessages: 24,
+    },
+    {
+      id: 2,
+      participant: {
+        name: "David Chen",
+        image: "/professional-teacher-man.png",
+        role: "tutor",
+        subject: "English Literature",
+        online: false,
+      },
+      lastMessage: {
+        content: "I've uploaded the essay feedback. Please review before our next lesson.",
+        timestamp: "1 day ago",
+        sender: "David Chen",
+        unread: true,
+      },
+      totalMessages: 18,
+    },
+    {
+      id: 3,
+      participant: {
+        name: "Maria Santos",
+        image: "/piano-teacher-woman.png",
+        role: "tutor",
+        subject: "Piano",
+        online: true,
+      },
+      lastMessage: {
+        content: "Don't forget to practice the scales we covered today!",
+        timestamp: "3 days ago",
+        sender: "Maria Santos",
+        unread: false,
+      },
+      totalMessages: 12,
+    },
+  ]
+
+  // Mock learning progress data
+  const learningProgress = {
+    totalHours: 45,
+    completedLessons: 12,
+    averageRating: 4.8,
+    currentStreak: 7,
+    subjects: [
+      {
+        name: "Mathematics",
+        tutor: "Sarah Johnson",
+        progress: 75,
+        hoursSpent: 20,
+        lessonsCompleted: 8,
+        nextLesson: "2024-01-20",
+        topics: [
+          { name: "Algebra", completed: true, score: 92 },
+          { name: "Calculus Basics", completed: true, score: 88 },
+          { name: "Derivatives", completed: false, score: null },
+          { name: "Integration", completed: false, score: null },
+        ],
+      },
+      {
+        name: "English Literature",
+        tutor: "David Chen",
+        progress: 60,
+        hoursSpent: 15,
+        lessonsCompleted: 3,
+        nextLesson: "2024-01-22",
+        topics: [
+          { name: "Essay Writing", completed: true, score: 85 },
+          { name: "Poetry Analysis", completed: true, score: 90 },
+          { name: "Novel Study", completed: false, score: null },
+          { name: "Critical Thinking", completed: false, score: null },
+        ],
+      },
+      {
+        name: "Piano",
+        tutor: "Maria Santos",
+        progress: 40,
+        hoursSpent: 10,
+        lessonsCompleted: 1,
+        nextLesson: "2024-01-25",
+        topics: [
+          { name: "Basic Scales", completed: true, score: 78 },
+          { name: "Chord Progressions", completed: false, score: null },
+          { name: "Sheet Music Reading", completed: false, score: null },
+          { name: "Performance Techniques", completed: false, score: null },
+        ],
+      },
+    ],
+    achievements: [
+      {
+        id: 1,
+        title: "First Lesson Complete",
+        description: "Completed your first tutoring session",
+        icon: "🎯",
+        earned: true,
+        date: "2024-01-10",
+      },
+      {
+        id: 2,
+        title: "Week Warrior",
+        description: "Attended lessons for 7 consecutive days",
+        icon: "🔥",
+        earned: true,
+        date: "2024-01-14",
+      },
+      {
+        id: 3,
+        title: "Math Master",
+        description: "Scored 90+ on 5 math assessments",
+        icon: "🧮",
+        earned: false,
+        date: null,
+      },
+      {
+        id: 4,
+        title: "Bookworm",
+        description: "Complete 10 literature lessons",
+        icon: "📚",
+        earned: false,
+        date: null,
+      },
+    ],
+  }
+
+  // Mock profile data
+  const userProfile = {
+    personalInfo: {
+      firstName: "Alex",
+      lastName: "Chen",
+      email: "alex.chen@email.com",
+      phone: "+62 812 3456 7890",
+      dateOfBirth: "1995-03-15",
+      location: "Jakarta, Indonesia",
+      timezone: "Asia/Jakarta",
+      avatar: "/placeholder.svg",
+    },
+    preferences: {
+      language: "English",
+      currency: "USD",
+      notifications: {
+        email: true,
+        sms: false,
+        push: true,
+        lessonReminders: true,
+        messageAlerts: true,
+        promotions: false,
+      },
+      privacy: {
+        profileVisibility: "public",
+        showOnlineStatus: true,
+        allowMessages: true,
+      },
+    },
+    learningGoals: [
+      "Master calculus for university entrance exam",
+      "Improve English writing skills for academic purposes",
+      "Learn piano basics for personal enjoyment",
+    ],
+    interests: ["Mathematics", "Science", "Music", "Literature", "Technology"],
+    paymentMethods: [
+      {
+        id: 1,
+        type: "credit_card",
+        last4: "4242",
+        brand: "Visa",
+        expiryMonth: 12,
+        expiryYear: 2025,
+        isDefault: true,
+      },
+      {
+        id: 2,
+        type: "paypal",
+        email: "alex.chen@email.com",
+        isDefault: false,
+      },
+    ],
+  }
+
   const handleApproveBooking = (bookingId: number) => {
     console.log("Approving booking:", bookingId)
     // In real app, this would make an API call
@@ -182,18 +367,18 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b sticky top-0 z-50">
+      <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold">TutorHome</div>
+            <div className="text-2xl font-bold text-orange-500">TutorHome</div>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tutors" className="transition-colors">
+            <Link href="/tutors" className="text-gray-600 hover:text-orange-500 transition-colors">
               find tutors
             </Link>
-            <Link href="/dashboard" className="font-medium">
+            <Link href="/dashboard" className="text-orange-500 font-medium">
               dashboard
             </Link>
           </nav>
@@ -209,10 +394,10 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {userType === "student" ? "student dashboard" : "tutor dashboard"}
           </h1>
-          <p>
+          <p className="text-gray-600">
             {userType === "student"
               ? "manage your bookings and track your learning progress"
               : "manage your student bookings and schedule"}
@@ -233,24 +418,24 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-green-600 mb-2">
                       {studentBookings.filter((b) => b.status === "approved").length}
                     </div>
-                    <div className="text-sm">approved lessons</div>
+                    <div className="text-sm text-gray-600">approved lessons</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-yellow-600 mb-2">
                       {studentBookings.filter((b) => b.status === "pending").length}
                     </div>
-                    <div className="text-sm">pending requests</div>
+                    <div className="text-sm text-gray-600">pending requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">{studentBookings.length}</div>
-                    <div className="text-sm">total bookings</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">{studentBookings.length}</div>
+                    <div className="text-sm text-gray-600">total bookings</div>
                   </CardContent>
                 </Card>
               </div>
@@ -273,8 +458,8 @@ export default function DashboardPage() {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2 mb-2">
-                              <h3 className="text-lg font-semibold">{booking.tutor.name}</h3>
-                              <Badge className="border">
+                              <h3 className="text-lg font-semibold text-gray-900">{booking.tutor.name}</h3>
+                              <Badge className={`${getStatusColor(booking.status)} border`}>
                                 <div className="flex items-center space-x-1">
                                   {getStatusIcon(booking.status)}
                                   <span className="capitalize">{booking.status}</span>
@@ -282,9 +467,9 @@ export default function DashboardPage() {
                               </Badge>
                             </div>
 
-                            <p className="font-medium mb-2">{booking.tutor.subject}</p>
+                            <p className="text-blue-600 font-medium mb-2">{booking.tutor.subject}</p>
 
-                            <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
                               <div className="flex items-center space-x-1">
                                 <Calendar className="w-4 h-4" />
                                 <span>{new Date(booking.date).toLocaleDateString()}</span>
@@ -300,22 +485,22 @@ export default function DashboardPage() {
                                 <span>${booking.price}/hr</span>
                               </div>
                               <div className="flex items-center space-x-1">
-                                <Star className="w-4 h-4" />
+                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                 <span>{booking.tutor.rating}</span>
                               </div>
                             </div>
 
                             {booking.message && (
-                              <div className="rounded-lg p-3 mb-3">
-                                <p className="text-sm">
+                              <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                                <p className="text-sm text-gray-700">
                                   <span className="font-medium">your message:</span> {booking.message}
                                 </p>
                               </div>
                             )}
 
                             {booking.status === "canceled" && booking.cancelReason && (
-                              <div className="border rounded-lg p-3">
-                                <p className="text-sm">
+                              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <p className="text-sm text-red-700">
                                   <span className="font-medium">cancellation reason:</span> {booking.cancelReason}
                                 </p>
                               </div>
@@ -326,20 +511,22 @@ export default function DashboardPage() {
                         <div className="flex flex-col space-y-2 lg:w-48">
                           {booking.status === "approved" && (
                             <>
-                              <Button className="w-full">join lesson</Button>
-                              <Button variant="outline" className="w-full">
+                              <Link href={`/lesson/${booking.id}`}>
+                                <Button className="w-full bg-green-600 hover:bg-green-700">join lesson</Button>
+                              </Link>
+                              <Button variant="outline" className="w-full bg-transparent">
                                 <MessageCircle className="w-4 h-4 mr-2" />
                                 message tutor
                               </Button>
                             </>
                           )}
                           {booking.status === "pending" && (
-                            <Button variant="outline" className="w-full" disabled>
+                            <Button variant="outline" className="w-full bg-transparent" disabled>
                               waiting for approval
                             </Button>
                           )}
                           {booking.status === "canceled" && (
-                            <Button variant="outline" className="w-full">
+                            <Button variant="outline" className="w-full bg-transparent">
                               book again
                             </Button>
                           )}
@@ -354,16 +541,14 @@ export default function DashboardPage() {
             <TabsContent value="messages" className="space-y-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold">messages</h2>
-                  <p>
-                    communicate with your {userType === "student" ? "tutors" : "students"}
-                  </p>
+                  <h2 className="text-2xl font-bold text-gray-900">messages</h2>
+                  <p className="text-gray-600">communicate with your tutors</p>
                 </div>
                 <ChatSystem
                   currentUserId={1}
                   currentUserType={userType}
                   triggerButton={
-                    <Button>
+                    <Button className="bg-blue-600 hover:bg-blue-700">
                       <MessageCircle className="w-4 h-4 mr-2" />
                       open chat
                     </Button>
@@ -371,38 +556,539 @@ export default function DashboardPage() {
                 />
               </div>
 
+              <div className="grid grid-cols-1 gap-4">
+                {conversations.map((conversation) => (
+                  <Card key={conversation.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="relative">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={conversation.participant.image || "/placeholder.svg"} alt={conversation.participant.name} />
+                            <AvatarFallback>
+                              {conversation.participant.name.split(" ").map(n => n[0]).join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          {conversation.participant.online && (
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className="font-semibold text-gray-900 truncate">
+                              {conversation.participant.name}
+                            </h3>
+                            <span className="text-sm text-gray-500">{conversation.lastMessage.timestamp}</span>
+                          </div>
+
+                          <p className="text-sm text-blue-600 mb-1">{conversation.participant.subject}</p>
+
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm text-gray-600 truncate flex-1 mr-2">
+                              {conversation.lastMessage.content}
+                            </p>
+                            {conversation.lastMessage.unread && (
+                              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-end space-y-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {conversation.totalMessages} messages
+                          </Badge>
+                          <Button variant="outline" size="sm">
+                            <MessageCircle className="w-4 h-4 mr-1" />
+                            Chat
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="progress" className="space-y-6">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">learning progress</h2>
+                <p className="text-gray-600">track your learning journey and achievements</p>
+              </div>
+
+              {/* Progress Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">{learningProgress.totalHours}</div>
+                    <div className="text-sm text-gray-600">total hours</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-green-600 mb-2">{learningProgress.completedLessons}</div>
+                    <div className="text-sm text-gray-600">lessons completed</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-yellow-600 mb-2">{learningProgress.averageRating}</div>
+                    <div className="text-sm text-gray-600">average rating</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-orange-600 mb-2">{learningProgress.currentStreak}</div>
+                    <div className="text-sm text-gray-600">day streak</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Subject Progress */}
+              <Card className="mb-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <BarChart3 className="w-5 h-5 mr-2" />
+                    subject progress
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {learningProgress.subjects.map((subject, index) => (
+                    <div key={index} className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{subject.name}</h3>
+                          <p className="text-sm text-gray-600">with {subject.tutor}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-blue-600">{subject.progress}%</div>
+                          <div className="text-sm text-gray-500">complete</div>
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${subject.progress}%` }}
+                        ></div>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-500">Hours:</span>
+                          <span className="font-medium ml-1">{subject.hoursSpent}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Lessons:</span>
+                          <span className="font-medium ml-1">{subject.lessonsCompleted}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Next:</span>
+                          <span className="font-medium ml-1">{new Date(subject.nextLesson).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex space-x-1">
+                          {subject.topics.slice(0, 2).map((topic, topicIndex) => (
+                            <Badge
+                              key={topicIndex}
+                              variant={topic.completed ? "default" : "secondary"}
+                              className="text-xs"
+                            >
+                              {topic.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Achievements */}
               <Card>
-                <CardContent className="p-8 text-center">
-                  <MessageCircle className="w-16 h-16 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">start messaging</h3>
-                  <p className="mb-4">
-                    click "open chat" above to start conversations with your{" "}
-                    {userType === "student" ? "tutors" : "students"}
-                  </p>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Award className="w-5 h-5 mr-2" />
+                    achievements
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {learningProgress.achievements.map((achievement) => (
+                      <div
+                        key={achievement.id}
+                        className={`p-4 rounded-lg border-2 ${achievement.earned
+                            ? 'border-green-200 bg-green-50'
+                            : 'border-gray-200 bg-gray-50'
+                          }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="text-2xl">{achievement.icon}</div>
+                          <div className="flex-1">
+                            <h3 className={`font-semibold ${achievement.earned ? 'text-green-800' : 'text-gray-600'
+                              }`}>
+                              {achievement.title}
+                            </h3>
+                            <p className={`text-sm ${achievement.earned ? 'text-green-600' : 'text-gray-500'
+                              }`}>
+                              {achievement.description}
+                            </p>
+                            {achievement.earned && achievement.date && (
+                              <p className="text-xs text-green-500 mt-1">
+                                Earned on {new Date(achievement.date).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                          {achievement.earned && (
+                            <CheckCircle className="w-6 h-6 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="progress">
-              <Card>
-                <CardHeader>
-                  <CardTitle>learning progress</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>learning progress tracking coming soon...</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
+            <TabsContent value="profile" className="space-y-6">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">profile settings</h2>
+                <p className="text-gray-600">manage your account information and preferences</p>
+              </div>
 
-            <TabsContent value="profile">
-              <Card>
-                <CardHeader>
-                  <CardTitle>profile settings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>profile management coming soon...</p>
-                </CardContent>
-              </Card>
+              <Tabs defaultValue="personal" className="space-y-6">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="personal">personal info</TabsTrigger>
+                  <TabsTrigger value="preferences">preferences</TabsTrigger>
+                  <TabsTrigger value="security">security</TabsTrigger>
+                  <TabsTrigger value="billing">billing</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="personal" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <User className="w-5 h-5 mr-2" />
+                        personal information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="flex items-center space-x-6">
+                        <Avatar className="w-20 h-20">
+                          <AvatarImage src={userProfile.personalInfo.avatar || "/placeholder.svg"} />
+                          <AvatarFallback className="text-xl">
+                            {userProfile.personalInfo.firstName[0]}{userProfile.personalInfo.lastName[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-2">
+                          <Button variant="outline" className="bg-transparent">
+                            <Camera className="w-4 h-4 mr-2" />
+                            change photo
+                          </Button>
+                          <p className="text-sm text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">first name</label>
+                          <Input defaultValue={userProfile.personalInfo.firstName} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">last name</label>
+                          <Input defaultValue={userProfile.personalInfo.lastName} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">email address</label>
+                          <Input type="email" defaultValue={userProfile.personalInfo.email} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">phone number</label>
+                          <Input defaultValue={userProfile.personalInfo.phone} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">date of birth</label>
+                          <Input type="date" defaultValue={userProfile.personalInfo.dateOfBirth} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">location</label>
+                          <Input defaultValue={userProfile.personalInfo.location} />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">learning goals</label>
+                          <div className="space-y-2">
+                            {userProfile.learningGoals.map((goal, index) => (
+                              <div key={index} className="flex items-center space-x-2">
+                                <Input defaultValue={goal} className="flex-1" />
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                            <Button variant="outline" className="w-full bg-transparent">
+                              add learning goal
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">interests</label>
+                          <div className="flex flex-wrap gap-2">
+                            {userProfile.interests.map((interest, index) => (
+                              <Badge key={index} variant="secondary" className="px-3 py-1">
+                                {interest}
+                                <button className="ml-2 text-gray-500 hover:text-gray-700">×</button>
+                              </Badge>
+                            ))}
+                            <Button variant="outline" size="sm">add interest</Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end space-x-3">
+                        <Button variant="outline">cancel</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">save changes</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="preferences" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Settings className="w-5 h-5 mr-2" />
+                        preferences
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">language</label>
+                          <select className="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="en">English</option>
+                            <option value="id">Bahasa Indonesia</option>
+                            <option value="zh">中文</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">currency</label>
+                          <select className="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="USD">USD ($)</option>
+                            <option value="IDR">IDR (Rp)</option>
+                            <option value="EUR">EUR (€)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="font-medium text-gray-900">notification preferences</h3>
+                        <div className="space-y-3">
+                          {Object.entries(userProfile.preferences.notifications).map(([key, value]) => (
+                            <div key={key} className="flex items-center justify-between">
+                              <label className="text-sm text-gray-700 capitalize">
+                                {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                              </label>
+                              <input
+                                type="checkbox"
+                                defaultChecked={value}
+                                className="w-4 h-4 text-blue-600 rounded"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="font-medium text-gray-900">privacy settings</h3>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm text-gray-700">profile visibility</label>
+                            <select className="p-2 border border-gray-300 rounded-md">
+                              <option value="public">Public</option>
+                              <option value="private">Private</option>
+                              <option value="tutors-only">Tutors Only</option>
+                            </select>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm text-gray-700">show online status</label>
+                            <input
+                              type="checkbox"
+                              defaultChecked={userProfile.preferences.privacy.showOnlineStatus}
+                              className="w-4 h-4 text-blue-600 rounded"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm text-gray-700">allow messages from tutors</label>
+                            <input
+                              type="checkbox"
+                              defaultChecked={userProfile.preferences.privacy.allowMessages}
+                              className="w-4 h-4 text-blue-600 rounded"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end space-x-3">
+                        <Button variant="outline">cancel</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">save preferences</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="security" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Shield className="w-5 h-5 mr-2" />
+                        security settings
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-4">
+                        <h3 className="font-medium text-gray-900">change password</h3>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">current password</label>
+                            <Input type="password" />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">new password</label>
+                            <Input type="password" />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">confirm new password</label>
+                            <Input type="password" />
+                          </div>
+                          <Button className="bg-blue-600 hover:bg-blue-700">update password</Button>
+                        </div>
+                      </div>
+
+                      <div className="border-t pt-6">
+                        <div className="space-y-4">
+                          <h3 className="font-medium text-gray-900">two-factor authentication</h3>
+                          <p className="text-sm text-gray-600">
+                            Add an extra layer of security to your account by enabling two-factor authentication.
+                          </p>
+                          <Button variant="outline" className="bg-transparent">
+                            enable 2FA
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="border-t pt-6">
+                        <div className="space-y-4">
+                          <h3 className="font-medium text-gray-900">active sessions</h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div>
+                                <p className="font-medium text-sm">Current Session</p>
+                                <p className="text-xs text-gray-600">Chrome on Windows • Jakarta, Indonesia</p>
+                              </div>
+                              <Badge variant="secondary">Active</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div>
+                                <p className="font-medium text-sm">Mobile App</p>
+                                <p className="text-xs text-gray-600">iOS App • Last seen 2 hours ago</p>
+                              </div>
+                              <Button variant="outline" size="sm">revoke</Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="billing" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <CreditCard className="w-5 h-5 mr-2" />
+                        billing & payments
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-4">
+                        <h3 className="font-medium text-gray-900">payment methods</h3>
+                        <div className="space-y-3">
+                          {userProfile.paymentMethods.map((method) => (
+                            <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">
+                                    {method.type === 'credit_card' ? method.brand : 'PP'}
+                                  </span>
+                                </div>
+                                <div>
+                                  <p className="font-medium text-sm">
+                                    {method.type === 'credit_card'
+                                      ? `•••• •••• •••• ${method.last4}`
+                                      : method.email
+                                    }
+                                  </p>
+                                  {method.type === 'credit_card' && (
+                                    <p className="text-xs text-gray-600">
+                                      Expires {method.expiryMonth}/{method.expiryYear}
+                                    </p>
+                                  )}
+                                </div>
+                                {method.isDefault && (
+                                  <Badge variant="secondary">Default</Badge>
+                                )}
+                              </div>
+                              <div className="flex space-x-2">
+                                <Button variant="outline" size="sm">edit</Button>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                          <Button variant="outline" className="w-full bg-transparent">
+                            add payment method
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="border-t pt-6">
+                        <div className="space-y-4">
+                          <h3 className="font-medium text-gray-900">billing history</h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div>
+                                <p className="font-medium text-sm">Mathematics Lesson - Sarah Johnson</p>
+                                <p className="text-xs text-gray-600">January 15, 2024</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-sm">$25.00</p>
+                                <Button variant="ghost" size="sm">
+                                  <Download className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div>
+                                <p className="font-medium text-sm">English Literature - David Chen</p>
+                                <p className="text-xs text-gray-600">January 12, 2024</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-sm">$30.00</p>
+                                <Button variant="ghost" size="sm">
+                                  <Download className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </TabsContent>
           </Tabs>
         )}
@@ -421,37 +1107,37 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-yellow-600 mb-2">
                       {tutorBookings.filter((b) => b.status === "pending").length}
                     </div>
-                    <div className="text-sm">pending requests</div>
+                    <div className="text-sm text-gray-600">pending requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-green-600 mb-2">
                       {tutorBookings.filter((b) => b.status === "approved").length}
                     </div>
-                    <div className="text-sm">approved lessons</div>
+                    <div className="text-sm text-gray-600">approved lessons</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-red-600 mb-2">
                       {tutorBookings.filter((b) => b.status === "rejected").length}
                     </div>
-                    <div className="text-sm">rejected requests</div>
+                    <div className="text-sm text-gray-600">rejected requests</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">
                       $
                       {tutorBookings
                         .filter((b) => b.status === "approved")
                         .reduce((sum, b) => sum + b.proposedPrice, 0)}
                     </div>
-                    <div className="text-sm">total earnings</div>
+                    <div className="text-sm text-gray-600">total earnings</div>
                   </CardContent>
                 </Card>
               </div>
@@ -478,8 +1164,8 @@ export default function DashboardPage() {
 
                             <div className="flex-1">
                               <div className="flex items-center space-x-2 mb-2">
-                                <h3 className="text-lg font-semibold">{booking.student.name}</h3>
-                                <Badge className="border">
+                                <h3 className="text-lg font-semibold text-gray-900">{booking.student.name}</h3>
+                                <Badge className={`${getStatusColor(booking.status)} border`}>
                                   <div className="flex items-center space-x-1">
                                     {getStatusIcon(booking.status)}
                                     <span className="capitalize">{booking.status}</span>
@@ -487,7 +1173,7 @@ export default function DashboardPage() {
                                 </Badge>
                               </div>
 
-                              <div className="flex flex-wrap items-center gap-4 text-sm mb-3">
+                              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
                                 <div className="flex items-center space-x-1">
                                   <Mail className="w-4 h-4" />
                                   <span>{booking.student.email}</span>
@@ -501,20 +1187,20 @@ export default function DashboardPage() {
                           </div>
 
                           <div className="text-right">
-                            <div className="text-sm mb-1">requested on</div>
+                            <div className="text-sm text-gray-500 mb-1">requested on</div>
                             <div className="text-sm font-medium">
                               {new Date(booking.createdAt).toLocaleDateString()}
                             </div>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
                           <div>
-                            <div className="text-sm mb-1">subject</div>
-                            <div className="font-medium">{booking.subject}</div>
+                            <div className="text-sm text-gray-500 mb-1">subject</div>
+                            <div className="font-medium text-blue-600">{booking.subject}</div>
                           </div>
                           <div>
-                            <div className="text-sm mb-1">date & time</div>
+                            <div className="text-sm text-gray-500 mb-1">date & time</div>
                             <div className="font-medium">
                               {new Date(booking.date).toLocaleDateString()}
                               <br />
@@ -522,49 +1208,49 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div>
-                            <div className="text-sm mb-1">duration</div>
+                            <div className="text-sm text-gray-500 mb-1">duration</div>
                             <div className="font-medium">{booking.duration} minutes</div>
                           </div>
                           <div>
-                            <div className="text-sm mb-1">price offer</div>
+                            <div className="text-sm text-gray-500 mb-1">price offer</div>
                             <div className="font-medium">
                               {booking.proposedPrice !== booking.originalPrice ? (
                                 <>
-                                  <span className="line-through">${booking.originalPrice}</span>
-                                  <span className="ml-2">${booking.proposedPrice}/hr</span>
+                                  <span className="line-through text-gray-400">${booking.originalPrice}</span>
+                                  <span className="text-green-600 ml-2">${booking.proposedPrice}/hr</span>
                                 </>
                               ) : (
-                                <span>${booking.proposedPrice}/hr</span>
+                                <span className="text-green-600">${booking.proposedPrice}/hr</span>
                               )}
                             </div>
                           </div>
                         </div>
 
                         {booking.message && (
-                          <div className="border rounded-lg p-4">
-                            <div className="text-sm font-medium mb-2">student message:</div>
-                            <p className="text-sm">{booking.message}</p>
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="text-sm font-medium text-blue-900 mb-2">student message:</div>
+                            <p className="text-sm text-blue-800">{booking.message}</p>
                           </div>
                         )}
 
                         {booking.priceReason && booking.proposedPrice !== booking.originalPrice && (
-                          <div className="border rounded-lg p-4">
-                            <div className="text-sm font-medium mb-2">price negotiation reason:</div>
-                            <p className="text-sm">{booking.priceReason}</p>
+                          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <div className="text-sm font-medium text-orange-900 mb-2">price negotiation reason:</div>
+                            <p className="text-sm text-orange-800">{booking.priceReason}</p>
                           </div>
                         )}
 
                         {booking.status === "rejected" && booking.rejectionReason && (
-                          <div className="border rounded-lg p-4">
-                            <div className="text-sm font-medium mb-2">rejection reason:</div>
-                            <p className="text-sm">{booking.rejectionReason}</p>
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <div className="text-sm font-medium text-red-900 mb-2">rejection reason:</div>
+                            <p className="text-sm text-red-800">{booking.rejectionReason}</p>
                           </div>
                         )}
 
                         {booking.status === "pending" && (
                           <div className="flex space-x-3 pt-4 border-t">
                             <Button
-                              className="flex-1"
+                              className="flex-1 bg-green-600 hover:bg-green-700"
                               onClick={() => handleApproveBooking(booking.id)}
                             >
                               <CheckCircle className="w-4 h-4 mr-2" />
@@ -572,13 +1258,13 @@ export default function DashboardPage() {
                             </Button>
                             <Button
                               variant="outline"
-                              className="flex-1"
+                              className="flex-1 border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
                               onClick={() => handleRejectBooking(booking.id)}
                             >
                               <XCircle className="w-4 h-4 mr-2" />
                               reject booking
                             </Button>
-                            <Button variant="outline" className="px-6">
+                            <Button variant="outline" className="px-6 bg-transparent">
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message
                             </Button>
@@ -587,8 +1273,8 @@ export default function DashboardPage() {
 
                         {booking.status === "approved" && (
                           <div className="flex space-x-3 pt-4 border-t">
-                            <Button className="flex-1">start lesson</Button>
-                            <Button variant="outline" className="px-6">
+                            <Button className="flex-1 bg-blue-600 hover:bg-blue-700">start lesson</Button>
+                            <Button variant="outline" className="px-6 bg-transparent">
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message student
                             </Button>
@@ -604,8 +1290,8 @@ export default function DashboardPage() {
             <TabsContent value="messages" className="space-y-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold">messages</h2>
-                  <p>
+                  <h2 className="text-2xl font-bold text-gray-900">messages</h2>
+                  <p className="text-gray-600">
                     communicate with your {userType === "student" ? "tutors" : "students"}
                   </p>
                 </div>
@@ -613,7 +1299,7 @@ export default function DashboardPage() {
                   currentUserId={1}
                   currentUserType={userType}
                   triggerButton={
-                    <Button>
+                    <Button className="bg-blue-600 hover:bg-blue-700">
                       <MessageCircle className="w-4 h-4 mr-2" />
                       open chat
                     </Button>
@@ -623,9 +1309,9 @@ export default function DashboardPage() {
 
               <Card>
                 <CardContent className="p-8 text-center">
-                  <MessageCircle className="w-16 h-16 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">start messaging</h3>
-                  <p className="mb-4">
+                  <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">start messaging</h3>
+                  <p className="text-gray-600 mb-4">
                     click "open chat" above to start conversations with your{" "}
                     {userType === "student" ? "tutors" : "students"}
                   </p>
@@ -639,7 +1325,7 @@ export default function DashboardPage() {
                   <CardTitle>my schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>schedule management coming soon...</p>
+                  <p className="text-gray-600">schedule management coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -650,7 +1336,7 @@ export default function DashboardPage() {
                   <CardTitle>profile settings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>profile management coming soon...</p>
+                  <p className="text-gray-600">profile management coming soon...</p>
                 </CardContent>
               </Card>
             </TabsContent>

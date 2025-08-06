@@ -32,28 +32,28 @@ import {
 export default function HomePage() {
   const categories = [
     {
-      name: "Mathematics",
+      name: "Matematika",
       icon: Calculator,
       color: "bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700",
-      count: "2,500+ tutors",
+      count: "2,500+ Materi",
     },
     {
-      name: "Languages",
+      name: "Bahasa",
       icon: BookOpen,
       color: "bg-gradient-to-br from-green-100 to-green-200 text-green-700",
-      count: "1,800+ tutors",
+      count: "1,800+ Materi",
     },
     {
-      name: "Music",
+      name: "Musik",
       icon: Music,
       color: "bg-gradient-to-br from-purple-100 to-purple-200 text-purple-700",
-      count: "950+ tutors",
+      count: "950+ Materi",
     },
     {
       name: "Art & Design",
       icon: Palette,
       color: "bg-gradient-to-br from-pink-100 to-pink-200 text-pink-700",
-      count: "720+ tutors",
+      count: "720+ Materi",
     },
   ];
 
@@ -217,34 +217,34 @@ export default function HomePage() {
 
   const faqs = [
     {
-      question: "How do I find the right tutor for me?",
+      question: "Bagaimana cara menemukan tutor yang tepat untuk saya?",
       answer:
-        "Use our search filters to find tutors by subject, location, price range, and availability. Read reviews and check their profiles to find the perfect match for your learning style and goals.",
+        "Gunakan filter pencarian kami untuk menemukan tutor berdasarkan mata pelajaran, lokasi, kisaran harga, dan ketersediaan. Baca ulasan dan periksa profil mereka untuk menemukan tutor yang paling sesuai dengan gaya belajar dan tujuan Anda.",
     },
     {
-      question: "What subjects are available?",
+      question: "Mata pelajaran apa saja yang tersedia?",
       answer:
-        "We offer tutoring in academic subjects like Math, Science, Languages, as well as creative subjects like Music, Art, and specialized skills like Programming and Test Preparation.",
+        "Kami menawarkan bimbingan belajar dalam mata pelajaran akademis seperti Matematika, Sains, Bahasa, serta mata pelajaran kreatif seperti Musik, Seni, dan keterampilan khusus seperti Pemrograman dan Persiapan Ujian.",
     },
     {
-      question: "How does pricing work?",
+      question: "Bagaimana cara kerja penetapan harga?",
       answer:
-        "Each tutor sets their own hourly rate. You can filter by price range and even request custom pricing. Most tutors offer flexible packages and discounts for multiple sessions.",
+        "Setiap tutor menetapkan tarif per jamnya sendiri. Anda dapat memfilter berdasarkan rentang harga dan bahkan meminta harga khusus. Sebagian besar tutor menawarkan paket fleksibel dan diskon untuk beberapa sesi.",
     },
     {
-      question: "Can I have online or in-person lessons?",
+      question: "Bisakah saya mengikuti pelajaran daring atau tatap muka?",
       answer:
-        "Yes! Many tutors offer both online and in-person lessons. You can filter by your preference and discuss the format that works best for you with your chosen tutor.",
+        "Ya! Banyak tutor menawarkan les online dan tatap muka. Anda dapat memfilter sesuai preferensi dan mendiskusikan format yang paling sesuai dengan tutor pilihan Anda.",
     },
     {
-      question: "What if I'm not satisfied with my tutor?",
+      question: "Bagaimana jika saya tidak puas dengan Pengajar saya?",
       answer:
-        "We offer a satisfaction guarantee. If you're not happy with your first lesson, we'll help you find a new tutor or provide a refund. Your learning success is our priority.",
+        "Kami menawarkan jaminan kepuasan. Jika Anda tidak puas dengan pelajaran pertama Anda, kami akan membantu Anda mencari tutor baru atau memberikan pengembalian dana. Kesuksesan belajar Anda adalah prioritas kami.",
     },
     {
-      question: "How do I book a lesson?",
+      question: "Bagaimana cara memesan pelajaran?",
       answer:
-        "Simply browse tutors, select your preferred tutor, choose a date and time that works for you, and send a booking request. The tutor will confirm and you can start learning!",
+        "Cukup telusuri Pengajar, pilih Pengajar pilihan Anda, pilih tanggal dan waktu yang sesuai, lalu kirimkan permintaan pemesanan. Pengajar akan mengonfirmasi dan Anda bisa mulai belajar.!",
     },
   ];
 
@@ -254,16 +254,16 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-            Find Your Perfect <span>Tutor</span>
+            Temukan kesempurnaan dalam <span>Belajar</span>
             <br />
             <span className="text-4xl md:text-5xl">
-              Learn Anything, Anywhere
+              Belajar apa saja dan dimana saja
             </span>
           </h1>
           <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
-            Connect with qualified tutors for personalized learning experiences.
-            From academic subjects to creative skills, find the perfect match
-            for your learning journey.
+            Terhubung dengan tutor berkualifikasi untuk pengalaman belajar yang dipersonalisasi.
+            Dari mata pelajaran akademik hingga keterampilan kreatif, temukan yang paling cocok
+            untuk perjalanan belajar Anda.
           </p>
 
           {/* Enhanced Search Bar */}
@@ -272,19 +272,19 @@ export default function HomePage() {
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6" />
                 <Input
-                  placeholder="What do you want to learn?"
+                  placeholder="Kamu mau belajar apa?"
                   className="pl-12 border-0 focus-visible:ring-0 text-lg h-14 shadow-none"
                 />
               </div>
               <div className="flex-1 relative">
                 <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6" />
                 <Input
-                  placeholder="Your location"
+                  placeholder="Lokasi kamu"
                   className="pl-12 border-0 focus-visible:ring-0 text-lg h-14 shadow-none"
                 />
               </div>
               <Button size="lg" className="h-14 px-10 font-semibold">
-                search
+                Cari
               </Button>
             </div>
           </div>
@@ -292,16 +292,16 @@ export default function HomePage() {
           {/* Enhanced Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center p-6 rounded-2xl">
-              <div className="text-4xl font-bold mb-2">15,000+</div>
-              <div className="font-medium">Expert Tutors</div>
+              <div className="text-4xl font-bold mb-2">1,000+</div>
+              <div className="font-medium">Pengajar Berpengalaman</div>
             </div>
             <div className="text-center p-6 rounded-2xl">
-              <div className="text-4xl font-bold mb-2">100,000+</div>
-              <div className="font-medium">Happy Students</div>
+              <div className="text-4xl font-bold mb-2">20,000+</div>
+              <div className="font-medium">Siswa Terbantu</div>
             </div>
             <div className="text-center p-6 rounded-2xl">
               <div className="text-4xl font-bold mb-2">200+</div>
-              <div className="font-medium">Subjects Available</div>
+              <div className="font-medium">Topik</div>
             </div>
           </div>
         </div>
@@ -310,9 +310,9 @@ export default function HomePage() {
       {/* Enhanced Categories */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6">Popular Categories</h2>
+          <h2 className="text-4xl font-bold mb-6">Kategori Favorit</h2>
           <p className="text-xl max-w-3xl mx-auto">
-            Explore our wide range of subjects from academic to creative skills
+            Jelajahi berbagai macam subjek kami mulai dari keterampilan akademis hingga kreatif
           </p>
         </div>
 
@@ -400,7 +400,7 @@ export default function HomePage() {
                     tutor={tutor}
                     triggerButton={
                       <Button className="w-full font-semibold py-3">
-                        view profile
+                        Lihat Pengajar
                       </Button>
                     }
                   />
@@ -416,7 +416,7 @@ export default function HomePage() {
             size="lg"
             className="border-2 px-8 py-3 font-semibold"
           >
-            view all piano tutors
+            Lihat lebih banyak pengajar
           </Button>
         </div>
       </section>
@@ -424,10 +424,10 @@ export default function HomePage() {
       {/* Student Reviews Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6">What Our Students Say</h2>
+          <h2 className="text-4xl font-bold mb-6">Apa yang siswa katakan</h2>
           <p className="text-xl max-w-3xl mx-auto">
-            Real feedback from students who've transformed their learning
-            journey with us
+            Umpan balik nyata dari siswa yang telah mengubah perjalanan belajar mereka
+            bersama kami
           </p>
         </div>
 
@@ -451,9 +451,8 @@ export default function HomePage() {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(review.rating) ? "" : ""
-                          }`}
+                          className={`w-4 h-4 ${i < Math.floor(review.rating) ? "" : ""
+                            }`}
                         />
                       ))}
                       <span className="text-sm ml-2">{review.rating}</span>
@@ -479,7 +478,7 @@ export default function HomePage() {
             Frequently Asked Questions
           </h2>
           <p className="text-xl max-w-3xl mx-auto">
-            Everything you need to know about finding and working with tutors
+            Segala hal yang perlu Anda ketahui tentang menemukan dan bekerja dengan tutor
           </p>
         </div>
 
@@ -500,9 +499,9 @@ export default function HomePage() {
       {/* How It Works */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6">How It Works</h2>
+          <h2 className="text-4xl font-bold mb-6">Cara Kerjanya</h2>
           <p className="text-xl max-w-3xl mx-auto">
-            Getting started with TutorHome is simple and straightforward
+            Memulai dengan TutorHome itu sederhana dan mudah
           </p>
         </div>
 
@@ -511,30 +510,27 @@ export default function HomePage() {
             <div className="w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xs border">
               <Search className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">1. Search & Browse</h3>
+            <h3 className="text-2xl font-bold mb-4">1. Cari dan telusuri</h3>
             <p className="leading-relaxed">
-              Find tutors by subject, location, and price range. Read reviews
-              and compare profiles to find your perfect match.
+              Temukan tutor berdasarkan mata pelajaran, lokasi, dan kisaran harga. Baca ulasan dan bandingkan profil untuk menemukan tutor yang tepat.
             </p>
           </div>
           <div className="text-center group">
             <div className="w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xs border">
               <Users className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">2. Connect & Book</h3>
+            <h3 className="text-2xl font-bold mb-4">2. Hubungkan & Pesan</h3>
             <p className="leading-relaxed">
-              Contact your chosen tutor, discuss your learning goals, and
-              schedule your first lesson at your convenience.
+              Hubungi Pengajar pilihan Anda, diskusikan tujuan pembelajaran Anda, dan jadwalkan pelajaran pertama Anda sesuai keinginan Anda.
             </p>
           </div>
           <div className="text-center group">
             <div className="w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xs border">
               <BookOpen className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">3. Start Learning</h3>
+            <h3 className="text-2xl font-bold mb-4">3. Mulai Belajar</h3>
             <p className="leading-relaxed">
-              Begin your personalized learning journey with expert guidance and
-              achieve your educational goals.
+              Mulailah perjalanan belajar personal Anda dengan bimbingan ahli dan raih tujuan pendidikan Anda.
             </p>
           </div>
         </div>
@@ -547,37 +543,37 @@ export default function HomePage() {
             <div>
               <div className="text-3xl font-bold mb-6">LearnWay</div>
               <p className="leading-relaxed mb-6">
-                Connecting students with qualified tutors for personalized
-                learning experiences that transform lives.
+                Menghubungkan siswa dengan tutor berkualifikasi untuk pengalaman belajar yang dipersonalisasi
+                yang mengubah hidup.
               </p>
             </div>
             <div>
-              <h4 className="font-bold mb-6 text-lg">For Students</h4>
+              <h4 className="font-bold mb-6 text-lg">Untuk Siswa</h4>
               <ul className="space-y-3">
                 <li>
                   <Link href="#" className="transition-colors">
-                    Find Tutors
+                    Temukan Pengajar
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="transition-colors">
-                    How it Works
+                    Bagaimana cara kerjanya
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="transition-colors">
-                    Pricing
+                    Harga
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="transition-colors">
-                    Success Stories
+                    Cerita Kesuksesan
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-6 text-lg">For Tutors</h4>
+              <h4 className="font-bold mb-6 text-lg">Untuk Pengajar</h4>
               <ul className="space-y-3">
                 <li>
                   <Link href="#" className="transition-colors">
