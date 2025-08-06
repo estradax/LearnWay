@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
-import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, MessageCircle, Send, FileText, Download, Upload, Settings, Users, Clock, BookOpen, Maximize, Minimize, Volume2, VolumeX, Share, Camera, Monitor, Hand, Star, CheckCircle } from 'lucide-react'
+import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, MessageCircle, Send, FileText, Download, Upload, Settings, Users, Clock, BookOpen, Maximize, Minimize, Volume2, VolumeX, Share, Camera, Monitor, Hand, Star, CheckCircle, DollarSign, AlertCircle } from 'lucide-react'
 import Link from "next/link"
 
 interface Message {
@@ -36,6 +36,20 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
     const [lessonDuration, setLessonDuration] = useState(0)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
+    // Add these new states after the existing state declarations
+    const [showCompletionForm, setShowCompletionForm] = useState(false)
+    const [lessonSummary, setLessonSummary] = useState({
+        topicsTaught: "",
+        lessonDescription: "",
+        studentProgress: "",
+        homework: "",
+        nextLessonPlan: ""
+    })
+    const [appRating, setAppRating] = useState(0)
+    const [appFeedback, setAppFeedback] = useState("")
+    const [paymentProcessing, setPaymentProcessing] = useState(false)
+    const [paymentCompleted, setPaymentCompleted] = useState(false)
+
     // Mock lesson data
     const lesson = {
         id: params.id,
@@ -54,6 +68,7 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
         duration: 60,
         subject: "Mathematics - Calculus",
         description: "Introduction to derivatives and basic calculus concepts",
+        userType: "tutor", // Add this to determine if current user is tutor or student
         materials: [
             { name: "Calculus Worksheet.pdf", size: "2.3 MB", type: "pdf" },
             { name: "Practice Problems.docx", size: "1.8 MB", type: "doc" },
@@ -130,10 +145,34 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
         setIsCallActive(true)
     }
 
+    // Update the handleEndLesson function
     const handleEndLesson = () => {
         setLessonEnded(true)
         setIsCallActive(false)
         setLessonStarted(false)
+        // For teachers, show completion form instead of direct completion
+        if (lesson.userType === "tutor") {
+            setShowCompletionForm(true)
+        }
+    }
+
+    // Add new handler functions
+    const handleLessonSummaryChange = (field: string, value: string) => {
+        setLessonSummary(prev => ({
+            ...prev,
+            [field]: value
+        }))
+    }
+
+    const handleCompleteLesson = async () => {
+        setPaymentProcessing(true)
+
+        // Simulate payment processing
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
+        setPaymentProcessing(false)
+        setPaymentCompleted(true)
+        setShowCompletionForm(false)
     }
 
     const scrollToBottom = () => {
@@ -156,7 +195,8 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
         )
     }
 
-    if (lessonEnded) {
+    // Replace the existing lessonEnded return statement with this updated version
+    if (lessonEnded && !showCompletionForm) {
         return (
             <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
                 {/* Header */}
@@ -228,6 +268,291 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
                                         Back to Dashboard
                                     </Button>
                                 </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    // Add the teacher completion form modal after the existing lessonEnded check
+    if (showCompletionForm) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                {/* Header */}
+                <header className="border-b bg-white shadow-sm">
+                    <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                        <Link href="/" className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                                <BookOpen className="w-5 h-5 text-white" />
+                            </div>
+                            <span className="text-xl font-bold text-gray-900">TutorHome</span>
+                        </Link>
+                        <div className="flex items-center space-x-2">
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                Lesson Completed
+                            </Badge>
+                        </div>
+                    </div>
+                </header>
+
+                <div className="container mx-auto px-4 py-8">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="mb-8 text-center">
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Complete Lesson Summary</h1>
+                            <p className="text-gray-600">Fill out the lesson details and complete the payment process</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Left Column - Lesson Summary Form */}
+                            <div className="space-y-6">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center">
+                                            <FileText className="w-5 h-5 mr-2" />
+                                            Lesson Summary
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">Topics Taught *</label>
+                                            <Textarea
+                                                placeholder="List the main topics covered in this lesson..."
+                                                value={lessonSummary.topicsTaught}
+                                                onChange={(e) => handleLessonSummaryChange('topicsTaught', e.target.value)}
+                                                rows={3}
+                                                className="resize-none"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">Lesson Description *</label>
+                                            <Textarea
+                                                placeholder="Provide a detailed description of what was accomplished..."
+                                                value={lessonSummary.lessonDescription}
+                                                onChange={(e) => handleLessonSummaryChange('lessonDescription', e.target.value)}
+                                                rows={4}
+                                                className="resize-none"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">Student Progress</label>
+                                            <Textarea
+                                                placeholder="How did the student perform? Any improvements or challenges?"
+                                                value={lessonSummary.studentProgress}
+                                                onChange={(e) => handleLessonSummaryChange('studentProgress', e.target.value)}
+                                                rows={3}
+                                                className="resize-none"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">Homework/Practice</label>
+                                            <Textarea
+                                                placeholder="Any homework or practice exercises assigned..."
+                                                value={lessonSummary.homework}
+                                                onChange={(e) => handleLessonSummaryChange('homework', e.target.value)}
+                                                rows={2}
+                                                className="resize-none"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">Next Lesson Plan</label>
+                                            <Textarea
+                                                placeholder="What will be covered in the next lesson..."
+                                                value={lessonSummary.nextLessonPlan}
+                                                onChange={(e) => handleLessonSummaryChange('nextLessonPlan', e.target.value)}
+                                                rows={2}
+                                                className="resize-none"
+                                            />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* App Rating */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center">
+                                            <Star className="w-5 h-5 mr-2" />
+                                            Rate TutorHome App
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="text-center">
+                                            <p className="text-sm text-gray-600 mb-4">How was your experience using our platform?</p>
+                                            <div className="flex justify-center space-x-2 mb-4">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <button
+                                                        key={star}
+                                                        onClick={() => setAppRating(star)}
+                                                        className="p-1 transition-transform hover:scale-110"
+                                                    >
+                                                        <Star
+                                                            className={`w-8 h-8 ${star <= appRating
+                                                                    ? 'text-yellow-400 fill-yellow-400'
+                                                                    : 'text-gray-300'
+                                                                }`}
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <Textarea
+                                                placeholder="Share your feedback about the platform (optional)..."
+                                                value={appFeedback}
+                                                onChange={(e) => setAppFeedback(e.target.value)}
+                                                rows={3}
+                                                className="resize-none"
+                                            />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Right Column - Receipt and Payment */}
+                            <div className="space-y-6">
+                                {/* Lesson Receipt */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center">
+                                            <DollarSign className="w-5 h-5 mr-2" />
+                                            Lesson Receipt
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-4">
+                                            {/* Student Info */}
+                                            <div className="flex items-center space-x-3 pb-4 border-b">
+                                                <Avatar className="w-12 h-12">
+                                                    <AvatarImage src={lesson.student.image || "/placeholder.svg"} alt={lesson.student.name} />
+                                                    <AvatarFallback>
+                                                        {lesson.student.name.split(" ").map(n => n[0]).join("")}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900">{lesson.student.name}</h3>
+                                                    <p className="text-sm text-gray-600">Student</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Lesson Details */}
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Subject:</span>
+                                                    <span className="font-medium">{lesson.subject}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Date:</span>
+                                                    <span className="font-medium">{lesson.scheduledTime}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Duration:</span>
+                                                    <span className="font-medium">{formatTime(lessonDuration)}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Scheduled Duration:</span>
+                                                    <span className="font-medium">{lesson.duration} minutes</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="border-t pt-4">
+                                                <div className="space-y-2">
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">Hourly Rate:</span>
+                                                        <span className="font-medium">$25.00</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">Actual Duration:</span>
+                                                        <span className="font-medium">{Math.ceil(lessonDuration / 60)} minutes</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">Platform Fee (10%):</span>
+                                                        <span className="font-medium text-red-600">-$2.50</span>
+                                                    </div>
+                                                    <div className="border-t pt-2 flex justify-between text-lg font-bold">
+                                                        <span>Total Earnings:</span>
+                                                        <span className="text-green-600">$22.50</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Payment Status */}
+                                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                                <div className="flex items-center">
+                                                    <AlertCircle className="w-5 h-5 text-yellow-600 mr-2" />
+                                                    <span className="text-sm text-yellow-800">
+                                                        Payment will be processed after lesson completion
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Payment Processing */}
+                                {paymentProcessing && (
+                                    <Card>
+                                        <CardContent className="p-6 text-center">
+                                            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Processing Payment</h3>
+                                            <p className="text-gray-600">Please wait while we process your earnings...</p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+
+                                {/* Payment Completed */}
+                                {paymentCompleted && (
+                                    <Card>
+                                        <CardContent className="p-6 text-center">
+                                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <CheckCircle className="w-8 h-8 text-green-600" />
+                                            </div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Payment Completed!</h3>
+                                            <p className="text-gray-600 mb-4">$22.50 has been added to your account</p>
+                                            <Badge className="bg-green-100 text-green-800">
+                                                Funds Available in 1-2 Business Days
+                                            </Badge>
+                                        </CardContent>
+                                    </Card>
+                                )}
+
+                                {/* Action Buttons */}
+                                <div className="space-y-3">
+                                    <Button
+                                        onClick={handleCompleteLesson}
+                                        disabled={!lessonSummary.topicsTaught || !lessonSummary.lessonDescription || paymentProcessing}
+                                        className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                        size="lg"
+                                    >
+                                        {paymentProcessing ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <CheckCircle className="w-5 h-5 mr-2" />
+                                                Complete Lesson & Process Payment
+                                            </>
+                                        )}
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setShowCompletionForm(false)}
+                                        className="w-full"
+                                        disabled={paymentProcessing}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
+
+                                {/* Required Fields Notice */}
+                                <div className="text-xs text-gray-500 text-center">
+                                    * Topics Taught and Lesson Description are required fields
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -446,8 +771,8 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
                                         >
                                             <div
                                                 className={`max-w-[80%] rounded-lg px-3 py-2 ${message.sender === lesson.student.name
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'bg-gray-100 text-gray-900'
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'bg-gray-100 text-gray-900'
                                                     }`}
                                             >
                                                 <div className="text-xs opacity-75 mb-1">{message.sender}</div>
