@@ -44,6 +44,7 @@ export default function TutorsPage() {
       reviews: 127,
       price: 25,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -90,6 +91,7 @@ export default function TutorsPage() {
       reviews: 89,
       price: 30,
       location: "Surabaya",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -129,6 +131,7 @@ export default function TutorsPage() {
       reviews: 45,
       price: 35,
       location: "Bandung",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -168,6 +171,7 @@ export default function TutorsPage() {
       reviews: 156,
       price: 28,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -204,6 +208,7 @@ export default function TutorsPage() {
       reviews: 78,
       price: 32,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -242,6 +247,7 @@ export default function TutorsPage() {
       reviews: 92,
       price: 40,
       location: "Bandung",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -489,6 +495,11 @@ export default function TutorsPage() {
                         <div className="flex items-center space-x-1">
                           <MapPin className="w-4 h-4" />
                           <span>{tutor.location}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <BookOpen className="w-4 h-4" />
+                          <span className="font-semibold">{tutor.murid}</span>
+                          <span>murid</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock className="w-4 h-4" />
