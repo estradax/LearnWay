@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Libre_Baskerville, Lora, IBM_Plex_Mono, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const libreBaskerville = Libre_Baskerville({
   variable: "--font-libre-baskerville",
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${libreBaskerville.variable} ${ibmPlexMono.variable} ${lora.variable} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
