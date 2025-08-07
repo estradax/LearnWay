@@ -44,6 +44,7 @@ export default function TutorsPage() {
       reviews: 127,
       price: 25,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -90,6 +91,7 @@ export default function TutorsPage() {
       reviews: 89,
       price: 30,
       location: "Surabaya",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -129,6 +131,7 @@ export default function TutorsPage() {
       reviews: 45,
       price: 35,
       location: "Bandung",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -168,6 +171,7 @@ export default function TutorsPage() {
       reviews: 156,
       price: 28,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -204,6 +208,7 @@ export default function TutorsPage() {
       reviews: 78,
       price: 32,
       location: "Jakarta",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -242,6 +247,7 @@ export default function TutorsPage() {
       reviews: 92,
       price: 40,
       location: "Bandung",
+      murid: 50,
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
       verified: true,
@@ -311,14 +317,14 @@ export default function TutorsPage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
               <Input
-                placeholder="Search by subject, tutor name, or keyword..."
+                placeholder="Cari berdasarkan subjek, nama tutor, atau kata kunci..."
                 className="pl-10 text-lg"
               />
             </div>
             <div className="flex gap-2">
               <Select>
                 <SelectTrigger className="w-48">
-                  <SelectValue placeholder="All Subjects" />
+                  <SelectValue placeholder="Semua Subject" />
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map((subject) => (
@@ -336,7 +342,7 @@ export default function TutorsPage() {
                 <SlidersHorizontal className="w-5 h-5 mr-2" />
                 filters
               </Button>
-              <Button className="px-8">search</Button>
+              <Button className="px-8">Cari</Button>
             </div>
           </div>
 
@@ -347,7 +353,7 @@ export default function TutorsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <h4 className="font-semibold mb-3">
-                      Price Range (per hour)
+                      Kisaran Harga (per hour)
                     </h4>
                     <div className="space-y-3">
                       <Slider
@@ -366,7 +372,7 @@ export default function TutorsPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold mb-3">Experience Level</h4>
+                    <h4 className="font-semibold mb-3">Pengalaman</h4>
                     <div className="space-y-2">
                       {["1-2 years", "3-5 years", "5+ years", "10+ years"].map(
                         (exp) => (
@@ -385,13 +391,13 @@ export default function TutorsPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold mb-3">Availability</h4>
+                    <h4 className="font-semibold mb-3">Ketersediaan</h4>
                     <div className="space-y-2">
                       {[
-                        "Available today",
-                        "Available tomorrow",
-                        "Available this week",
-                        "Flexible schedule",
+                        "Tersedia hari ini",
+                        "Tersedia besok",
+                        "Tersedia minggu ini",
+                        "Jadwal fleksibel",
                       ].map((avail) => (
                         <div
                           key={avail}
@@ -414,19 +420,19 @@ export default function TutorsPage() {
         {/* Results Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold">Available Tutors</h1>
-            <p>{tutors.length} tutors found</p>
+            <h1 className="text-2xl font-bold">Pengajar Tersedia</h1>
+            <p>{tutors.length} Pengajar ditemukan</p>
           </div>
           <Select defaultValue="rating">
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-              <SelectItem value="experience">Most Experienced</SelectItem>
-              <SelectItem value="reviews">Most Reviews</SelectItem>
+              <SelectItem value="rating">Rating Tertinggi</SelectItem>
+              <SelectItem value="price-low">Harga : Murah sampai mahal</SelectItem>
+              <SelectItem value="price-high">Harga : Mahal sampai murah</SelectItem>
+              <SelectItem value="experience">Tinggi Pengalaman</SelectItem>
+              <SelectItem value="reviews">Tinggi Penilaian</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -491,6 +497,11 @@ export default function TutorsPage() {
                           <span>{tutor.location}</span>
                         </div>
                         <div className="flex items-center space-x-1">
+                          <BookOpen className="w-4 h-4" />
+                          <span className="font-semibold">{tutor.murid}</span>
+                          <span>murid</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
                           <Clock className="w-4 h-4" />
                           <span>{tutor.experience}</span>
                         </div>
@@ -539,7 +550,7 @@ export default function TutorsPage() {
         {/* Load More */}
         <div className="text-center mt-12">
           <Button variant="outline" size="lg">
-            Load More Tutors
+            Lihat lebih banyak pengajar
           </Button>
         </div>
       </div>
