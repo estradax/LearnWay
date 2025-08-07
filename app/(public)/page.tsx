@@ -623,7 +623,7 @@ export default function HomePage() {
         </div>
         <div className="border-t mt-12 pt-8 text-center text-base">
           <p>
-            &copy; 2024 TutorHome. All rights reserved. Made with ❤️ for
+            &copy; 2025 learnWay. All rights reserved. Made with heart for
             learners everywhere.
           </p>
         </div>
