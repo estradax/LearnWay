@@ -26,32 +26,31 @@ import {
 import ContactTutorModal from "@/components/contact-tutor-modal";
 import ChatSystem from "@/components/chat-system";
 
+
 interface TutorProfileModalProps {
   tutor: any;
+  isOpen: boolean;
+  onClose: () => void;
+  onContactTutor?: () => void;
   triggerButton?: React.ReactNode;
 }
 
 export default function TutorProfileModal({
   tutor,
+  isOpen,
+  onClose,
+  onContactTutor,
   triggerButton,
 }: TutorProfileModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
 
   if (!tutor) return null;
 
-  const defaultTriggerButton = (
-    <Button className="w-full rounded-2xl font-semibold py-3">
-      View Profile
-    </Button>
-  );
+
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          {triggerButton || defaultTriggerButton}
-        </DialogTrigger>
+      <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
         <DialogContent className="w-full max-w-[98vw] sm:min-w-[600px] md:min-w-[900px] max-h-[90vh] overflow-y-auto p-2 sm:p-6">
           <DialogHeader>
             <DialogTitle className="sr-only">Tutor Profile</DialogTitle>
@@ -60,23 +59,23 @@ export default function TutorProfileModal({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 p-2 sm:p-6">
             {/* Main Profile */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-              {/* Header Card */}
-              <Card className="border shadow-xs">
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-                    <div className="relative flex-shrink-0 flex justify-center sm:block">
-                      <img
-                        src={tutor.image || "/placeholder.svg"}
-                        alt={tutor.name}
-                        className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
-                      />
-                      {tutor.verified && (
-                        <Badge className="mt-2 sm:mt-4">
-                          <Check className="w-5 h-5" />
-                          Verified
-                        </Badge>
-                      )}
-                    </div>
+            {/* Header Card */}
+            <Card className="border shadow-xs">
+              <CardContent>
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                  <div className="relative flex-shrink-0 flex justify-center sm:block">
+                    <img
+                      src={tutor.image || "/placeholder.svg"}
+                      alt={tutor.name}
+                      className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
+                    />
+                    {tutor.verified && (
+                      <Badge className="mt-2 sm:mt-4">
+                        <Check className="w-5 h-5" />
+                        Verified
+                      </Badge>
+                    )}
+                  </div>
 
                     <div className="flex-1 text-center sm:text-left">
                       <h1 className="text-base xs:text-lg sm:text-3xl font-bold mb-1 sm:mb-2 break-words break-all leading-tight truncate max-w-full">{tutor.name}</h1>
@@ -105,7 +104,7 @@ export default function TutorProfileModal({
                       </div>
 
                       <div className="flex flex-wrap gap-1 xs:gap-2 justify-center sm:justify-start">
-                        {tutor.subjects.map((subject, index) => (
+                        {tutor.subjects.map((subject: any, index: any) => (
                           <Badge key={index} variant="secondary" className="text-[10px] xs:text-xs sm:text-sm px-2 py-1 truncate max-w-[90px] xs:max-w-[120px] sm:max-w-none">
                             {subject}
                           </Badge>
@@ -141,7 +140,7 @@ export default function TutorProfileModal({
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 list-disc list-inside">
-                      {tutor.education.map((edu, index) => (
+                      {tutor.education.map((edu: any, index: any) => (
                         <li key={index}>{edu}</li>
                       ))}
                     </ul>
@@ -157,7 +156,7 @@ export default function TutorProfileModal({
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 list-disc list-inside">
-                      {tutor.achievements.map((achievement, index) => (
+                      {tutor.achievements.map((achievement: any, index: any) => (
                         <li key={index}>{achievement}</li>
                       ))}
                     </ul>
@@ -175,7 +174,7 @@ export default function TutorProfileModal({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {tutor.reviews_data.map((review, index) => (
+                    {tutor.reviews_data.map((review: any, index: any) => (
                       <div
                         key={index}
                         className="border-b pb-4 last:border-b-0"
@@ -184,7 +183,7 @@ export default function TutorProfileModal({
                           <div className="flex items-center space-x-2">
                             <span className="font-medium">{review.name}</span>
                             <div className="flex">
-                              {[...Array(5)].map((_, i) => (
+                              {[...Array(5)].map((_: any, i: any) => (
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${i < review.rating ? "" : ""
@@ -223,8 +222,12 @@ export default function TutorProfileModal({
                     <Button
                       className="w-full"
                       onClick={() => {
-                        setIsOpen(false);
-                        setShowContactModal(true);
+                        if (onContactTutor) {
+                          onContactTutor();
+                        } else {
+                          setShowContactModal(true);
+                          onClose();
+                        }
                       }}
                     >
                       contact tutor
@@ -254,7 +257,7 @@ export default function TutorProfileModal({
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {tutor.languages.map((language, index) => (
+                    {tutor.languages.map((language: any, index: any) => (
                       <Badge key={index} variant="outline">
                         {language}
                       </Badge>
@@ -279,7 +282,6 @@ export default function TutorProfileModal({
           </div>
         </DialogContent>
       </Dialog>
-
       {/* Contact Modal */}
       <ContactTutorModal
         tutor={tutor}
