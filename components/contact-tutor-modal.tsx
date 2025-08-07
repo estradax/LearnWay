@@ -73,33 +73,33 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto p-2 sm:p-6">
         <DialogHeader>
           <DialogTitle className="sr-only">Contact Tutor</DialogTitle>
-          <Button variant="ghost" size="sm" className="absolute right-4 top-4 rounded-full" onClick={onClose}>
+          <Button variant="ghost" size="sm" className="absolute right-2 top-2 sm:right-4 sm:top-4 rounded-full" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="p-2 sm:p-6">
           {/* Tutor Info Header */}
-          <div className="flex items-center space-x-4 mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-gray-50 rounded-lg">
             <img
               src={tutor.image || "/placeholder.svg"}
               alt={tutor.name}
-              className="w-16 h-16 rounded-full object-cover"
+              className="w-20 h-20 sm:w-16 sm:h-16 rounded-full object-cover mx-auto sm:mx-0"
             />
-            <div>
-              <h3 className="text-xl font-bold text-gray-900">{tutor.name}</h3>
-              <p className="text-blue-600 font-medium">{tutor.subject}</p>
-              <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
+            <div className="w-full sm:w-auto text-center sm:text-left">
+              <h3 className="text-base sm:text-xl font-bold text-gray-900 break-words">{tutor.name}</h3>
+              <p className="text-blue-600 font-medium text-sm sm:text-base">{tutor.subject}</p>
+              <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mt-1">
                 <span className="flex items-center space-x-1">
                   <DollarSign className="w-4 h-4" />
                   <span>${tutor.price}/hr</span>
                 </span>
                 <span className="flex items-center space-x-1">
                   <MapPin className="w-4 h-4" />
-                  <span>{tutor.location}</span>
+                  <span className="truncate max-w-[120px] sm:max-w-none">{tutor.location}</span>
                 </span>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 <p className="text-gray-600">Fill out the form below to get in touch with your tutor</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label htmlFor="name">Full Name *</Label>
                   <Input
@@ -145,7 +145,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label htmlFor="subject">Subject</Label>
                   <Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
@@ -153,7 +153,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                       <SelectValue placeholder="Select subject" />
                     </SelectTrigger>
                     <SelectContent>
-                      {tutor.subjects.map((subject) => (
+                      {tutor.subjects.map((subject: string) => (
                         <SelectItem key={subject} value={subject}>
                           {subject}
                         </SelectItem>
@@ -177,7 +177,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label>Preferred Date</Label>
                   <Popover>
@@ -221,7 +221,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
               </div>
 
               {/* Price Negotiation Option */}
-              <Card className="border-orange-200 bg-orange-50">
+              <Card className="border-orange-200 bg-orange-50 mt-2">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <DollarSign className="w-5 h-5 text-orange-600" />
@@ -247,7 +247,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </CardContent>
               </Card>
 
-              <div className="flex space-x-3">
+              <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
                 <Button variant="outline" onClick={onClose} className="flex-1 bg-transparent">
                   Cancel
                 </Button>
@@ -311,7 +311,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </CardContent>
               </Card>
 
-              <div className="flex space-x-3">
+              <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
                 <Button variant="outline" onClick={() => setContactStep(1)} className="flex-1">
                   Back
                 </Button>
@@ -394,7 +394,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </ul>
               </div>
 
-              <div className="flex space-x-3">
+              <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
                 <ChatSystem
                   currentUserId={1}
                   currentUserType="student"
