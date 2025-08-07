@@ -1,19 +1,79 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Link from "next/link"
-import { Calendar, Clock, DollarSign, CheckCircle, XCircle, AlertCircle, MessageCircle, Star, Phone, Mail, User, Settings, BookOpen, TrendingUp, Award, Target, Edit, Camera, Bell, Shield, CreditCard, Globe, Trash2, Download, BarChart3, CalendarIcon, ClockIcon } from 'lucide-react'
-import ChatSystem from "@/components/chat-system"
-import { Input } from "@/components/ui/input"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  MessageCircle,
+  Star,
+  Phone,
+  Mail,
+  User,
+  Settings,
+  BookOpen,
+  TrendingUp,
+  Award,
+  Target,
+  Edit,
+  Camera,
+  Bell,
+  Shield,
+  CreditCard,
+  Globe,
+  Trash2,
+  Download,
+  BarChart3,
+  CalendarIcon,
+  ClockIcon,
+} from "lucide-react";
+import ChatSystem from "@/components/chat-system";
+import { Input } from "@/components/ui/input";
+import { useSession, signOut } from "@/lib/client/auth";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  // Mock user data - in real app this would come from authentication context
-  const [userType] = useState<"student" | "tutor">("student") // Change this to test different views
+  const router = useRouter();
+  const { data: session, isPending: sessionLoading } = useSession();
+
+  // Determine user type from session data
+  const userType = session?.user?.role === "teacher" ? "teacher" : "student";
+
+  React.useEffect(() => {
+    if (!session && !sessionLoading) {
+      router.push("/login");
+    }
+  }, [session, sessionLoading, router]);
+
+  // Redirect if not authenticated
+  if (sessionLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+  };
 
   // Mock student bookings data
   const studentBookings = [
@@ -69,7 +129,7 @@ export default function DashboardPage() {
       createdAt: "2024-01-08",
       cancelReason: "Tutor unavailable due to illness",
     },
-  ]
+  ];
 
   // Mock tutor bookings data
   const tutorBookings = [
@@ -90,7 +150,8 @@ export default function DashboardPage() {
       status: "pending",
       message:
         "I'm struggling with quadratic equations and need help preparing for my upcoming exam. I'm a high school student and would prefer a slower pace.",
-      priceReason: "I'm a student with limited budget, but I can commit to 2 sessions per week",
+      priceReason:
+        "I'm a student with limited budget, but I can commit to 2 sessions per week",
       createdAt: "2024-01-14",
     },
     {
@@ -108,7 +169,8 @@ export default function DashboardPage() {
       originalPrice: 25,
       proposedPrice: 25,
       status: "approved",
-      message: "Need intensive calculus tutoring for university entrance exam preparation.",
+      message:
+        "Need intensive calculus tutoring for university entrance exam preparation.",
       createdAt: "2024-01-13",
     },
     {
@@ -126,12 +188,13 @@ export default function DashboardPage() {
       originalPrice: 25,
       proposedPrice: 22,
       status: "rejected",
-      message: "Working professional looking for weekend statistics tutoring for data analysis skills.",
+      message:
+        "Working professional looking for weekend statistics tutoring for data analysis skills.",
       priceReason: "Looking for long-term commitment with multiple sessions",
       createdAt: "2024-01-11",
       rejectionReason: "Schedule conflict with existing commitments",
     },
-  ]
+  ];
 
   // Mock messages data
   const conversations = [
@@ -145,7 +208,8 @@ export default function DashboardPage() {
         online: true,
       },
       lastMessage: {
-        content: "Great progress on derivatives! Let's work on integration next session.",
+        content:
+          "Great progress on derivatives! Let's work on integration next session.",
         timestamp: "2 hours ago",
         sender: "Sarah Johnson",
         unread: false,
@@ -162,7 +226,8 @@ export default function DashboardPage() {
         online: false,
       },
       lastMessage: {
-        content: "I've uploaded the essay feedback. Please review before our next lesson.",
+        content:
+          "I've uploaded the essay feedback. Please review before our next lesson.",
         timestamp: "1 day ago",
         sender: "David Chen",
         unread: true,
@@ -186,7 +251,7 @@ export default function DashboardPage() {
       },
       totalMessages: 12,
     },
-  ]
+  ];
 
   // Mock learning progress data
   const learningProgress = {
@@ -272,7 +337,7 @@ export default function DashboardPage() {
         date: null,
       },
     ],
-  }
+  };
 
   // Mock profile data
   const userProfile = {
@@ -326,45 +391,45 @@ export default function DashboardPage() {
         isDefault: false,
       },
     ],
-  }
+  };
 
   const handleApproveBooking = (bookingId: number) => {
-    console.log("Approving booking:", bookingId)
+    console.log("Approving booking:", bookingId);
     // In real app, this would make an API call
-  }
+  };
 
   const handleRejectBooking = (bookingId: number) => {
-    console.log("Rejecting booking:", bookingId)
+    console.log("Rejecting booking:", bookingId);
     // In real app, this would make an API call
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "approved":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "canceled":
       case "rejected":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "approved":
-        return <CheckCircle className="w-4 h-4" />
+        return <CheckCircle className="w-4 h-4" />;
       case "pending":
-        return <AlertCircle className="w-4 h-4" />
+        return <AlertCircle className="w-4 h-4" />;
       case "canceled":
       case "rejected":
-        return <XCircle className="w-4 h-4" />
+        return <XCircle className="w-4 h-4" />;
       default:
-        return <AlertCircle className="w-4 h-4" />
+        return <AlertCircle className="w-4 h-4" />;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -372,10 +437,13 @@ export default function DashboardPage() {
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-orange-500">TutorHome</div>
+            <div className="text-2xl font-bold text-orange-500">LearnWay</div>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tutors" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <Link
+              href="/tutors"
+              className="text-gray-600 hover:text-orange-500 transition-colors"
+            >
               find tutors
             </Link>
             <Link href="/dashboard" className="text-orange-500 font-medium">
@@ -384,10 +452,15 @@ export default function DashboardPage() {
           </nav>
           <div className="flex items-center space-x-3">
             <Avatar>
-              <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback>JD</AvatarFallback>
+              <AvatarImage src={session.user?.image || "/placeholder.svg"} />
+              <AvatarFallback>
+                {session.user?.firstName?.[0]}
+                {session.user?.lastName?.[0]}
+              </AvatarFallback>
             </Avatar>
-            <Button variant="ghost">sign out</Button>
+            <Button variant="ghost" onClick={handleSignOut}>
+              Sign out
+            </Button>
           </div>
         </div>
       </header>
@@ -395,12 +468,12 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {userType === "student" ? "student dashboard" : "tutor dashboard"}
+            Welcome back, {session.user?.firstName || "User"}!
           </h1>
           <p className="text-gray-600">
             {userType === "student"
-              ? "manage your bookings and track your learning progress"
-              : "manage your student bookings and schedule"}
+              ? "Manage your bookings and track your learning progress"
+              : "Manage your student bookings and schedule"}
           </p>
         </div>
 
@@ -419,22 +492,34 @@ export default function DashboardPage() {
                 <Card>
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-green-600 mb-2">
-                      {studentBookings.filter((b) => b.status === "approved").length}
+                      {
+                        studentBookings.filter((b) => b.status === "approved")
+                          .length
+                      }
                     </div>
-                    <div className="text-sm text-gray-600">approved lessons</div>
+                    <div className="text-sm text-gray-600">
+                      approved lessons
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-yellow-600 mb-2">
-                      {studentBookings.filter((b) => b.status === "pending").length}
+                      {
+                        studentBookings.filter((b) => b.status === "pending")
+                          .length
+                      }
                     </div>
-                    <div className="text-sm text-gray-600">pending requests</div>
+                    <div className="text-sm text-gray-600">
+                      pending requests
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">{studentBookings.length}</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                      {studentBookings.length}
+                    </div>
                     <div className="text-sm text-gray-600">total bookings</div>
                   </CardContent>
                 </Card>
@@ -447,7 +532,10 @@ export default function DashboardPage() {
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
                         <div className="flex items-start space-x-4">
                           <Avatar className="w-16 h-16">
-                            <AvatarImage src={booking.tutor.image || "/placeholder.svg"} alt={booking.tutor.name} />
+                            <AvatarImage
+                              src={booking.tutor.image || "/placeholder.svg"}
+                              alt={booking.tutor.name}
+                            />
                             <AvatarFallback>
                               {booking.tutor.name
                                 .split(" ")
@@ -458,21 +546,33 @@ export default function DashboardPage() {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">{booking.tutor.name}</h3>
-                              <Badge className={`${getStatusColor(booking.status)} border`}>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {booking.tutor.name}
+                              </h3>
+                              <Badge
+                                className={`${getStatusColor(
+                                  booking.status
+                                )} border`}
+                              >
                                 <div className="flex items-center space-x-1">
                                   {getStatusIcon(booking.status)}
-                                  <span className="capitalize">{booking.status}</span>
+                                  <span className="capitalize">
+                                    {booking.status}
+                                  </span>
                                 </div>
                               </Badge>
                             </div>
 
-                            <p className="text-blue-600 font-medium mb-2">{booking.tutor.subject}</p>
+                            <p className="text-blue-600 font-medium mb-2">
+                              {booking.tutor.subject}
+                            </p>
 
                             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
                               <div className="flex items-center space-x-1">
                                 <Calendar className="w-4 h-4" />
-                                <span>{new Date(booking.date).toLocaleDateString()}</span>
+                                <span>
+                                  {new Date(booking.date).toLocaleDateString()}
+                                </span>
                               </div>
                               <div className="flex items-center space-x-1">
                                 <Clock className="w-4 h-4" />
@@ -493,18 +593,25 @@ export default function DashboardPage() {
                             {booking.message && (
                               <div className="bg-gray-50 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-gray-700">
-                                  <span className="font-medium">your message:</span> {booking.message}
+                                  <span className="font-medium">
+                                    your message:
+                                  </span>{" "}
+                                  {booking.message}
                                 </p>
                               </div>
                             )}
 
-                            {booking.status === "canceled" && booking.cancelReason && (
-                              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                                <p className="text-sm text-red-700">
-                                  <span className="font-medium">cancellation reason:</span> {booking.cancelReason}
-                                </p>
-                              </div>
-                            )}
+                            {booking.status === "canceled" &&
+                              booking.cancelReason && (
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                  <p className="text-sm text-red-700">
+                                    <span className="font-medium">
+                                      cancellation reason:
+                                    </span>{" "}
+                                    {booking.cancelReason}
+                                  </p>
+                                </div>
+                              )}
                           </div>
                         </div>
 
@@ -512,21 +619,33 @@ export default function DashboardPage() {
                           {booking.status === "approved" && (
                             <>
                               <Link href={`/lesson/${booking.id}`}>
-                                <Button className="w-full bg-green-600 hover:bg-green-700">join lesson</Button>
+                                <Button className="w-full bg-green-600 hover:bg-green-700">
+                                  join lesson
+                                </Button>
                               </Link>
-                              <Button variant="outline" className="w-full bg-transparent">
+                              <Button
+                                variant="outline"
+                                className="w-full bg-transparent"
+                              >
                                 <MessageCircle className="w-4 h-4 mr-2" />
                                 message tutor
                               </Button>
                             </>
                           )}
                           {booking.status === "pending" && (
-                            <Button variant="outline" className="w-full bg-transparent" disabled>
+                            <Button
+                              variant="outline"
+                              className="w-full bg-transparent"
+                              disabled
+                            >
                               waiting for approval
                             </Button>
                           )}
                           {booking.status === "canceled" && (
-                            <Button variant="outline" className="w-full bg-transparent">
+                            <Button
+                              variant="outline"
+                              className="w-full bg-transparent"
+                            >
                               book again
                             </Button>
                           )}
@@ -558,14 +677,26 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 gap-4">
                 {conversations.map((conversation) => (
-                  <Card key={conversation.id} className="hover:shadow-md transition-shadow">
+                  <Card
+                    key={conversation.id}
+                    className="hover:shadow-md transition-shadow"
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-4">
                         <div className="relative">
                           <Avatar className="w-12 h-12">
-                            <AvatarImage src={conversation.participant.image || "/placeholder.svg"} alt={conversation.participant.name} />
+                            <AvatarImage
+                              src={
+                                conversation.participant.image ||
+                                "/placeholder.svg"
+                              }
+                              alt={conversation.participant.name}
+                            />
                             <AvatarFallback>
-                              {conversation.participant.name.split(" ").map(n => n[0]).join("")}
+                              {conversation.participant.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
                             </AvatarFallback>
                           </Avatar>
                           {conversation.participant.online && (
@@ -578,10 +709,14 @@ export default function DashboardPage() {
                             <h3 className="font-semibold text-gray-900 truncate">
                               {conversation.participant.name}
                             </h3>
-                            <span className="text-sm text-gray-500">{conversation.lastMessage.timestamp}</span>
+                            <span className="text-sm text-gray-500">
+                              {conversation.lastMessage.timestamp}
+                            </span>
                           </div>
 
-                          <p className="text-sm text-blue-600 mb-1">{conversation.participant.subject}</p>
+                          <p className="text-sm text-blue-600 mb-1">
+                            {conversation.participant.subject}
+                          </p>
 
                           <div className="flex items-center justify-between">
                             <p className="text-sm text-gray-600 truncate flex-1 mr-2">
@@ -611,33 +746,47 @@ export default function DashboardPage() {
 
             <TabsContent value="progress" className="space-y-6">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">learning progress</h2>
-                <p className="text-gray-600">track your learning journey and achievements</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  learning progress
+                </h2>
+                <p className="text-gray-600">
+                  track your learning journey and achievements
+                </p>
               </div>
 
               {/* Progress Overview */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">{learningProgress.totalHours}</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                      {learningProgress.totalHours}
+                    </div>
                     <div className="text-sm text-gray-600">total hours</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">{learningProgress.completedLessons}</div>
-                    <div className="text-sm text-gray-600">lessons completed</div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">
+                      {learningProgress.completedLessons}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      lessons completed
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-yellow-600 mb-2">{learningProgress.averageRating}</div>
+                    <div className="text-3xl font-bold text-yellow-600 mb-2">
+                      {learningProgress.averageRating}
+                    </div>
                     <div className="text-sm text-gray-600">average rating</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">{learningProgress.currentStreak}</div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">
+                      {learningProgress.currentStreak}
+                    </div>
                     <div className="text-sm text-gray-600">day streak</div>
                   </CardContent>
                 </Card>
@@ -656,11 +805,17 @@ export default function DashboardPage() {
                     <div key={index} className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-semibold text-gray-900">{subject.name}</h3>
-                          <p className="text-sm text-gray-600">with {subject.tutor}</p>
+                          <h3 className="font-semibold text-gray-900">
+                            {subject.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            with {subject.tutor}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-blue-600">{subject.progress}%</div>
+                          <div className="text-2xl font-bold text-blue-600">
+                            {subject.progress}%
+                          </div>
                           <div className="text-sm text-gray-500">complete</div>
                         </div>
                       </div>
@@ -675,26 +830,36 @@ export default function DashboardPage() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
                           <span className="text-gray-500">Hours:</span>
-                          <span className="font-medium ml-1">{subject.hoursSpent}</span>
+                          <span className="font-medium ml-1">
+                            {subject.hoursSpent}
+                          </span>
                         </div>
                         <div>
                           <span className="text-gray-500">Lessons:</span>
-                          <span className="font-medium ml-1">{subject.lessonsCompleted}</span>
+                          <span className="font-medium ml-1">
+                            {subject.lessonsCompleted}
+                          </span>
                         </div>
                         <div>
                           <span className="text-gray-500">Next:</span>
-                          <span className="font-medium ml-1">{new Date(subject.nextLesson).toLocaleDateString()}</span>
+                          <span className="font-medium ml-1">
+                            {new Date(subject.nextLesson).toLocaleDateString()}
+                          </span>
                         </div>
                         <div className="flex space-x-1">
-                          {subject.topics.slice(0, 2).map((topic, topicIndex) => (
-                            <Badge
-                              key={topicIndex}
-                              variant={topic.completed ? "default" : "secondary"}
-                              className="text-xs"
-                            >
-                              {topic.name}
-                            </Badge>
-                          ))}
+                          {subject.topics
+                            .slice(0, 2)
+                            .map((topic, topicIndex) => (
+                              <Badge
+                                key={topicIndex}
+                                variant={
+                                  topic.completed ? "default" : "secondary"
+                                }
+                                className="text-xs"
+                              >
+                                {topic.name}
+                              </Badge>
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -715,25 +880,39 @@ export default function DashboardPage() {
                     {learningProgress.achievements.map((achievement) => (
                       <div
                         key={achievement.id}
-                        className={`p-4 rounded-lg border-2 ${achievement.earned
-                            ? 'border-green-200 bg-green-50'
-                            : 'border-gray-200 bg-gray-50'
-                          }`}
+                        className={`p-4 rounded-lg border-2 ${
+                          achievement.earned
+                            ? "border-green-200 bg-green-50"
+                            : "border-gray-200 bg-gray-50"
+                        }`}
                       >
                         <div className="flex items-center space-x-3">
                           <div className="text-2xl">{achievement.icon}</div>
                           <div className="flex-1">
-                            <h3 className={`font-semibold ${achievement.earned ? 'text-green-800' : 'text-gray-600'
-                              }`}>
+                            <h3
+                              className={`font-semibold ${
+                                achievement.earned
+                                  ? "text-green-800"
+                                  : "text-gray-600"
+                              }`}
+                            >
                               {achievement.title}
                             </h3>
-                            <p className={`text-sm ${achievement.earned ? 'text-green-600' : 'text-gray-500'
-                              }`}>
+                            <p
+                              className={`text-sm ${
+                                achievement.earned
+                                  ? "text-green-600"
+                                  : "text-gray-500"
+                              }`}
+                            >
                               {achievement.description}
                             </p>
                             {achievement.earned && achievement.date && (
                               <p className="text-xs text-green-500 mt-1">
-                                Earned on {new Date(achievement.date).toLocaleDateString()}
+                                Earned on{" "}
+                                {new Date(
+                                  achievement.date
+                                ).toLocaleDateString()}
                               </p>
                             )}
                           </div>
@@ -750,8 +929,12 @@ export default function DashboardPage() {
 
             <TabsContent value="profile" className="space-y-6">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">profile settings</h2>
-                <p className="text-gray-600">manage your account information and preferences</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  profile settings
+                </h2>
+                <p className="text-gray-600">
+                  manage your account information and preferences
+                </p>
               </div>
 
               <Tabs defaultValue="personal" className="space-y-6">
@@ -773,9 +956,15 @@ export default function DashboardPage() {
                     <CardContent className="space-y-6">
                       <div className="flex items-center space-x-6">
                         <Avatar className="w-20 h-20">
-                          <AvatarImage src={userProfile.personalInfo.avatar || "/placeholder.svg"} />
+                          <AvatarImage
+                            src={
+                              userProfile.personalInfo.avatar ||
+                              "/placeholder.svg"
+                            }
+                          />
                           <AvatarFallback className="text-xl">
-                            {userProfile.personalInfo.firstName[0]}{userProfile.personalInfo.lastName[0]}
+                            {userProfile.personalInfo.firstName[0]}
+                            {userProfile.personalInfo.lastName[0]}
                           </AvatarFallback>
                         </Avatar>
                         <div className="space-y-2">
@@ -783,72 +972,120 @@ export default function DashboardPage() {
                             <Camera className="w-4 h-4 mr-2" />
                             change photo
                           </Button>
-                          <p className="text-sm text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
+                          <p className="text-sm text-gray-500">
+                            JPG, PNG or GIF. Max size 2MB.
+                          </p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">first name</label>
-                          <Input defaultValue={userProfile.personalInfo.firstName} />
+                          <label className="text-sm font-medium text-gray-700">
+                            first name
+                          </label>
+                          <Input
+                            defaultValue={userProfile.personalInfo.firstName}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">last name</label>
-                          <Input defaultValue={userProfile.personalInfo.lastName} />
+                          <label className="text-sm font-medium text-gray-700">
+                            last name
+                          </label>
+                          <Input
+                            defaultValue={userProfile.personalInfo.lastName}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">email address</label>
-                          <Input type="email" defaultValue={userProfile.personalInfo.email} />
+                          <label className="text-sm font-medium text-gray-700">
+                            email address
+                          </label>
+                          <Input
+                            type="email"
+                            defaultValue={userProfile.personalInfo.email}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">phone number</label>
-                          <Input defaultValue={userProfile.personalInfo.phone} />
+                          <label className="text-sm font-medium text-gray-700">
+                            phone number
+                          </label>
+                          <Input
+                            defaultValue={userProfile.personalInfo.phone}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">date of birth</label>
-                          <Input type="date" defaultValue={userProfile.personalInfo.dateOfBirth} />
+                          <label className="text-sm font-medium text-gray-700">
+                            date of birth
+                          </label>
+                          <Input
+                            type="date"
+                            defaultValue={userProfile.personalInfo.dateOfBirth}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">location</label>
-                          <Input defaultValue={userProfile.personalInfo.location} />
+                          <label className="text-sm font-medium text-gray-700">
+                            location
+                          </label>
+                          <Input
+                            defaultValue={userProfile.personalInfo.location}
+                          />
                         </div>
                       </div>
 
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">learning goals</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            learning goals
+                          </label>
                           <div className="space-y-2">
                             {userProfile.learningGoals.map((goal, index) => (
-                              <div key={index} className="flex items-center space-x-2">
+                              <div
+                                key={index}
+                                className="flex items-center space-x-2"
+                              >
                                 <Input defaultValue={goal} className="flex-1" />
                                 <Button variant="outline" size="sm">
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </div>
                             ))}
-                            <Button variant="outline" className="w-full bg-transparent">
+                            <Button
+                              variant="outline"
+                              className="w-full bg-transparent"
+                            >
                               add learning goal
                             </Button>
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">interests</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            interests
+                          </label>
                           <div className="flex flex-wrap gap-2">
                             {userProfile.interests.map((interest, index) => (
-                              <Badge key={index} variant="secondary" className="px-3 py-1">
+                              <Badge
+                                key={index}
+                                variant="secondary"
+                                className="px-3 py-1"
+                              >
                                 {interest}
-                                <button className="ml-2 text-gray-500 hover:text-gray-700">×</button>
+                                <button className="ml-2 text-gray-500 hover:text-gray-700">
+                                  ×
+                                </button>
                               </Badge>
                             ))}
-                            <Button variant="outline" size="sm">add interest</Button>
+                            <Button variant="outline" size="sm">
+                              add interest
+                            </Button>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex justify-end space-x-3">
                         <Button variant="outline">cancel</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700">save changes</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">
+                          save changes
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -865,7 +1102,9 @@ export default function DashboardPage() {
                     <CardContent className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">language</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            language
+                          </label>
                           <select className="w-full p-2 border border-gray-300 rounded-md">
                             <option value="en">English</option>
                             <option value="id">Bahasa Indonesia</option>
@@ -873,7 +1112,9 @@ export default function DashboardPage() {
                           </select>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">currency</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            currency
+                          </label>
                           <select className="w-full p-2 border border-gray-300 rounded-md">
                             <option value="USD">USD ($)</option>
                             <option value="IDR">IDR (Rp)</option>
@@ -883,12 +1124,19 @@ export default function DashboardPage() {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="font-medium text-gray-900">notification preferences</h3>
+                        <h3 className="font-medium text-gray-900">
+                          notification preferences
+                        </h3>
                         <div className="space-y-3">
-                          {Object.entries(userProfile.preferences.notifications).map(([key, value]) => (
-                            <div key={key} className="flex items-center justify-between">
+                          {Object.entries(
+                            userProfile.preferences.notifications
+                          ).map(([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex items-center justify-between"
+                            >
                               <label className="text-sm text-gray-700 capitalize">
-                                {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                                {key.replace(/([A-Z])/g, " $1").toLowerCase()}
                               </label>
                               <input
                                 type="checkbox"
@@ -901,10 +1149,14 @@ export default function DashboardPage() {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="font-medium text-gray-900">privacy settings</h3>
+                        <h3 className="font-medium text-gray-900">
+                          privacy settings
+                        </h3>
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <label className="text-sm text-gray-700">profile visibility</label>
+                            <label className="text-sm text-gray-700">
+                              profile visibility
+                            </label>
                             <select className="p-2 border border-gray-300 rounded-md">
                               <option value="public">Public</option>
                               <option value="private">Private</option>
@@ -912,18 +1164,26 @@ export default function DashboardPage() {
                             </select>
                           </div>
                           <div className="flex items-center justify-between">
-                            <label className="text-sm text-gray-700">show online status</label>
+                            <label className="text-sm text-gray-700">
+                              show online status
+                            </label>
                             <input
                               type="checkbox"
-                              defaultChecked={userProfile.preferences.privacy.showOnlineStatus}
+                              defaultChecked={
+                                userProfile.preferences.privacy.showOnlineStatus
+                              }
                               className="w-4 h-4 text-blue-600 rounded"
                             />
                           </div>
                           <div className="flex items-center justify-between">
-                            <label className="text-sm text-gray-700">allow messages from tutors</label>
+                            <label className="text-sm text-gray-700">
+                              allow messages from tutors
+                            </label>
                             <input
                               type="checkbox"
-                              defaultChecked={userProfile.preferences.privacy.allowMessages}
+                              defaultChecked={
+                                userProfile.preferences.privacy.allowMessages
+                              }
                               className="w-4 h-4 text-blue-600 rounded"
                             />
                           </div>
@@ -932,7 +1192,9 @@ export default function DashboardPage() {
 
                       <div className="flex justify-end space-x-3">
                         <Button variant="outline">cancel</Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700">save preferences</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700">
+                          save preferences
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -948,29 +1210,42 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <div className="space-y-4">
-                        <h3 className="font-medium text-gray-900">change password</h3>
+                        <h3 className="font-medium text-gray-900">
+                          change password
+                        </h3>
                         <div className="space-y-4">
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">current password</label>
+                            <label className="text-sm font-medium text-gray-700">
+                              current password
+                            </label>
                             <Input type="password" />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">new password</label>
+                            <label className="text-sm font-medium text-gray-700">
+                              new password
+                            </label>
                             <Input type="password" />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">confirm new password</label>
+                            <label className="text-sm font-medium text-gray-700">
+                              confirm new password
+                            </label>
                             <Input type="password" />
                           </div>
-                          <Button className="bg-blue-600 hover:bg-blue-700">update password</Button>
+                          <Button className="bg-blue-600 hover:bg-blue-700">
+                            update password
+                          </Button>
                         </div>
                       </div>
 
                       <div className="border-t pt-6">
                         <div className="space-y-4">
-                          <h3 className="font-medium text-gray-900">two-factor authentication</h3>
+                          <h3 className="font-medium text-gray-900">
+                            two-factor authentication
+                          </h3>
                           <p className="text-sm text-gray-600">
-                            Add an extra layer of security to your account by enabling two-factor authentication.
+                            Add an extra layer of security to your account by
+                            enabling two-factor authentication.
                           </p>
                           <Button variant="outline" className="bg-transparent">
                             enable 2FA
@@ -980,21 +1255,33 @@ export default function DashboardPage() {
 
                       <div className="border-t pt-6">
                         <div className="space-y-4">
-                          <h3 className="font-medium text-gray-900">active sessions</h3>
+                          <h3 className="font-medium text-gray-900">
+                            active sessions
+                          </h3>
                           <div className="space-y-3">
                             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div>
-                                <p className="font-medium text-sm">Current Session</p>
-                                <p className="text-xs text-gray-600">Chrome on Windows • Jakarta, Indonesia</p>
+                                <p className="font-medium text-sm">
+                                  Current Session
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  Chrome on Windows • Jakarta, Indonesia
+                                </p>
                               </div>
                               <Badge variant="secondary">Active</Badge>
                             </div>
                             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div>
-                                <p className="font-medium text-sm">Mobile App</p>
-                                <p className="text-xs text-gray-600">iOS App • Last seen 2 hours ago</p>
+                                <p className="font-medium text-sm">
+                                  Mobile App
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  iOS App • Last seen 2 hours ago
+                                </p>
                               </div>
-                              <Button variant="outline" size="sm">revoke</Button>
+                              <Button variant="outline" size="sm">
+                                revoke
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -1013,26 +1300,33 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <div className="space-y-4">
-                        <h3 className="font-medium text-gray-900">payment methods</h3>
+                        <h3 className="font-medium text-gray-900">
+                          payment methods
+                        </h3>
                         <div className="space-y-3">
                           {userProfile.paymentMethods.map((method) => (
-                            <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div
+                              key={method.id}
+                              className="flex items-center justify-between p-4 border rounded-lg"
+                            >
                               <div className="flex items-center space-x-3">
                                 <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center">
                                   <span className="text-white text-xs font-bold">
-                                    {method.type === 'credit_card' ? method.brand : 'PP'}
+                                    {method.type === "credit_card"
+                                      ? method.brand
+                                      : "PP"}
                                   </span>
                                 </div>
                                 <div>
                                   <p className="font-medium text-sm">
-                                    {method.type === 'credit_card'
+                                    {method.type === "credit_card"
                                       ? `•••• •••• •••• ${method.last4}`
-                                      : method.email
-                                    }
+                                      : method.email}
                                   </p>
-                                  {method.type === 'credit_card' && (
+                                  {method.type === "credit_card" && (
                                     <p className="text-xs text-gray-600">
-                                      Expires {method.expiryMonth}/{method.expiryYear}
+                                      Expires {method.expiryMonth}/
+                                      {method.expiryYear}
                                     </p>
                                   )}
                                 </div>
@@ -1041,14 +1335,19 @@ export default function DashboardPage() {
                                 )}
                               </div>
                               <div className="flex space-x-2">
-                                <Button variant="outline" size="sm">edit</Button>
+                                <Button variant="outline" size="sm">
+                                  edit
+                                </Button>
                                 <Button variant="outline" size="sm">
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </div>
                             </div>
                           ))}
-                          <Button variant="outline" className="w-full bg-transparent">
+                          <Button
+                            variant="outline"
+                            className="w-full bg-transparent"
+                          >
                             add payment method
                           </Button>
                         </div>
@@ -1056,12 +1355,18 @@ export default function DashboardPage() {
 
                       <div className="border-t pt-6">
                         <div className="space-y-4">
-                          <h3 className="font-medium text-gray-900">billing history</h3>
+                          <h3 className="font-medium text-gray-900">
+                            billing history
+                          </h3>
                           <div className="space-y-3">
                             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div>
-                                <p className="font-medium text-sm">Mathematics Lesson - Sarah Johnson</p>
-                                <p className="text-xs text-gray-600">January 15, 2024</p>
+                                <p className="font-medium text-sm">
+                                  Mathematics Lesson - Sarah Johnson
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  January 15, 2024
+                                </p>
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-sm">$25.00</p>
@@ -1072,8 +1377,12 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div>
-                                <p className="font-medium text-sm">English Literature - David Chen</p>
-                                <p className="text-xs text-gray-600">January 12, 2024</p>
+                                <p className="font-medium text-sm">
+                                  English Literature - David Chen
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  January 12, 2024
+                                </p>
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-sm">$30.00</p>
@@ -1094,7 +1403,7 @@ export default function DashboardPage() {
         )}
 
         {/* Tutor Dashboard */}
-        {userType === "tutor" && (
+        {userType === "teacher" && (
           <Tabs defaultValue="bookings" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="bookings">booking requests</TabsTrigger>
@@ -1108,25 +1417,40 @@ export default function DashboardPage() {
                 <Card>
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-yellow-600 mb-2">
-                      {tutorBookings.filter((b) => b.status === "pending").length}
+                      {
+                        tutorBookings.filter((b) => b.status === "pending")
+                          .length
+                      }
                     </div>
-                    <div className="text-sm text-gray-600">pending requests</div>
+                    <div className="text-sm text-gray-600">
+                      pending requests
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-green-600 mb-2">
-                      {tutorBookings.filter((b) => b.status === "approved").length}
+                      {
+                        tutorBookings.filter((b) => b.status === "approved")
+                          .length
+                      }
                     </div>
-                    <div className="text-sm text-gray-600">approved lessons</div>
+                    <div className="text-sm text-gray-600">
+                      approved lessons
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-red-600 mb-2">
-                      {tutorBookings.filter((b) => b.status === "rejected").length}
+                      {
+                        tutorBookings.filter((b) => b.status === "rejected")
+                          .length
+                      }
                     </div>
-                    <div className="text-sm text-gray-600">rejected requests</div>
+                    <div className="text-sm text-gray-600">
+                      rejected requests
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -1151,7 +1475,9 @@ export default function DashboardPage() {
                           <div className="flex items-start space-x-4">
                             <Avatar className="w-12 h-12">
                               <AvatarImage
-                                src={booking.student.image || "/placeholder.svg"}
+                                src={
+                                  booking.student.image || "/placeholder.svg"
+                                }
                                 alt={booking.student.name}
                               />
                               <AvatarFallback>
@@ -1164,11 +1490,19 @@ export default function DashboardPage() {
 
                             <div className="flex-1">
                               <div className="flex items-center space-x-2 mb-2">
-                                <h3 className="text-lg font-semibold text-gray-900">{booking.student.name}</h3>
-                                <Badge className={`${getStatusColor(booking.status)} border`}>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  {booking.student.name}
+                                </h3>
+                                <Badge
+                                  className={`${getStatusColor(
+                                    booking.status
+                                  )} border`}
+                                >
                                   <div className="flex items-center space-x-1">
                                     {getStatusIcon(booking.status)}
-                                    <span className="capitalize">{booking.status}</span>
+                                    <span className="capitalize">
+                                      {booking.status}
+                                    </span>
                                   </div>
                                 </Badge>
                               </div>
@@ -1187,7 +1521,9 @@ export default function DashboardPage() {
                           </div>
 
                           <div className="text-right">
-                            <div className="text-sm text-gray-500 mb-1">requested on</div>
+                            <div className="text-sm text-gray-500 mb-1">
+                              requested on
+                            </div>
                             <div className="text-sm font-medium">
                               {new Date(booking.createdAt).toLocaleDateString()}
                             </div>
@@ -1196,11 +1532,17 @@ export default function DashboardPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">subject</div>
-                            <div className="font-medium text-blue-600">{booking.subject}</div>
+                            <div className="text-sm text-gray-500 mb-1">
+                              subject
+                            </div>
+                            <div className="font-medium text-blue-600">
+                              {booking.subject}
+                            </div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">date & time</div>
+                            <div className="text-sm text-gray-500 mb-1">
+                              date & time
+                            </div>
                             <div className="font-medium">
                               {new Date(booking.date).toLocaleDateString()}
                               <br />
@@ -1208,19 +1550,32 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">duration</div>
-                            <div className="font-medium">{booking.duration} minutes</div>
+                            <div className="text-sm text-gray-500 mb-1">
+                              duration
+                            </div>
+                            <div className="font-medium">
+                              {booking.duration} minutes
+                            </div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-500 mb-1">price offer</div>
+                            <div className="text-sm text-gray-500 mb-1">
+                              price offer
+                            </div>
                             <div className="font-medium">
-                              {booking.proposedPrice !== booking.originalPrice ? (
+                              {booking.proposedPrice !==
+                              booking.originalPrice ? (
                                 <>
-                                  <span className="line-through text-gray-400">${booking.originalPrice}</span>
-                                  <span className="text-green-600 ml-2">${booking.proposedPrice}/hr</span>
+                                  <span className="line-through text-gray-400">
+                                    ${booking.originalPrice}
+                                  </span>
+                                  <span className="text-green-600 ml-2">
+                                    ${booking.proposedPrice}/hr
+                                  </span>
                                 </>
                               ) : (
-                                <span className="text-green-600">${booking.proposedPrice}/hr</span>
+                                <span className="text-green-600">
+                                  ${booking.proposedPrice}/hr
+                                </span>
                               )}
                             </div>
                           </div>
@@ -1228,24 +1583,38 @@ export default function DashboardPage() {
 
                         {booking.message && (
                           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-blue-900 mb-2">student message:</div>
-                            <p className="text-sm text-blue-800">{booking.message}</p>
+                            <div className="text-sm font-medium text-blue-900 mb-2">
+                              student message:
+                            </div>
+                            <p className="text-sm text-blue-800">
+                              {booking.message}
+                            </p>
                           </div>
                         )}
 
-                        {booking.priceReason && booking.proposedPrice !== booking.originalPrice && (
-                          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-orange-900 mb-2">price negotiation reason:</div>
-                            <p className="text-sm text-orange-800">{booking.priceReason}</p>
-                          </div>
-                        )}
+                        {booking.priceReason &&
+                          booking.proposedPrice !== booking.originalPrice && (
+                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                              <div className="text-sm font-medium text-orange-900 mb-2">
+                                price negotiation reason:
+                              </div>
+                              <p className="text-sm text-orange-800">
+                                {booking.priceReason}
+                              </p>
+                            </div>
+                          )}
 
-                        {booking.status === "rejected" && booking.rejectionReason && (
-                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <div className="text-sm font-medium text-red-900 mb-2">rejection reason:</div>
-                            <p className="text-sm text-red-800">{booking.rejectionReason}</p>
-                          </div>
-                        )}
+                        {booking.status === "rejected" &&
+                          booking.rejectionReason && (
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                              <div className="text-sm font-medium text-red-900 mb-2">
+                                rejection reason:
+                              </div>
+                              <p className="text-sm text-red-800">
+                                {booking.rejectionReason}
+                              </p>
+                            </div>
+                          )}
 
                         {booking.status === "pending" && (
                           <div className="flex space-x-3 pt-4 border-t">
@@ -1264,7 +1633,10 @@ export default function DashboardPage() {
                               <XCircle className="w-4 h-4 mr-2" />
                               reject booking
                             </Button>
-                            <Button variant="outline" className="px-6 bg-transparent">
+                            <Button
+                              variant="outline"
+                              className="px-6 bg-transparent"
+                            >
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message
                             </Button>
@@ -1273,8 +1645,13 @@ export default function DashboardPage() {
 
                         {booking.status === "approved" && (
                           <div className="flex space-x-3 pt-4 border-t">
-                            <Button className="flex-1 bg-blue-600 hover:bg-blue-700">start lesson</Button>
-                            <Button variant="outline" className="px-6 bg-transparent">
+                            <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+                              start lesson
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="px-6 bg-transparent"
+                            >
                               <MessageCircle className="w-4 h-4 mr-2" />
                               message student
                             </Button>
@@ -1292,12 +1669,12 @@ export default function DashboardPage() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">messages</h2>
                   <p className="text-gray-600">
-                    communicate with your {userType === "student" ? "tutors" : "students"}
+                    communicate with your {"student"}
                   </p>
                 </div>
                 <ChatSystem
                   currentUserId={1}
-                  currentUserType={userType}
+                  currentUserType={"student"}
                   triggerButton={
                     <Button className="bg-blue-600 hover:bg-blue-700">
                       <MessageCircle className="w-4 h-4 mr-2" />
@@ -1310,10 +1687,12 @@ export default function DashboardPage() {
               <Card>
                 <CardContent className="p-8 text-center">
                   <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">start messaging</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    start messaging
+                  </h3>
                   <p className="text-gray-600 mb-4">
                     click "open chat" above to start conversations with your{" "}
-                    {userType === "student" ? "tutors" : "students"}
+                    {"student"}
                   </p>
                 </CardContent>
               </Card>
@@ -1325,7 +1704,9 @@ export default function DashboardPage() {
                   <CardTitle>my schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">schedule management coming soon...</p>
+                  <p className="text-gray-600">
+                    schedule management coming soon...
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -1336,7 +1717,9 @@ export default function DashboardPage() {
                   <CardTitle>profile settings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">profile management coming soon...</p>
+                  <p className="text-gray-600">
+                    profile management coming soon...
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -1344,5 +1727,5 @@ export default function DashboardPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

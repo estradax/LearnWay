@@ -27,15 +27,28 @@ import {
   X,
   FileText,
   ImageIcon,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { signUp } from "@/lib/client/auth";
+import { register } from "@/lib/client/api/register";
+import { uploadFile } from "@/lib/client/upload-file";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1); // 1: User Type, 2: Basic Info, 3: Additional Info
   const [userType, setUserType] = useState<"student" | "teacher" | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFileUrls, setUploadedFileUrls] = useState<
+    Array<{ url: string; fileName: string; fileType: string }>
+  >([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     // Basic Info
     firstName: "",
@@ -85,6 +98,10 @@ export default function RegisterPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
   };
 
   const handleArrayToggle = (
@@ -99,24 +116,202 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const validateStep = (step: number): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (step === 1) {
+      if (!userType) {
+        newErrors.userType = "Please select a user type";
+      }
+    } else if (step === 2) {
+      if (!formData.firstName.trim()) {
+        newErrors.firstName = "First name is required";
+      }
+      if (!formData.lastName.trim()) {
+        newErrors.lastName = "Last name is required";
+      }
+      if (!formData.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = "Please enter a valid email address";
+      }
+      if (!formData.password) {
+        newErrors.password = "Password is required";
+      } else if (formData.password.length < 8) {
+        newErrors.password = "Password must be at least 8 characters long";
+      }
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = "Please confirm your password";
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
+      }
+      if (!formData.location.trim()) {
+        newErrors.location = "Location is required";
+      }
+    } else if (step === 3) {
+      if (userType === "student") {
+        if (formData.interests.length === 0) {
+          newErrors.interests = "Please select at least one interest";
+        }
+        if (!formData.learningGoals.trim()) {
+          newErrors.learningGoals = "Learning goals are required";
+        }
+      } else if (userType === "teacher") {
+        if (formData.subjects.length === 0) {
+          newErrors.subjects = "Please select at least one subject";
+        }
+        if (!formData.description.trim()) {
+          newErrors.description = "Teaching description is required";
+        }
+        if (!formData.education.trim()) {
+          newErrors.education = "Education background is required";
+        }
+        if (!formData.hourlyRate.trim()) {
+          newErrors.hourlyRate = "Hourly rate is required";
+        }
+        // Check if all uploaded files have been processed
+        if (
+          uploadedFiles.length > 0 &&
+          uploadedFileUrls.length !== uploadedFiles.length
+        ) {
+          newErrors.files = "Please wait for all files to finish uploading";
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setUploadedFiles((prev) => [...prev, ...files]);
+    setIsUploading(true);
+
+    try {
+      const uploadedUrls: Array<{
+        url: string;
+        fileName: string;
+        fileType: string;
+      }> = [];
+      for (const file of files) {
+        const { url, error } = await uploadFile(file);
+        if (error) {
+          toast.error(`Failed to upload file: ${error.message}`);
+          // Optionally, you might want to remove the failed file from the state
+          setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
+        } else if (url) {
+          uploadedUrls.push({ url, fileName: file.name, fileType: file.type });
+        }
+      }
+      setUploadedFileUrls((prev) => [...prev, ...uploadedUrls]);
+    } catch (error) {
+      console.error("File upload error:", error);
+      toast.error("An unexpected error occurred during file upload.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const removeFile = (index: number) => {
+    const fileToRemove = uploadedFiles[index];
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+    setUploadedFileUrls((prev) => prev.filter((_, i) => i !== index));
+    toast.info(`File "${fileToRemove.name}" removed.`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registration submitted:", {
-      userType,
-      formData,
-      uploadedFiles: uploadedFiles.map((f) => f.name),
-    });
-    // Here you would typically send the data to your backend
-    // Redirect to dashboard or verification page
+
+    if (!validateStep(3)) {
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      // First, create the user with better-auth
+      const result = await signUp.email({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        role: userType || "student",
+        location: formData.location,
+        name: `${formData.firstName} ${formData.lastName}`,
+        phoneNumber: formData.phone || undefined,
+        learningGoal: formData.learningGoals,
+        teachingDescription: formData.description,
+        educationBackground: formData.education,
+        teachingExperience: formData.teachingExperience,
+        hourlyRate: parseFloat(formData.hourlyRate) || undefined,
+        additionalExperience: formData.certifications,
+      });
+
+      if (result.error) {
+        setErrors({ general: result.error.message || "Registration failed" });
+        toast.error(result.error.message || "Registration failed");
+        return;
+      }
+
+      // If user creation was successful, call the additional register API
+      if (result.data.user) {
+        try {
+          const registerData = {
+            userId: result.data.user.id,
+            role: userType || "student",
+            subjectInterestData:
+              userType === "student" ? formData.interests : undefined,
+            subjectCanTeachData:
+              userType === "teacher" ? formData.subjects : undefined,
+            teachingDocumentData:
+              userType === "teacher" && uploadedFileUrls.length > 0
+                ? uploadedFileUrls.map((file) => ({
+                    document: file.url, // Store URL instead of file object
+                    fileType: file.fileType,
+                    fileName: file.fileName,
+                  }))
+                : undefined,
+          };
+
+          await register(registerData);
+
+          toast.success(
+            "Registration successful! Please check your email to verify your account."
+          );
+          router.push("/login");
+        } catch (registerError) {
+          console.error("Additional registration error:", registerError);
+          // Even if the additional registration fails, the user was created successfully
+          toast.success(
+            "Account created successfully! Please check your email to verify your account."
+          );
+          router.push("/login");
+        }
+      } else {
+        toast.success(
+          "Registration successful! Please check your email to verify your account."
+        );
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setErrors({ general: "An unexpected error occurred. Please try again." });
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getFileIcon = (fileName: string) => {
@@ -173,6 +368,16 @@ export default function RegisterPage() {
 
         <Card className="shadow-xs border bg-card">
           <CardContent className="p-8">
+            {/* General Error Display */}
+            {errors.general && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-5 h-5 text-red-500" />
+                  <p className="text-red-700 text-sm">{errors.general}</p>
+                </div>
+              </div>
+            )}
+
             {/* Step 1: User Type Selection */}
             {currentStep === 1 && (
               <div className="space-y-6">
@@ -231,16 +436,19 @@ export default function RegisterPage() {
                   </Card>
                 </div>
 
+                {errors.userType && (
+                  <p className="text-xs text-red-500 text-center">
+                    {errors.userType}
+                  </p>
+                )}
+
                 <div className="flex justify-between">
                   <Link href="/login">
                     <Button variant="outline" className="bg-transparent">
                       back to login
                     </Button>
                   </Link>
-                  <Button
-                    onClick={() => setCurrentStep(2)}
-                    disabled={!userType}
-                  >
+                  <Button onClick={handleNext} disabled={!userType}>
                     continue
                   </Button>
                 </div>
@@ -276,6 +484,11 @@ export default function RegisterPage() {
                         className="mt-1"
                         required
                       />
+                      {errors.firstName && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.firstName}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <Label
@@ -294,6 +507,11 @@ export default function RegisterPage() {
                         className="mt-1"
                         required
                       />
+                      {errors.lastName && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.lastName}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -315,6 +533,11 @@ export default function RegisterPage() {
                       className="mt-1"
                       required
                     />
+                    {errors.email && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -351,6 +574,11 @@ export default function RegisterPage() {
                           )}
                         </Button>
                       </div>
+                      {errors.password && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.password}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <Label
@@ -387,6 +615,11 @@ export default function RegisterPage() {
                           )}
                         </Button>
                       </div>
+                      {errors.confirmPassword && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -425,6 +658,11 @@ export default function RegisterPage() {
                         className="mt-1"
                         required
                       />
+                      {errors.location && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.location}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </form>
@@ -432,12 +670,12 @@ export default function RegisterPage() {
                 <div className="flex justify-between">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentStep(1)}
+                    onClick={handleBack}
                     className="bg-transparent"
                   >
                     back
                   </Button>
-                  <Button onClick={() => setCurrentStep(3)}>continue</Button>
+                  <Button onClick={handleNext}>continue</Button>
                 </div>
               </div>
             )}
@@ -488,6 +726,11 @@ export default function RegisterPage() {
                             </div>
                           ))}
                         </div>
+                        {errors.interests && (
+                          <p className="text-xs text-red-500 mt-2">
+                            {errors.interests}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500 mt-2">
                           Select subjects you're interested in learning (minimum
                           1 required)
@@ -511,6 +754,11 @@ export default function RegisterPage() {
                           rows={3}
                           className="mt-1"
                         />
+                        {errors.learningGoals && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.learningGoals}
+                          </p>
+                        )}
                       </div>
                     </>
                   )}
@@ -544,6 +792,11 @@ export default function RegisterPage() {
                             </div>
                           ))}
                         </div>
+                        {errors.subjects && (
+                          <p className="text-xs text-red-500 mt-2">
+                            {errors.subjects}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500 mt-2">
                           Select all subjects you can teach (minimum 1 required)
                         </p>
@@ -567,6 +820,11 @@ export default function RegisterPage() {
                           className="mt-1"
                           required
                         />
+                        {errors.description && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.description}
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -587,6 +845,11 @@ export default function RegisterPage() {
                           className="mt-1"
                           required
                         />
+                        {errors.education && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.education}
+                          </p>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -637,6 +900,11 @@ export default function RegisterPage() {
                             className="mt-1"
                             required
                           />
+                          {errors.hourlyRate && (
+                            <p className="text-xs text-red-500 mt-1">
+                              {errors.hourlyRate}
+                            </p>
+                          )}
                         </div>
                       </div>
 
@@ -673,6 +941,19 @@ export default function RegisterPage() {
                           <p className="text-xs text-gray-500 mb-4">
                             Supported formats: PDF, JPG, PNG (max 5MB each)
                           </p>
+                          <Label htmlFor="file-upload">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="bg-transparent"
+                              disabled={isUploading}
+                              onClick={() =>
+                                document.getElementById("file-upload")?.click()
+                              }
+                            >
+                              {isUploading ? "Uploading..." : "choose files"}
+                            </Button>
+                          </Label>
                           <input
                             type="file"
                             multiple
@@ -680,16 +961,8 @@ export default function RegisterPage() {
                             onChange={handleFileUpload}
                             className="hidden"
                             id="file-upload"
+                            disabled={isUploading}
                           />
-                          <Label htmlFor="file-upload">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              className="bg-transparent"
-                            >
-                              choose files
-                            </Button>
-                          </Label>
                         </div>
 
                         {/* Uploaded Files Display */}
@@ -714,6 +987,14 @@ export default function RegisterPage() {
                                   >
                                     {(file.size / 1024 / 1024).toFixed(2)} MB
                                   </Badge>
+                                  {uploadedFileUrls[index] && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs text-green-600"
+                                    >
+                                      ✓ Uploaded
+                                    </Badge>
+                                  )}
                                 </div>
                                 <Button
                                   type="button"
@@ -721,11 +1002,17 @@ export default function RegisterPage() {
                                   size="sm"
                                   onClick={() => removeFile(index)}
                                   className="text-red-500 hover:text-red-700"
+                                  disabled={isUploading}
                                 >
                                   <X className="w-4 h-4" />
                                 </Button>
                               </div>
                             ))}
+                            {errors.files && (
+                              <p className="text-xs text-red-500 mt-2">
+                                {errors.files}
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
@@ -755,7 +1042,7 @@ export default function RegisterPage() {
                   <div className="flex justify-between">
                     <Button
                       variant="outline"
-                      onClick={() => setCurrentStep(2)}
+                      onClick={handleBack}
                       className="bg-transparent"
                     >
                       back
@@ -767,8 +1054,9 @@ export default function RegisterPage() {
                           ? "bg-primary hover:bg-primary/90"
                           : "bg-primary hover:bg-primary/90"
                       }`}
+                      disabled={isLoading || isUploading}
                     >
-                      create {userType} account
+                      {isLoading ? "Creating..." : `create ${userType} account`}
                     </Button>
                   </div>
                 </form>

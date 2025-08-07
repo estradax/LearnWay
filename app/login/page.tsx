@@ -1,33 +1,79 @@
-"use client"
+"use client";
 
-import type React from "react"
+import React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Eye, EyeOff, BookOpen } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Eye, EyeOff, BookOpen } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "@/lib/client/auth";
+import { useSession } from "@/lib/client/auth";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter();
+  const { data: session, isPending: sessionLoading } = useSession();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
-  })
+  });
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (session && !sessionLoading) {
+      router.push("/dashboard");
+    }
+  }, [session, sessionLoading, router]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (error) setError(null);
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Login submitted:", formData)
-    // Here you would typically send the data to your backend
-    // Redirect to dashboard after successful login
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn.email({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (result.error) {
+        setError(
+          result.error.message || "Login failed. Please check your credentials."
+        );
+      } else {
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Show loading state while checking session
+  if (sessionLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -35,26 +81,26 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6" />
-            </div>
-            <span className="text-2xl font-bold">TutorHome</span>
-          </Link>
-          <h1 className="text-3xl font-bold mb-2">welcome back</h1>
-          <p>sign in to your account to continue learning</p>
+          <h1 className="text-3xl font-bold mb-2">LearnWay</h1>
+          <p>Sign in to your account to continue learning</p>
         </div>
 
         {/* Login Form */}
         <Card className="shadow-xl border-0">
           <CardHeader>
-            <CardTitle className="text-center text-xl">sign in</CardTitle>
+            <CardTitle className="text-center text-xl">Sign in</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                  {error}
+                </div>
+              )}
+
               <div>
                 <Label htmlFor="email" className="text-sm font-medium">
-                  email address
+                  Email address
                 </Label>
                 <Input
                   id="email"
@@ -64,22 +110,26 @@ export default function LoginPage() {
                   placeholder="your.email@example.com"
                   className="mt-1"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
               <div>
                 <Label htmlFor="password" className="text-sm font-medium">
-                  password
+                  Password
                 </Label>
                 <div className="relative mt-1">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
-                    placeholder="enter your password"
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
+                    placeholder="Enter your password"
                     className="pr-10"
                     required
+                    disabled={isLoading}
                   />
                   <Button
                     type="button"
@@ -87,8 +137,13 @@ export default function LoginPage() {
                     size="sm"
                     className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -98,27 +153,41 @@ export default function LoginPage() {
                   <Checkbox
                     id="remember"
                     checked={formData.rememberMe}
-                    onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("rememberMe", checked as boolean)
+                    }
+                    disabled={isLoading}
                   />
                   <Label htmlFor="remember" className="text-sm">
-                    remember me
+                    Remember me
                   </Label>
                 </div>
                 <Link href="/forgot-password" className="text-sm">
-                  forgot password?
+                  Forgot password?
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full py-3">
-                sign in
+              <Button
+                type="submit"
+                className="w-full py-3"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
               <p>
-                don't have an account?{" "}
-                <Link href="/register" className="font-medium">
-                  sign up here
+                Don't have an account?{" "}
+                <Link href="/register" className="font-medium text-primary">
+                  Sign up here
                 </Link>
               </p>
             </div>
@@ -135,7 +204,7 @@ export default function LoginPage() {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <Button variant="outline">
+                <Button variant="outline" disabled={isLoading}>
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -154,13 +223,17 @@ export default function LoginPage() {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                  google
+                  Google
                 </Button>
-                <Button variant="outline">
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <Button variant="outline" disabled={isLoading}>
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
-                  facebook
+                  Facebook
                 </Button>
               </div>
             </div>
@@ -170,17 +243,12 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-8 text-center text-sm">
           <p>
-            by signing in, you agree to our{" "}
-            <Link href="/terms">
-              terms of service
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy">
-              privacy policy
-            </Link>
+            By signing in, you agree to our{" "}
+            <Link href="/terms">terms of service</Link> and{" "}
+            <Link href="/privacy">privacy policy</Link>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
