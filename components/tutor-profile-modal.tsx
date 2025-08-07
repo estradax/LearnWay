@@ -52,47 +52,47 @@ export default function TutorProfileModal({
         <DialogTrigger asChild>
           {triggerButton || defaultTriggerButton}
         </DialogTrigger>
-        <DialogContent className="min-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-full max-w-[98vw] sm:min-w-[600px] md:min-w-[900px] max-h-[90vh] overflow-y-auto p-2 sm:p-6">
           <DialogHeader>
             <DialogTitle className="sr-only">Tutor Profile</DialogTitle>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 p-2 sm:p-6">
             {/* Main Profile */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Header Card */}
               <Card className="border shadow-xs">
                 <CardContent>
-                  <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-                    <div className="relative flex-shrink-0">
+                  <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                    <div className="relative flex-shrink-0 flex justify-center sm:block">
                       <img
                         src={tutor.image || "/placeholder.svg"}
                         alt={tutor.name}
-                        className="w-32 h-32 rounded object-cover mx-auto md:mx-0"
+                        className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
                       />
                       {tutor.verified && (
-                        <Badge className="mt-4">
+                        <Badge className="mt-2 sm:mt-4">
                           <Check className="w-5 h-5" />
                           Verified
                         </Badge>
                       )}
                     </div>
 
-                    <div className="flex-1 text-center md:text-left">
-                      <h1 className="text-3xl font-bold mb-2">{tutor.name}</h1>
-                      <p className="text-xl font-medium mb-3">
+                    <div className="flex-1 text-center sm:text-left">
+                      <h1 className="text-base xs:text-lg sm:text-3xl font-bold mb-1 sm:mb-2 break-words break-all leading-tight truncate max-w-full">{tutor.name}</h1>
+                      <p className="text-xs xs:text-sm sm:text-xl font-medium mb-1 sm:mb-3 truncate max-w-full">
                         {tutor.subject} Tutor
                       </p>
 
-                      <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mb-4 text-sm">
+                      <div className="flex flex-wrap justify-center sm:justify-start items-center gap-1 xs:gap-2 sm:gap-4 mb-1 sm:mb-4 text-[11px] xs:text-xs sm:text-sm">
                         <div className="flex items-center space-x-1">
                           <Star className="w-4 h-4" />
                           <span className="font-medium">{tutor.rating}</span>
                           <span>({tutor.reviews} reviews)</span>
                         </div>
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center space-x-1 max-w-[110px] xs:max-w-[140px] sm:max-w-none truncate">
                           <MapPin className="w-4 h-4" />
-                          <span>{tutor.location}</span>
+                          <span className="truncate">{tutor.location}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock className="w-4 h-4" />
@@ -104,9 +104,9 @@ export default function TutorProfileModal({
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                      <div className="flex flex-wrap gap-1 xs:gap-2 justify-center sm:justify-start">
                         {tutor.subjects.map((subject, index) => (
-                          <Badge key={index} variant="secondary">
+                          <Badge key={index} variant="secondary" className="text-[10px] xs:text-xs sm:text-sm px-2 py-1 truncate max-w-[90px] xs:max-w-[120px] sm:max-w-none">
                             {subject}
                           </Badge>
                         ))}
@@ -131,7 +131,7 @@ export default function TutorProfileModal({
               </Card>
 
               {/* Education & Achievements */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <Card className="border shadow-xs">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
@@ -187,9 +187,8 @@ export default function TutorProfileModal({
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${
-                                    i < review.rating ? "" : ""
-                                  }`}
+                                  className={`w-4 h-4 ${i < review.rating ? "" : ""
+                                    }`}
                                 />
                               ))}
                             </div>
@@ -205,21 +204,21 @@ export default function TutorProfileModal({
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Price & Contact */}
               <Card className="border shadow-xs">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+                  <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                     <span>Book a Lesson</span>
                     <div className="text-right">
-                      <div className="text-2xl font-bold">
+                      <div className="text-lg sm:text-2xl font-bold">
                         ${tutor.price}
-                        <span className="text-sm">/hour</span>
+                        <span className="text-xs sm:text-sm">/hour</span>
                       </div>
                     </div>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-2 sm:space-y-4">
                   <div className="space-y-2">
                     <Button
                       className="w-full"

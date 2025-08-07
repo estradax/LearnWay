@@ -15,27 +15,27 @@ export default function PublicLayout({
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/tutors" className="transition-colors font-medium">
-              find tutors
+              Temukkan Pengajar
             </Link>
             <Link
               href="/become-tutor"
               className="transition-colors font-medium"
             >
-              become a tutor
+              Cara Menjadi Pengajar
             </Link>
             <Link
               href="/how-it-works"
               className="transition-colors font-medium"
             >
-              how it works
+              Bagaimana cara kerjanya
             </Link>
           </nav>
           <div className="flex items-center space-x-3">
             <Link href="/login">
-              <Button variant="ghost">sign in</Button>
+              <Button variant="ghost">Masuk</Button>
             </Link>
             <Link href="/register">
-              <Button className="px-6">sign up</Button>
+              <Button className="px-6">Daftar</Button>
             </Link>
           </div>
         </div>
