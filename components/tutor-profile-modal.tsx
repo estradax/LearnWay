@@ -59,23 +59,23 @@ export default function TutorProfileModal({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 p-2 sm:p-6">
             {/* Main Profile */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            {/* Header Card */}
-            <Card className="border shadow-xs">
-              <CardContent>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-                  <div className="relative flex-shrink-0 flex justify-center sm:block">
-                    <img
-                      src={tutor.image || "/placeholder.svg"}
-                      alt={tutor.name}
-                      className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
-                    />
-                    {tutor.verified && (
-                      <Badge className="mt-2 sm:mt-4">
-                        <Check className="w-5 h-5" />
-                        Verified
-                      </Badge>
-                    )}
-                  </div>
+              {/* Header Card */}
+              <Card className="border shadow-xs">
+                <CardContent>
+                  <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                    <div className="relative flex-shrink-0 flex justify-center sm:block">
+                      <img
+                        src={tutor.image || "/placeholder.svg"}
+                        alt={tutor.name}
+                        className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
+                      />
+                      {tutor.verified && (
+                        <Badge className="mt-2 sm:mt-4">
+                          <Check className="w-5 h-5" />
+                          Verified
+                        </Badge>
+                      )}
+                    </div>
 
                     <div className="flex-1 text-center sm:text-left">
                       <h1 className="text-base xs:text-lg sm:text-3xl font-bold mb-1 sm:mb-2 break-words break-all leading-tight truncate max-w-full">{tutor.name}</h1>
