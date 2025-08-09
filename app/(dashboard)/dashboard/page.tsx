@@ -24,7 +24,17 @@ import {
   ContactRequestItem,
   getIncomingContactRequestsAsTutor,
   TutorIncomingContactRequestItem,
+  decideContactRequest,
 } from "@/lib/client/api/contact-request";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import ChatSystem from "@/components/chat-system";
+import { payContactRequest, completeContactRequest } from "@/lib/client/api/messages";
+import { Textarea } from "@/components/ui/textarea";
+import { submitCompletionSummary } from "@/lib/client/api/messages";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -36,6 +46,11 @@ export default function DashboardPage() {
   );
   const [requestsLoading, setRequestsLoading] = React.useState(false);
   const [requestsError, setRequestsError] = React.useState<string | null>(null);
+  const [studentDetailOpen, setStudentDetailOpen] = React.useState(false);
+  const [selectedStudentRequest, setSelectedStudentRequest] = React.useState<ContactRequestItem | null>(null);
+  const [chatContactRequestId, setChatContactRequestId] = React.useState<number | undefined>(undefined);
+  const [actionBusy, setActionBusy] = React.useState(false);
+  const [actionMsg, setActionMsg] = React.useState<string | null>(null);
 
   // Incoming requests (addressed to me as tutor)
   const [incomingRequests, setIncomingRequests] = React.useState<
@@ -43,6 +58,18 @@ export default function DashboardPage() {
   >(null);
   const [incomingLoading, setIncomingLoading] = React.useState(false);
   const [incomingError, setIncomingError] = React.useState<string | null>(null);
+  const [tutorSummary, setTutorSummary] = React.useState("");
+ 
+   // Dialog state for viewing/deciding a single request
+  const [selectedRequest, setSelectedRequest] = React.useState<
+    TutorIncomingContactRequestItem | null
+  >(null);
+  const [detailOpen, setDetailOpen] = React.useState(false);
+  const [selectedFixedDate, setSelectedFixedDate] = React.useState<Date | undefined>(
+    undefined
+  );
+  const [actionLoading, setActionLoading] = React.useState(false);
+  const [actionError, setActionError] = React.useState<string | null>(null);
 
   // Redirect unauthenticated users
   React.useEffect(() => {
@@ -100,6 +127,69 @@ export default function DashboardPage() {
       ignore = true;
     };
   }, [session?.user?.id]);
+
+  const openDetail = (req: TutorIncomingContactRequestItem) => {
+    setSelectedRequest(req);
+    setActionError(null);
+    setSelectedFixedDate(undefined);
+    setDetailOpen(true);
+  };
+
+  const closeDetail = () => {
+    setDetailOpen(false);
+    setSelectedRequest(null);
+    setSelectedFixedDate(undefined);
+    setActionError(null);
+  };
+
+  const refreshIncoming = async () => {
+    try {
+      const data = await getIncomingContactRequestsAsTutor();
+      setIncomingRequests(data);
+    } catch {
+      // ignore
+    }
+  };
+
+  const approveRequest = async () => {
+    if (!selectedRequest) return;
+    const fixedDateIso = selectedFixedDate
+      ? selectedFixedDate.toISOString()
+      : selectedRequest.fixedDate || undefined;
+    if (!fixedDateIso) {
+      setActionError("Please choose a fixed date");
+      return;
+    }
+    try {
+      setActionLoading(true);
+      setActionError(null);
+      await decideContactRequest(selectedRequest.id, {
+        status: "approved",
+        fixedDate: fixedDateIso,
+      });
+      await refreshIncoming();
+      closeDetail();
+    } catch (e) {
+      setActionError(e instanceof Error ? e.message : "Failed to approve");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const rejectRequest = async () => {
+    if (!selectedRequest) return;
+    try {
+      setActionLoading(true);
+      setActionError(null);
+      await decideContactRequest(selectedRequest.id, { status: "rejected" });
+      await refreshIncoming();
+      closeDetail();
+    } catch (e) {
+      setActionError(e instanceof Error ? e.message : "Failed to reject");
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   if (sessionLoading) {
     return (
@@ -451,6 +541,8 @@ export default function DashboardPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "finish":
+        return "bg-green-100 text-green-800 border-green-200";
       case "approved":
         return "bg-green-100 text-green-800 border-green-200";
       case "pending":
@@ -465,6 +557,8 @@ export default function DashboardPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
+      case "finish":
+        return <CheckCircle className="w-4 h-4" />;
       case "approved":
         return <CheckCircle className="w-4 h-4" />;
       case "pending":
@@ -475,6 +569,13 @@ export default function DashboardPage() {
       default:
         return <AlertCircle className="w-4 h-4" />;
     }
+  };
+
+  const getDisplayStatus = (
+    item: Pick<ContactRequestItem, "status" | "isCompleted" | "completionSummary">
+  ) => {
+    if (item.isCompleted && item.completionSummary) return "finish";
+    return item.status;
   };
 
   return (
@@ -577,11 +678,11 @@ export default function DashboardPage() {
                               }`}
                           </h3>
                           <Badge
-                            className={`${getStatusColor(req.status)} border`}
+                            className={`${getStatusColor(getDisplayStatus(req))} border`}
                           >
                             <div className="flex items-center space-x-1">
-                              {getStatusIcon(req.status)}
-                              <span className="capitalize">{req.status}</span>
+                              {getStatusIcon(getDisplayStatus(req))}
+                              <span className="capitalize">{getDisplayStatus(req)}</span>
                             </div>
                           </Badge>
                         </div>
@@ -635,12 +736,16 @@ export default function DashboardPage() {
                     <div className="flex flex-col space-y-2 lg:w-48">
                       {req.status === "approved" && (
                         <>
-                          <Button className="w-full bg-green-600 hover:bg-green-700">
-                            join lesson
+                          <Button
+                            className="w-full bg-green-600 hover:bg-green-700"
+                            onClick={() => { setSelectedStudentRequest(req); setStudentDetailOpen(true); }}
+                          >
+                            view details
                           </Button>
                           <Button
                             variant="outline"
                             className="w-full bg-transparent"
+                            onClick={() => setChatContactRequestId(req.id)}
                           >
                             <MessageCircle className="w-4 h-4 mr-2" />
                             message tutor
@@ -656,12 +761,130 @@ export default function DashboardPage() {
                           waiting for approval
                         </Button>
                       )}
+                      {req.status === "rejected" && (
+                        <Badge className="w-full justify-center">rejected</Badge>
+                      )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          <Dialog open={studentDetailOpen} onOpenChange={(o) => (o ? setStudentDetailOpen(true) : (setStudentDetailOpen(false), setSelectedStudentRequest(null)))}>
+            <DialogContent className="max-w-[95vw] sm:max-w-xl p-4">
+              <DialogHeader>
+                <DialogTitle>Lesson details</DialogTitle>
+              </DialogHeader>
+              {selectedStudentRequest && (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <div className="text-sm text-gray-600">Tutor</div>
+                    <div className="font-medium">
+                      {selectedStudentRequest.tutor?.name || `${selectedStudentRequest.tutor?.firstName || ""} ${selectedStudentRequest.tutor?.lastName || ""}`}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <div className="text-gray-600">Subject</div>
+                      <div className="font-medium">{selectedStudentRequest.subject}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-600">Duration</div>
+                      <div className="font-medium">{selectedStudentRequest.durationMinutes} minutes</div>
+                    </div>
+                    {selectedStudentRequest.fixedDate && (
+                      <div>
+                        <div className="text-gray-600">Fixed schedule</div>
+                        <div className="font-medium">{new Date(selectedStudentRequest.fixedDate).toLocaleString()}</div>
+                      </div>
+                    )}
+                    {selectedStudentRequest.proposedPrice && (
+                      <div>
+                        <div className="text-gray-600">Price</div>
+                        <div className="font-medium">${selectedStudentRequest.proposedPrice}/hr</div>
+                      </div>
+                    )}
+                    <div>
+                      <div className="text-gray-600">Payment</div>
+                      <div className="font-medium">{selectedStudentRequest.isPaid ? `paid on ${selectedStudentRequest.paymentDate ? new Date(selectedStudentRequest.paymentDate).toLocaleString() : "-"}` : "unpaid"}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-600">Completion</div>
+                      <div className="font-medium">{selectedStudentRequest.isCompleted ? "completed" : "not completed"}</div>
+                    </div>
+                  </div>
+                  {actionMsg && <div className="text-sm text-red-600">{actionMsg}</div>}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    {!selectedStudentRequest.isPaid && selectedStudentRequest.status === "approved" && (
+                      <Button
+                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        disabled={actionBusy}
+                        onClick={async () => {
+                          try {
+                            setActionBusy(true);
+                            setActionMsg(null);
+                            await payContactRequest(selectedStudentRequest.id);
+                            const data = await getMyContactRequests();
+                            setRequests(data);
+                            const u = data.find((d) => d.id === selectedStudentRequest.id) || null;
+                            setSelectedStudentRequest(u);
+                          } catch (e) {
+                            setActionMsg(e instanceof Error ? e.message : "Payment failed");
+                          } finally {
+                            setActionBusy(false);
+                          }
+                        }}
+                      >
+                        pay
+                      </Button>
+                    )}
+                    {selectedStudentRequest.isPaid && !selectedStudentRequest.isCompleted && (
+                      <Button
+                        variant="outline"
+                        className="flex-1 bg-transparent"
+                        disabled={actionBusy}
+                        onClick={async () => {
+                          try {
+                            setActionBusy(true);
+                            setActionMsg(null);
+                            await completeContactRequest(selectedStudentRequest.id);
+                            const data = await getMyContactRequests();
+                            setRequests(data);
+                            const u = data.find((d) => d.id === selectedStudentRequest.id) || null;
+                            setSelectedStudentRequest(u);
+                          } catch (e) {
+                            setActionMsg(e instanceof Error ? e.message : "Failed to complete");
+                          } finally {
+                            setActionBusy(false);
+                          }
+                        }}
+                      >
+                        mark as finished
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      className="flex-1 bg-transparent"
+                      onClick={() => setChatContactRequestId(selectedStudentRequest.id)}
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" /> message tutor
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+
+          <ChatSystem
+            currentUserId={1}
+            currentUserType="student"
+            triggerButton={null}
+            contactRequestId={chatContactRequestId}
+            onOpenChange={(open) => {
+              if (!open) setChatContactRequestId(undefined)
+            }}
+          />
         </TabsContent>
         <TabsContent value="students" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -746,11 +969,11 @@ export default function DashboardPage() {
                               }`}
                           </h3>
                           <Badge
-                            className={`${getStatusColor(req.status)} border`}
+                            className={`${getStatusColor(getDisplayStatus(req))} border`}
                           >
                             <div className="flex items-center space-x-1">
-                              {getStatusIcon(req.status)}
-                              <span className="capitalize">{req.status}</span>
+                              {getStatusIcon(getDisplayStatus(req))}
+                              <span className="capitalize">{getDisplayStatus(req)}</span>
                             </div>
                           </Badge>
                         </div>
@@ -784,6 +1007,12 @@ export default function DashboardPage() {
                               <span>${req.proposedPrice}/hr</span>
                             </div>
                           )}
+                          {req.fixedDate && (
+                            <div className="flex items-center space-x-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>fixed: {new Date(req.fixedDate).toLocaleString()}</span>
+                            </div>
+                          )}
                         </div>
 
                         {req.message && (
@@ -804,15 +1033,12 @@ export default function DashboardPage() {
                     <div className="flex flex-col space-y-2 lg:w-48">
                       {req.status === "approved" && (
                         <>
-                          <Button className="w-full bg-green-600 hover:bg-green-700">
-                            join lesson
-                          </Button>
                           <Button
                             variant="outline"
                             className="w-full bg-transparent"
+                            onClick={() => openDetail(req)}
                           >
-                            <MessageCircle className="w-4 h-4 mr-2" />
-                            message student
+                            view details
                           </Button>
                         </>
                       )}
@@ -820,9 +1046,9 @@ export default function DashboardPage() {
                         <Button
                           variant="outline"
                           className="w-full bg-transparent"
-                          disabled
+                          onClick={() => openDetail(req)}
                         >
-                          awaiting your approval
+                          view details
                         </Button>
                       )}
                     </div>
@@ -831,6 +1057,180 @@ export default function DashboardPage() {
               </Card>
             ))}
           </div>
+
+          <Dialog open={detailOpen} onOpenChange={(o) => (o ? setDetailOpen(true) : closeDetail())}>
+            <DialogContent className="max-w-[95vw] sm:max-w-xl p-4">
+              <DialogHeader>
+                <DialogTitle>Request details</DialogTitle>
+              </DialogHeader>
+              {selectedRequest && (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <div className="text-sm text-gray-600">Student</div>
+                    <div className="font-medium">
+                      {selectedRequest.student?.name || `${selectedRequest.student?.firstName || ""} ${selectedRequest.student?.lastName || ""}`}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <div className="text-gray-600">Subject</div>
+                      <div className="font-medium">{selectedRequest.subject}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-600">Duration</div>
+                      <div className="font-medium">{selectedRequest.durationMinutes} minutes</div>
+                    </div>
+                    {selectedRequest.preferredDate && (
+                      <div>
+                        <div className="text-gray-600">Preferred date</div>
+                        <div className="font-medium">{new Date(selectedRequest.preferredDate).toLocaleString()}</div>
+                      </div>
+                    )}
+                    {selectedRequest.timeSlot && (
+                      <div>
+                        <div className="text-gray-600">Preferred time</div>
+                        <div className="font-medium">{selectedRequest.timeSlot}</div>
+                      </div>
+                    )}
+                    {selectedRequest.proposedPrice && (
+                      <div>
+                        <div className="text-gray-600">Proposed price</div>
+                        <div className="font-medium">${selectedRequest.proposedPrice}/hr</div>
+                      </div>
+                    )}
+                    <div>
+                      <div className="text-gray-600">Payment</div>
+                      <div className="font-medium">{selectedRequest.isPaid ? "paid" : "unpaid"}</div>
+                    </div>
+                  </div>
+                  {selectedRequest.message && (
+                    <div className="text-sm">
+                      <div className="text-gray-600 mb-1">Message</div>
+                      <div className="bg-gray-50 rounded p-2">{selectedRequest.message}</div>
+                    </div>
+                  )}
+
+                  {selectedRequest.isCompleted && (
+                    <div className="space-y-2">
+                      <Label>Lesson summary</Label>
+                      <div className="bg-gray-50 rounded p-2 whitespace-pre-wrap">
+                        {selectedRequest.completionSummary || "-"}
+                      </div>
+                      {selectedRequest.completedAt && (
+                        <div className="text-xs text-gray-500">
+                          Completed at {new Date(selectedRequest.completedAt).toLocaleString()}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {!selectedRequest.isCompleted && (
+                    <div className="space-y-2">
+                      <Label>Fix date and time</Label>
+                      {selectedRequest.fixedDate ? (
+                        <div className="font-medium">
+                          {new Date(selectedRequest.fixedDate).toLocaleString()}
+                        </div>
+                      ) : (
+                        <>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" className="justify-start bg-transparent">
+                                {selectedFixedDate ? format(selectedFixedDate, "PPP p") : "Pick date"}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <div className="p-2">
+                                <CalendarPicker
+                                  mode="single"
+                                  selected={selectedFixedDate}
+                                  onSelect={setSelectedFixedDate}
+                                  initialFocus
+                                />
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                          <div className="text-xs text-gray-500">Required to accept</div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {actionError && (
+                    <div className="text-sm text-red-600">{actionError}</div>
+                  )}
+
+                  {/* Footer actions change by status */}
+                  {selectedRequest.status === "pending" && !selectedRequest.isCompleted && (
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button
+                        className="bg-green-600 hover:bg-green-700 flex-1"
+                        onClick={approveRequest}
+                        disabled={actionLoading}
+                      >
+                        accept request
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex-1 bg-transparent"
+                        onClick={rejectRequest}
+                        disabled={actionLoading}
+                      >
+                        deny request
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* When approved and paid and student marked finished, allow tutor to input summary and finish */}
+                  {selectedRequest.status === "approved" && selectedRequest.isPaid && selectedRequest.studentCompleted && !selectedRequest.isCompleted && (
+                    <div className="space-y-2">
+                      <Label>Lesson summary (required)</Label>
+                      <Textarea
+                        placeholder="What was covered, homework, next steps..."
+                        value={tutorSummary}
+                        onChange={(e) => setTutorSummary(e.target.value)}
+                      />
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <Button
+                          variant="outline"
+                          className="flex-1 bg-transparent"
+                          disabled={!tutorSummary.trim() || actionLoading}
+                          onClick={async () => {
+                            try {
+                              setActionLoading(true);
+                              await submitCompletionSummary(selectedRequest.id, tutorSummary.trim());
+                            } finally {
+                              setActionLoading(false);
+                            }
+                          }}
+                        >
+                          save summary
+                        </Button>
+                        <Button
+                          className="flex-1"
+                          disabled={actionLoading}
+                          onClick={async () => {
+                            try {
+                              setActionLoading(true);
+                              await completeContactRequest(selectedRequest.id);
+                              await refreshIncoming();
+                              closeDetail();
+                            } catch (e) {
+                              setActionError(e instanceof Error ? e.message : "Failed to complete");
+                            } finally {
+                              setActionLoading(false);
+                            }
+                          }}
+                        >
+                          mark as finished
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </TabsContent>
       </Tabs>
     </div>

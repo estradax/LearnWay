@@ -27,6 +27,18 @@ export const contactRequest = pgTable("contact_request", {
 
   status: text("status").notNull().default("pending"),
 
+  // New: final/fixed agreed date-time set by tutor upon acceptance
+  fixedDate: timestamp("fixed_date"),
+
+  // New: payment and completion tracking
+  isPaid: boolean("is_paid").notNull().default(false),
+  paymentDate: timestamp("payment_date"),
+  isCompleted: boolean("is_completed").notNull().default(false),
+  completionSummary: text("completion_summary"),
+  completedAt: timestamp("completed_at"),
+  tutorCompleted: boolean("tutor_completed").notNull().default(false),
+  studentCompleted: boolean("student_completed").notNull().default(false),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }); 

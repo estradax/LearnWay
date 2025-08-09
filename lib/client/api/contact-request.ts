@@ -60,6 +60,14 @@ export interface ContactRequestItem {
   proposedPrice: string | null; // decimals serialized as string
   priceReason: string | null;
   status: string;
+  fixedDate: string | null; // NEW: final fixed date set by tutor
+  isPaid: boolean;
+  paymentDate: string | null;
+  isCompleted: boolean;
+  completionSummary: string | null;
+  completedAt: string | null;
+  studentCompleted: boolean;
+  tutorCompleted: boolean;
   createdAt: string;
   updatedAt: string;
   tutor: {
@@ -122,6 +130,32 @@ export async function getIncomingContactRequestsAsTutor(): Promise<
       .json()
       .catch(() => ({ error: "Failed to fetch contact requests" }));
     throw new Error(errorData.error || "Failed to fetch contact requests");
+  }
+
+  return response.json();
+}
+
+export type ContactRequestDecision = {
+  status: "approved" | "rejected";
+  fixedDate?: string; // ISO string required if approved
+};
+
+export async function decideContactRequest(
+  id: number,
+  data: ContactRequestDecision
+): Promise<{ message: string }> {
+  const response = await fetch(`/api/contact-request/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData: ContactRequestError = await response
+      .json()
+      .catch(() => ({ error: "Failed to update contact request" }));
+    throw new Error(errorData.error || "Failed to update contact request");
   }
 
   return response.json();

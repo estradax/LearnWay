@@ -22,6 +22,7 @@ import {
   CheckCheck,
   Clock,
 } from "lucide-react"
+import { getMessages, sendMessage as apiSendMessage } from "@/lib/client/api/messages"
 
 interface Message {
   id: number
@@ -54,9 +55,11 @@ interface ChatSystemProps {
   currentUserId: number
   currentUserType: "student" | "tutor"
   triggerButton?: React.ReactNode
+  contactRequestId?: number
+  onOpenChange?: (open: boolean) => void
 }
 
-export default function ChatSystem({ currentUserId, currentUserType, triggerButton }: ChatSystemProps) {
+export default function ChatSystem({ currentUserId, currentUserType, triggerButton, contactRequestId, onOpenChange }: ChatSystemProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedChat, setSelectedChat] = useState<ChatConversation | null>(null)
   const [newMessage, setNewMessage] = useState("")
@@ -233,6 +236,54 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
     },
   ])
 
+  // Load messages for a provided contactRequestId and open dialog
+  useEffect(() => {
+    let ignore = false
+    async function load() {
+      if (!contactRequestId) return
+      try {
+        const rows = await getMessages(contactRequestId)
+        if (ignore) return
+        const msgs: Message[] = rows.map((m) => ({
+          id: m.id,
+          senderId: m.senderId === String(currentUserId) ? currentUserId : -1,
+          senderName: m.senderId === String(currentUserId) ? "You" : "Participant",
+          senderType: currentUserType,
+          content: m.content,
+          timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          status: "read",
+          type: m.type === "file" ? "file" : "text",
+        }))
+        const conv: ChatConversation = {
+          id: contactRequestId,
+          participantId: 0,
+          participantName: "Conversation",
+          participantType: currentUserType === "student" ? "tutor" : "student",
+          participantImage: "/placeholder.svg",
+          subject: undefined,
+          lastMessage: rows[rows.length - 1]?.content || "",
+          lastMessageTime: rows[rows.length - 1]?.createdAt ? new Date(rows[rows.length - 1].createdAt).toLocaleString() : "",
+          unreadCount: 0,
+          isOnline: true,
+          messages: msgs,
+        }
+        setConversations((prev) => {
+          const exists = prev.find((c) => c.id === conv.id)
+          return exists ? prev.map((c) => (c.id === conv.id ? conv : c)) : [conv, ...prev]
+        })
+        setSelectedChat(conv)
+        setIsOpen(true)
+        onOpenChange?.(true)
+      } catch {
+        // ignore
+      }
+    }
+    load()
+    return () => {
+      ignore = true
+    }
+  }, [contactRequestId])
+
   const filteredConversations = conversations.filter(
     (conv) =>
       conv.participantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -249,7 +300,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
     }
   }, [selectedChat])
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return
 
     const message: Message = {
@@ -277,16 +328,21 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
     setSelectedChat(updatedChat)
     setNewMessage("")
 
-    // Simulate message status updates
-    setTimeout(() => {
-      const deliveredMessage = { ...message, status: "delivered" as const }
-      const updatedChatDelivered = {
-        ...updatedChat,
-        messages: updatedChat.messages.map((msg) => (msg.id === message.id ? deliveredMessage : msg)),
+    // Attempt to send via API if this chat is bound to a contactRequestId
+    if (contactRequestId) {
+      try {
+        await apiSendMessage(contactRequestId, message.content)
+        const deliveredMessage = { ...message, status: "delivered" as const }
+        const updatedChatDelivered = {
+          ...updatedChat,
+          messages: updatedChat.messages.map((msg) => (msg.id === message.id ? deliveredMessage : msg)),
+        }
+        setSelectedChat(updatedChatDelivered)
+        setConversations((prev) => prev.map((conv) => (conv.id === selectedChat.id ? updatedChatDelivered : conv)))
+      } catch {
+        // ignore errors for now
       }
-      setSelectedChat(updatedChatDelivered)
-      setConversations((prev) => prev.map((conv) => (conv.id === selectedChat.id ? updatedChatDelivered : conv)))
-    }, 1000)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -317,7 +373,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
   )
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); onOpenChange?.(o) }}>
       <DialogTrigger asChild>{triggerButton || defaultTriggerButton}</DialogTrigger>
       <DialogContent className="max-w-6xl max-h-[90vh] p-0">
         <DialogHeader className="sr-only">
@@ -482,9 +538,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                             <p className="text-sm">{message.content}</p>
                           )}
 
-                          <div
-                            className={`flex items-center justify-end space-x-1 mt-1`}
-                          >
+                          <div className={`flex items-center justify-end space-x-1 mt-1`}>
                             <span className="text-xs">{message.timestamp}</span>
                             {message.senderId === currentUserId && getMessageStatusIcon(message.status)}
                           </div>

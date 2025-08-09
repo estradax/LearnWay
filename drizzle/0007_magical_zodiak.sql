@@ -1,0 +1,2 @@
+ALTER TABLE "contact_request" ADD COLUMN "tutor_completed" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "contact_request" ADD COLUMN "student_completed" boolean DEFAULT false NOT NULL;
