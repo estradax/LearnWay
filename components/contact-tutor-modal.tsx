@@ -1,32 +1,70 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Slider } from "@/components/ui/slider"
-import { CalendarIcon, DollarSign, X, MessageCircle, Clock, MapPin } from "lucide-react"
-import { format } from "date-fns"
-import ChatSystem from "@/components/chat-system"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import {
+  CalendarIcon,
+  DollarSign,
+  X,
+  MessageCircle,
+  Clock,
+  MapPin,
+} from "lucide-react";
+import { format } from "date-fns";
+import ChatSystem from "@/components/chat-system";
+import { createContactRequest } from "@/lib/client/api/contact-request";
+
+type TutorForContact = {
+  id: string | number;
+  userId?: string;
+  name: string;
+  subject?: string;
+  subjects: string[];
+  price: number;
+  image?: string | null;
+  location?: string | null;
+};
 
 interface ContactTutorModalProps {
-  tutor: any
-  isOpen: boolean
-  onClose: () => void
+  tutor: TutorForContact | null | undefined;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTutorModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>()
-  const [proposedPrice, setProposedPrice] = useState([tutor?.price || 25])
-  const [showPriceNegotiation, setShowPriceNegotiation] = useState(false)
-  const [contactStep, setContactStep] = useState(1) // 1: Contact Form, 2: Price Negotiation, 3: Confirmation
+export default function ContactTutorModal({
+  tutor,
+  isOpen,
+  onClose,
+}: ContactTutorModalProps) {
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [proposedPrice, setProposedPrice] = useState([tutor?.price || 25]);
+  const [showPriceNegotiation, setShowPriceNegotiation] = useState(false);
+  const [contactStep, setContactStep] = useState(1); // 1: Contact Form, 2: Price Negotiation, 3: Confirmation
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,47 +74,82 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
     timeSlot: "",
     message: "",
     priceReason: "",
-  })
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-  const timeSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM", "07:00 PM", "08:00 PM"]
+  const timeSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+    "07:00 PM",
+    "08:00 PM",
+  ];
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmitContact = () => {
     if (showPriceNegotiation) {
-      setContactStep(2)
+      setContactStep(2);
     } else {
-      setContactStep(3)
+      setContactStep(3);
     }
-  }
+  };
 
   const handleSubmitPriceNegotiation = () => {
-    setContactStep(3)
-  }
+    setContactStep(3);
+  };
 
-  const handleFinalSubmit = () => {
-    // Here you would typically send the data to your backend
-    console.log("Final submission:", {
-      tutor: tutor.id,
-      formData,
-      proposedPrice: proposedPrice[0],
-      selectedDate,
-      showPriceNegotiation,
-    })
-    onClose()
-    // Show success message or redirect
-  }
+  const handleFinalSubmit = async () => {
+    try {
+      setSubmitting(true);
+      if (!tutor) return;
+      const payload = {
+        tutorId: String(
+          (tutor as unknown as { userId?: string; id: string | number })
+            .userId ?? tutor.id
+        ),
+        studentName: formData.name,
+        studentEmail: formData.email,
+        studentPhone: formData.phone || undefined,
+        subject: formData.subject,
+        durationMinutes: Number(formData.duration),
+        preferredDate: selectedDate ? selectedDate.toISOString() : undefined,
+        timeSlot: formData.timeSlot || undefined,
+        message: formData.message || undefined,
+        wantsNegotiation: showPriceNegotiation,
+        proposedPrice: showPriceNegotiation ? proposedPrice[0] : undefined,
+        priceReason:
+          showPriceNegotiation && formData.priceReason
+            ? formData.priceReason
+            : undefined,
+      };
+      await createContactRequest(payload);
+      onClose();
+    } catch (err) {
+      console.error("Failed to submit contact request", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-  if (!tutor) return null
+  if (!tutor) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto p-2 sm:p-6">
         <DialogHeader>
           <DialogTitle className="sr-only">Contact Tutor</DialogTitle>
-          <Button variant="ghost" size="sm" className="absolute right-2 top-2 sm:right-4 sm:top-4 rounded-full" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute right-2 top-2 sm:right-4 sm:top-4 rounded-full"
+            onClick={onClose}
+          >
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>
@@ -90,8 +163,12 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
               className="w-20 h-20 sm:w-16 sm:h-16 rounded-full object-cover mx-auto sm:mx-0"
             />
             <div className="w-full sm:w-auto text-center sm:text-left">
-              <h3 className="text-base sm:text-xl font-bold text-gray-900 break-words">{tutor.name}</h3>
-              <p className="text-blue-600 font-medium text-sm sm:text-base">{tutor.subject}</p>
+              <h3 className="text-base sm:text-xl font-bold text-gray-900 break-words">
+                {tutor.name}
+              </h3>
+              <p className="text-blue-600 font-medium text-sm sm:text-base">
+                {tutor.subject}
+              </p>
               <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mt-1">
                 <span className="flex items-center space-x-1">
                   <DollarSign className="w-4 h-4" />
@@ -99,7 +176,9 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </span>
                 <span className="flex items-center space-x-1">
                   <MapPin className="w-4 h-4" />
-                  <span className="truncate max-w-[120px] sm:max-w-none">{tutor.location}</span>
+                  <span className="truncate max-w-[120px] sm:max-w-none">
+                    {tutor.location}
+                  </span>
                 </span>
               </div>
             </div>
@@ -109,12 +188,16 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
           {contactStep === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Contact {tutor.name}</h2>
-                <p className="text-gray-600">Fill out the form below to get in touch with your tutor</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Contact {tutor.name}
+                </h2>
+                <p className="text-gray-600">
+                  Fill out the form below to get in touch with your tutor
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="name">Full Name *</Label>
                   <Input
                     id="name"
@@ -123,7 +206,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                     placeholder="Your full name"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
@@ -135,7 +218,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input
                   id="phone"
@@ -146,10 +229,15 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
-                    <SelectTrigger>
+                  <Select
+                    value={formData.subject}
+                    onValueChange={(value) =>
+                      handleInputChange("subject", value)
+                    }
+                  >
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select subject" />
                     </SelectTrigger>
                     <SelectContent>
@@ -161,10 +249,15 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="duration">Lesson Duration</Label>
-                  <Select value={formData.duration} onValueChange={(value) => handleInputChange("duration", value)}>
-                    <SelectTrigger>
+                  <Select
+                    value={formData.duration}
+                    onValueChange={(value) =>
+                      handleInputChange("duration", value)
+                    }
+                  >
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -178,24 +271,39 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label>Preferred Date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left bg-transparent">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left bg-transparent"
+                      >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                        {selectedDate
+                          ? format(selectedDate, "PPP")
+                          : "Pick a date"}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} initialFocus />
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        initialFocus
+                      />
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="timeSlot">Preferred Time</Label>
-                  <Select value={formData.timeSlot} onValueChange={(value) => handleInputChange("timeSlot", value)}>
-                    <SelectTrigger>
+                  <Select
+                    value={formData.timeSlot}
+                    onValueChange={(value) =>
+                      handleInputChange("timeSlot", value)
+                    }
+                  >
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Choose time slot" />
                     </SelectTrigger>
                     <SelectContent>
@@ -209,7 +317,7 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
                 <Textarea
                   id="message"
@@ -234,25 +342,38 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                       type="checkbox"
                       id="priceNegotiation"
                       checked={showPriceNegotiation}
-                      onChange={(e) => setShowPriceNegotiation(e.target.checked)}
+                      onChange={(e) =>
+                        setShowPriceNegotiation(e.target.checked)
+                      }
                       className="rounded"
                     />
-                    <label htmlFor="priceNegotiation" className="text-sm font-medium">
-                      I'd like to negotiate the price (Current: ${tutor.price}/hr)
+                    <label
+                      htmlFor="priceNegotiation"
+                      className="text-sm font-medium"
+                    >
+                      I&apos;d like to negotiate the price (Current: $
+                      {tutor.price}/hr)
                     </label>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Many tutors are open to discussing pricing based on your budget and lesson frequency.
+                    Many tutors are open to discussing pricing based on your
+                    budget and lesson frequency.
                   </p>
                 </CardContent>
               </Card>
 
               <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
-                <Button variant="outline" onClick={onClose} className="flex-1 bg-transparent">
-                  Cancel
+                <Button
+                  variant="outline"
+                  onClick={onClose}
+                  className="flex-1 bg-transparent"
+                >
+                  cancel
                 </Button>
-                <Button onClick={handleSubmitContact} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                  {showPriceNegotiation ? "Continue to Price Discussion" : "Send Message"}
+                <Button onClick={handleSubmitContact}>
+                  {showPriceNegotiation
+                    ? "continue to price discussion"
+                    : "send message"}
                 </Button>
               </div>
             </div>
@@ -262,17 +383,29 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
           {contactStep === 2 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Price Negotiation</h2>
-                <p className="text-gray-600">Suggest a price that works for your budget</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Price Negotiation
+                </h2>
+                <p className="text-gray-600">
+                  Suggest a price that works for your budget
+                </p>
               </div>
 
               <Card>
                 <CardContent className="p-6">
                   <div className="text-center mb-6">
-                    <div className="text-sm text-gray-600 mb-2">Current Price</div>
-                    <div className="text-3xl font-bold text-gray-400 line-through">${tutor.price}/hr</div>
-                    <div className="text-sm text-gray-600 mt-4 mb-2">Your Proposed Price</div>
-                    <div className="text-4xl font-bold text-blue-600">${proposedPrice[0]}/hr</div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      Current Price
+                    </div>
+                    <div className="text-3xl font-bold text-gray-400 line-through">
+                      ${tutor.price}/hr
+                    </div>
+                    <div className="text-sm text-gray-600 mt-4 mb-2">
+                      Your Proposed Price
+                    </div>
+                    <div className="text-4xl font-bold text-primary">
+                      ${proposedPrice[0]}/hr
+                    </div>
                   </div>
 
                   <div className="space-y-4">
@@ -286,17 +419,23 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                       className="w-full"
                     />
                     <div className="flex justify-between text-sm text-gray-600">
-                      <span>${Math.max(10, Math.floor(tutor.price * 0.5))}</span>
+                      <span>
+                        ${Math.max(10, Math.floor(tutor.price * 0.5))}
+                      </span>
                       <span>${tutor.price}</span>
                     </div>
                   </div>
 
-                  <div className="mt-6">
-                    <Label htmlFor="priceReason">Why this price? (Optional)</Label>
+                  <div className="mt-6 space-y-2">
+                    <Label htmlFor="priceReason">
+                      Why this price? (Optional)
+                    </Label>
                     <Textarea
                       id="priceReason"
                       value={formData.priceReason}
-                      onChange={(e) => handleInputChange("priceReason", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("priceReason", e.target.value)
+                      }
                       placeholder="Explain your budget constraints, lesson frequency, or other factors..."
                       rows={3}
                     />
@@ -304,19 +443,27 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
 
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      <strong>Tip:</strong> Tutors are more likely to accept lower rates for regular, long-term students
-                      or multiple lessons per week.
+                      <strong>Tip:</strong> Tutors are more likely to accept
+                      lower rates for regular, long-term students or multiple
+                      lessons per week.
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
               <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
-                <Button variant="outline" onClick={() => setContactStep(1)} className="flex-1">
-                  Back
+                <Button
+                  variant="outline"
+                  onClick={() => setContactStep(1)}
+                  className="flex-1"
+                >
+                  back
                 </Button>
-                <Button onClick={handleSubmitPriceNegotiation} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                  Submit Price Proposal
+                <Button
+                  onClick={handleSubmitPriceNegotiation}
+                  className="flex-1"
+                >
+                  submit price proposal
                 </Button>
               </div>
             </div>
@@ -330,13 +477,17 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h2>
-                <p className="text-gray-600">Your request has been sent to {tutor.name}</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Summary
+                </h2>
+                <p className="text-gray-600">
+                  Your request will be sent to {tutor.name}.
+                </p>
               </div>
 
               <Card className="text-left">
                 <CardHeader>
-                  <CardTitle className="text-lg">Request Summary</CardTitle>
+                  <CardTitle className="text-lg">Request details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
@@ -349,12 +500,16 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Duration:</span>
-                    <span className="font-medium">{formData.duration} minutes</span>
+                    <span className="font-medium">
+                      {formData.duration} minutes
+                    </span>
                   </div>
                   {selectedDate && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Preferred Date:</span>
-                      <span className="font-medium">{format(selectedDate, "PPP")}</span>
+                      <span className="font-medium">
+                        {format(selectedDate, "PPP")}
+                      </span>
                     </div>
                   )}
                   {formData.timeSlot && (
@@ -368,7 +523,10 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                     <span className="font-medium">
                       {showPriceNegotiation ? (
                         <>
-                          <span className="line-through text-gray-400">${tutor.price}</span> ${proposedPrice[0]}/hr
+                          <span className="line-through text-gray-400">
+                            ${tutor.price}
+                          </span>{" "}
+                          ${proposedPrice[0]}/hr
                           <Badge variant="secondary" className="ml-2">
                             Negotiated
                           </Badge>
@@ -388,8 +546,10 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                 </div>
                 <ul className="text-sm text-blue-700 space-y-1 text-left">
                   <li>• {tutor.name} will review your request</li>
-                  <li>• You'll receive a response within 24 hours</li>
-                  {showPriceNegotiation && <li>• The tutor will consider your price proposal</li>}
+                  <li>• You&apos;ll receive a response within 24 hours</li>
+                  {showPriceNegotiation && (
+                    <li>• The tutor will consider your price proposal</li>
+                  )}
                   <li>• Once accepted, you can schedule your first lesson</li>
                 </ul>
               </div>
@@ -405,8 +565,12 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
                     </Button>
                   }
                 />
-                <Button onClick={handleFinalSubmit} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                  Done
+                <Button
+                  onClick={handleFinalSubmit}
+                  className="flex-1"
+                  disabled={submitting}
+                >
+                  {submitting ? "submitting..." : "done"}
                 </Button>
               </div>
             </div>
@@ -414,5 +578,5 @@ export default function ContactTutorModal({ tutor, isOpen, onClose }: ContactTut
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

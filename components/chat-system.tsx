@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
+import { useSession } from "@/lib/client/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +23,10 @@ import {
   CheckCheck,
   Clock,
 } from "lucide-react"
+import { getMessages, sendMessage as apiSendMessage } from "@/lib/client/api/messages"
+import type { MessageItem } from "@/lib/client/api/messages"
+import { getMyContactRequests, getIncomingContactRequestsAsTutor } from "@/lib/client/api/contact-request"
+import type { ContactRequestItem, TutorIncomingContactRequestItem } from "@/lib/client/api/contact-request"
 
 interface Message {
   id: number
@@ -54,184 +59,233 @@ interface ChatSystemProps {
   currentUserId: number
   currentUserType: "student" | "tutor"
   triggerButton?: React.ReactNode
+  contactRequestId?: number
+  onOpenChange?: (open: boolean) => void
 }
 
-export default function ChatSystem({ currentUserId, currentUserType, triggerButton }: ChatSystemProps) {
+export default function ChatSystem({ currentUserId, currentUserType, triggerButton, contactRequestId, onOpenChange }: ChatSystemProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedChat, setSelectedChat] = useState<ChatConversation | null>(null)
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { data: session } = useSession()
+  const currentAuthUserId = session?.user?.id ?? null
 
   // Mock conversations data
-  const [conversations, setConversations] = useState<ChatConversation[]>([
-    {
-      id: 1,
-      participantId: 2,
-      participantName: "Sarah Johnson",
-      participantType: "tutor",
-      participantImage: "/professional-teacher-woman.png",
-      subject: "Mathematics",
-      lastMessage: "Great! I'll prepare some practice problems for our next session.",
-      lastMessageTime: "2 min ago",
-      unreadCount: 2,
-      isOnline: true,
-      messages: [
-        {
-          id: 1,
-          senderId: 1,
-          senderName: "You",
-          senderType: "student",
-          content:
-            "Hi Sarah! I'm really struggling with quadratic equations. Could you help me understand the concept better?",
-          timestamp: "10:30 AM",
+  const [conversations, setConversations] = useState<ChatConversation[]>([])
+
+  // Load messages for a provided contactRequestId and open dialog
+  useEffect(() => {
+    let ignore = false
+    async function load() {
+      if (!contactRequestId) return
+      try {
+        const rows = await getMessages(contactRequestId)
+        if (ignore) return
+
+        // Fetch the corresponding contact request to derive participant info
+        let participantName = "Conversation"
+        let participantImage = "/placeholder.svg"
+        let subject: string | undefined = undefined
+
+        try {
+          if (currentUserType === "student") {
+            const list = await getMyContactRequests()
+            const item = list.find((r) => r.id === contactRequestId)
+            if (item) {
+              const tutor = item.tutor
+              participantName = [tutor?.firstName, tutor?.lastName].filter(Boolean).join(" ") || tutor?.name || "Tutor"
+              participantImage = tutor?.image || "/placeholder.svg"
+              subject = item.subject
+            }
+          } else {
+            const list = await getIncomingContactRequestsAsTutor()
+            const item = list.find((r) => r.id === contactRequestId)
+            if (item) {
+              const student = item.student
+              participantName = [student?.firstName, student?.lastName].filter(Boolean).join(" ") || student?.name || item.studentName || "Student"
+              participantImage = student?.image || "/placeholder.svg"
+              subject = item.subject
+            }
+          }
+        } catch {
+          // ignore contact-request fetch errors; fallback values remain
+        }
+
+        const otherType = currentUserType === "student" ? "tutor" : "student"
+
+        const msgs: Message[] = rows.map((m) => ({
+          id: m.id,
+          senderId: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserId : -1,
+          senderName: currentAuthUserId && m.senderId === currentAuthUserId ? "You" : participantName,
+          senderType: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserType : otherType,
+          content: m.content,
+          timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           status: "read",
-          type: "text",
-        },
-        {
-          id: 2,
-          senderId: 2,
-          senderName: "Sarah Johnson",
-          senderType: "tutor",
-          content: "Of course! Quadratic equations can be tricky at first. Let me break it down for you step by step.",
-          timestamp: "10:32 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 3,
-          senderId: 2,
-          senderName: "Sarah Johnson",
-          senderType: "tutor",
-          content:
-            "A quadratic equation is any equation that can be written in the form ax² + bx + c = 0, where a, b, and c are constants and a ≠ 0.",
-          timestamp: "10:33 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 4,
-          senderId: 1,
-          senderName: "You",
-          senderType: "student",
-          content: "That makes sense! Could you show me how to solve x² - 5x + 6 = 0?",
-          timestamp: "10:35 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 5,
-          senderId: 2,
-          senderName: "Sarah Johnson",
-          senderType: "tutor",
-          content: "We can solve this by factoring. We need to find two numbers that multiply to 6 and add to -5.",
-          timestamp: "10:36 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 6,
-          senderId: 2,
-          senderName: "Sarah Johnson",
-          senderType: "tutor",
-          content: "Great! I'll prepare some practice problems for our next session.",
-          timestamp: "10:45 AM",
-          status: "delivered",
-          type: "text",
-        },
-      ],
-    },
-    {
-      id: 2,
-      participantId: 3,
-      participantName: "David Chen",
-      participantType: "tutor",
-      participantImage: "/professional-teacher-man.png",
-      subject: "English Literature",
-      lastMessage: "I've uploaded the essay guidelines for you to review.",
-      lastMessageTime: "1 hour ago",
-      unreadCount: 0,
-      isOnline: false,
-      messages: [
-        {
-          id: 1,
-          senderId: 1,
-          senderName: "You",
-          senderType: "student",
-          content: "Hi David! I need help with my essay on Shakespeare's Hamlet.",
-          timestamp: "Yesterday 3:20 PM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 2,
-          senderId: 3,
-          senderName: "David Chen",
-          senderType: "tutor",
-          content: "I'd be happy to help! What specific aspect of Hamlet are you focusing on for your essay?",
-          timestamp: "Yesterday 3:25 PM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 3,
-          senderId: 3,
-          senderName: "David Chen",
-          senderType: "tutor",
-          content: "I've uploaded the essay guidelines for you to review.",
-          timestamp: "9:15 AM",
-          status: "read",
-          type: "file",
-          fileName: "Essay_Guidelines_Hamlet.pdf",
-          fileUrl: "#",
-        },
-      ],
-    },
-    {
-      id: 3,
-      participantId: 4,
-      participantName: "Alex Chen",
-      participantType: "student",
-      participantImage: "/placeholder.svg",
-      subject: "Mathematics",
-      lastMessage: "Thank you for the clear explanation!",
-      lastMessageTime: "3 hours ago",
-      unreadCount: 1,
-      isOnline: true,
-      messages: [
-        {
-          id: 1,
-          senderId: 4,
-          senderName: "Alex Chen",
-          senderType: "student",
-          content: "Hi! I'm having trouble with the algebra homework you assigned.",
-          timestamp: "7:30 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 2,
-          senderId: 1,
-          senderName: "You",
-          senderType: "tutor",
-          content: "No problem! Which specific problems are giving you trouble?",
-          timestamp: "7:45 AM",
-          status: "read",
-          type: "text",
-        },
-        {
-          id: 3,
-          senderId: 4,
-          senderName: "Alex Chen",
-          senderType: "student",
-          content: "Thank you for the clear explanation!",
-          timestamp: "8:20 AM",
-          status: "delivered",
-          type: "text",
-        },
-      ],
-    },
-  ])
+          type: m.type === "file" ? "file" : "text",
+        }))
+        const conv: ChatConversation = {
+          id: contactRequestId,
+          participantId: 0,
+          participantName,
+          participantType: currentUserType === "student" ? "tutor" : "student",
+          participantImage,
+          subject: subject,
+          lastMessage: rows[rows.length - 1]?.content || "",
+          lastMessageTime: rows[rows.length - 1]?.createdAt ? new Date(rows[rows.length - 1].createdAt).toLocaleString() : "",
+          unreadCount: 0,
+          isOnline: true,
+          messages: msgs,
+        }
+        setConversations((prev) => {
+          const exists = prev.find((c) => c.id === conv.id)
+          return exists ? prev.map((c) => (c.id === conv.id ? conv : c)) : [conv, ...prev]
+        })
+        setSelectedChat(conv)
+        setIsOpen(true)
+        onOpenChange?.(true)
+      } catch {
+        // ignore
+      }
+    }
+    load()
+    return () => {
+      ignore = true
+    }
+  }, [contactRequestId, currentUserId, currentUserType, onOpenChange, currentAuthUserId])
+
+  // When opening the dialog without a specific contactRequestId, load the user's conversations
+  useEffect(() => {
+    let ignore = false
+    async function loadConversationsForCurrentUser() {
+      if (contactRequestId) return
+      try {
+        let convs: ChatConversation[] = []
+        if (currentUserType === "student") {
+          const list: ContactRequestItem[] = await getMyContactRequests()
+          if (ignore) return
+          convs = list.map((item) => {
+            const other = item.tutor
+            const participantName = [other?.firstName, other?.lastName].filter(Boolean).join(" ") || other?.name || "Tutor"
+            const participantImage = other?.image || "/placeholder.svg"
+            return {
+              id: item.id,
+              participantId: 0,
+              participantName,
+              participantType: "tutor",
+              participantImage,
+              subject: item.subject,
+              lastMessage: "",
+              lastMessageTime: item.updatedAt || item.createdAt || "",
+              unreadCount: 0,
+              isOnline: true,
+              messages: [],
+            }
+          })
+        } else {
+          const list: TutorIncomingContactRequestItem[] = await getIncomingContactRequestsAsTutor()
+          if (ignore) return
+          convs = list.map((item) => {
+            const other = item.student
+            const participantName = [other?.firstName, other?.lastName].filter(Boolean).join(" ") || other?.name || "Student"
+            const participantImage = other?.image || "/placeholder.svg"
+            return {
+              id: item.id,
+              participantId: 0,
+              participantName,
+              participantType: "student",
+              participantImage,
+              subject: item.subject,
+              lastMessage: "",
+              lastMessageTime: item.updatedAt || item.createdAt || "",
+              unreadCount: 0,
+              isOnline: true,
+              messages: [],
+            }
+          })
+        }
+
+        setConversations(convs)
+
+        // Auto-select first conversation and load its messages
+        if (convs.length > 0 && !selectedChat) {
+          const first = convs[0]
+          setSelectedChat(first)
+          try {
+            const rows = await getMessages(first.id)
+            const otherType = currentUserType === "student" ? "tutor" : "student"
+            const msgs: Message[] = rows.map((m) => ({
+              id: m.id,
+              senderId: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserId : -1,
+              senderName: currentAuthUserId && m.senderId === currentAuthUserId ? "You" : first.participantName,
+              senderType: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserType : otherType,
+              content: m.content,
+              timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              status: "read",
+              type: m.type === "file" ? "file" : "text",
+            }))
+            const updated = {
+              ...first,
+              messages: msgs,
+              lastMessage: rows[rows.length - 1]?.content || "",
+              lastMessageTime: rows[rows.length - 1]?.createdAt ? new Date(rows[rows.length - 1].createdAt).toLocaleString() : "",
+            }
+            setSelectedChat(updated)
+            setConversations((prev) => prev.map((c) => (c.id === first.id ? updated : c)))
+          } catch {
+            // ignore
+          }
+          setIsOpen(true)
+          onOpenChange?.(true)
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadConversationsForCurrentUser()
+    return () => {
+      ignore = true
+    }
+  }, [contactRequestId, currentUserType, onOpenChange, selectedChat, currentAuthUserId, currentUserId])
+
+  function mapRowsToMessages(rows: MessageItem[], participantName: string): Message[] {
+    const otherType = currentUserType === "student" ? "tutor" : "student"
+    return rows.map((m) => ({
+      id: m.id,
+      senderId: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserId : -1,
+      senderName: currentAuthUserId && m.senderId === currentAuthUserId ? "You" : participantName,
+      senderType: currentAuthUserId && m.senderId === currentAuthUserId ? currentUserType : otherType,
+      content: m.content,
+      timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      status: "read",
+      type: m.type === "file" ? "file" : "text",
+    }))
+  }
+
+  const fetchAndSetMessages = async (conv: ChatConversation) => {
+    try {
+      const rows = await getMessages(conv.id)
+      const msgs = mapRowsToMessages(rows, conv.participantName)
+      const updated = {
+        ...conv,
+        messages: msgs,
+        lastMessage: rows[rows.length - 1]?.content || "",
+        lastMessageTime: rows[rows.length - 1]?.createdAt ? new Date(rows[rows.length - 1].createdAt).toLocaleString() : "",
+      }
+      setSelectedChat(updated)
+      setConversations((prev) => prev.map((c) => (c.id === conv.id ? updated : c)))
+    } catch {
+      // ignore
+    }
+  }
+
+  const handleSelectConversation = async (conversation: ChatConversation) => {
+    setSelectedChat(conversation)
+    if (conversation.messages.length === 0) {
+      await fetchAndSetMessages(conversation)
+    }
+  }
 
   const filteredConversations = conversations.filter(
     (conv) =>
@@ -249,7 +303,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
     }
   }, [selectedChat])
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return
 
     const message: Message = {
@@ -277,16 +331,22 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
     setSelectedChat(updatedChat)
     setNewMessage("")
 
-    // Simulate message status updates
-    setTimeout(() => {
-      const deliveredMessage = { ...message, status: "delivered" as const }
-      const updatedChatDelivered = {
-        ...updatedChat,
-        messages: updatedChat.messages.map((msg) => (msg.id === message.id ? deliveredMessage : msg)),
+    // Attempt to send via API using the selected conversation id
+    const targetConvId = selectedChat?.id || contactRequestId
+    if (targetConvId) {
+      try {
+        await apiSendMessage(targetConvId, message.content)
+        const deliveredMessage = { ...message, status: "delivered" as const }
+        const updatedChatDelivered = {
+          ...updatedChat,
+          messages: updatedChat.messages.map((msg) => (msg.id === message.id ? deliveredMessage : msg)),
+        }
+        setSelectedChat(updatedChatDelivered)
+        setConversations((prev) => prev.map((conv) => (conv.id === selectedChat.id ? updatedChatDelivered : conv)))
+      } catch {
+        // ignore errors for now
       }
-      setSelectedChat(updatedChatDelivered)
-      setConversations((prev) => prev.map((conv) => (conv.id === selectedChat.id ? updatedChatDelivered : conv)))
-    }, 1000)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -317,9 +377,9 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
   )
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); onOpenChange?.(o) }}>
       <DialogTrigger asChild>{triggerButton || defaultTriggerButton}</DialogTrigger>
-      <DialogContent className="max-w-6xl max-h-[90vh] p-0">
+      <DialogContent className="max-h-[90vh] p-0 min-w-5xl">
         <DialogHeader className="sr-only">
           <DialogTitle>Chat System</DialogTitle>
         </DialogHeader>
@@ -359,7 +419,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                         ? "border"
                         : "hover:bg-gray-100"
                     }`}
-                    onClick={() => setSelectedChat(conversation)}
+                    onClick={() => handleSelectConversation(conversation)}
                   >
                     <div className="flex items-start space-x-3">
                       <div className="relative">
@@ -473,6 +533,13 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                               : "rounded-r-2xl rounded-tl-2xl"
                           } p-3`}
                         >
+                          <div
+                            className={`text-xs font-medium mb-1 ${
+                              message.senderId === currentUserId ? "text-right" : "text-left"
+                            }`}
+                          >
+                            {message.senderName}
+                          </div>
                           {message.type === "file" ? (
                             <div className="flex items-center space-x-2">
                               <Paperclip className="w-4 h-4" />
@@ -482,9 +549,7 @@ export default function ChatSystem({ currentUserId, currentUserType, triggerButt
                             <p className="text-sm">{message.content}</p>
                           )}
 
-                          <div
-                            className={`flex items-center justify-end space-x-1 mt-1`}
-                          >
+                          <div className={`flex items-center justify-end space-x-1 mt-1`}>
                             <span className="text-xs">{message.timestamp}</span>
                             {message.senderId === currentUserId && getMessageStatusIcon(message.status)}
                           </div>
