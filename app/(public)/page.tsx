@@ -191,7 +191,7 @@ export default function HomePage() {
         "Pengajar yang luar biasa! Kalkulus jadi jauh lebih mudah dipahami. Nilai saya naik dari C ke A hanya dalam 2 bulan..",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
-      date: "2 weeks ago",
+      date: "2 minggu lalu",
     },
     {
       name: "David L.",
@@ -201,7 +201,7 @@ export default function HomePage() {
         "Belajar piano dengan tutor saya sungguh luar biasa. Sangat sabar dan beradaptasi dengan kecepatan belajar saya dengan sempurna.",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-man-UYl0E1brgRMNIdpwKtcub7BEPgdF0Y.png",
-      date: "1 month ago",
+      date: "1 bulan lalu",
     },
     {
       name: "Maria K.",
@@ -211,7 +211,7 @@ export default function HomePage() {
         "Pengajar bahasa Inggris yang luar biasa! Membantu saya mempersiapkan IELTS dan saya mendapatkan skor yang saya butuhkan untuk universitas.",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/chinese-teacher-woman-melqHKBZAmB7jTGnVLHjTkYAFiuRfH.png",
-      date: "3 weeks ago",
+      date: "3 minggu lalu",
     },
   ];
 
