@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,45 +16,91 @@ import {
   AlertCircle,
   MessageCircle,
   Star,
-  Phone,
-  Mail,
-  User,
-  Settings,
-  BookOpen,
-  TrendingUp,
-  Award,
-  Target,
-  Edit,
-  Camera,
-  Bell,
-  Shield,
-  CreditCard,
-  Globe,
-  Trash2,
-  Download,
-  BarChart3,
-  CalendarIcon,
-  ClockIcon,
 } from "lucide-react";
-import ChatSystem from "@/components/chat-system";
-import { Input } from "@/components/ui/input";
 import { useSession, signOut } from "@/lib/client/auth";
 import { useRouter } from "next/navigation";
+import {
+  getMyContactRequests,
+  ContactRequestItem,
+  getIncomingContactRequestsAsTutor,
+  TutorIncomingContactRequestItem,
+} from "@/lib/client/api/contact-request";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session, isPending: sessionLoading } = useSession();
 
-  // Determine user type from session data
-  const userType = session?.user?.role === "teacher" ? "teacher" : "student";
+  // Requests state (place hooks before early returns)
+  const [requests, setRequests] = React.useState<ContactRequestItem[] | null>(
+    null
+  );
+  const [requestsLoading, setRequestsLoading] = React.useState(false);
+  const [requestsError, setRequestsError] = React.useState<string | null>(null);
 
+  // Incoming requests (addressed to me as tutor)
+  const [incomingRequests, setIncomingRequests] = React.useState<
+    TutorIncomingContactRequestItem[] | null
+  >(null);
+  const [incomingLoading, setIncomingLoading] = React.useState(false);
+  const [incomingError, setIncomingError] = React.useState<string | null>(null);
+
+  // Redirect unauthenticated users
   React.useEffect(() => {
     if (!session && !sessionLoading) {
       router.push("/login");
     }
   }, [session, sessionLoading, router]);
 
-  // Redirect if not authenticated
+  // Load contact requests when session available
+  React.useEffect(() => {
+    let ignore = false;
+    async function load() {
+      setRequestsLoading(true);
+      setRequestsError(null);
+      try {
+        const data = await getMyContactRequests();
+        if (!ignore) setRequests(data);
+      } catch (e) {
+        if (!ignore)
+          setRequestsError(e instanceof Error ? e.message : "Failed to load");
+      } finally {
+        if (!ignore) setRequestsLoading(false);
+      }
+    }
+    if (session?.user?.id) {
+      load();
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [session?.user?.id]);
+
+  // Load incoming contact requests when session available (requests to me as tutor)
+  React.useEffect(() => {
+    let ignore = false;
+    async function load() {
+      setIncomingLoading(true);
+      setIncomingError(null);
+      try {
+        const data = await getIncomingContactRequestsAsTutor();
+        if (!ignore) setIncomingRequests(data);
+      } catch (e) {
+        if (!ignore)
+          setIncomingError(
+            e instanceof Error ? e.message : "Failed to load incoming requests"
+          );
+      } finally {
+        if (!ignore) setIncomingLoading(false);
+      }
+    }
+    if (session?.user?.id) {
+      load();
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [session?.user?.id]);
+
   if (sessionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -456,46 +502,66 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {
-                    studentBookings.filter((b) => b.status === "approved")
-                      .length
-                  }
+                <div className="text-3xl font-bold text-green-600 mb-2">
+                  {requests
+                    ? requests.filter((r) => r.status === "approved").length
+                    : 0}
                 </div>
-                <div className="text-sm text-gray-600">Approved teachers</div>
+                <div className="text-sm text-gray-600">approved lessons</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {studentBookings.filter((b) => b.status === "pending").length}
+                <div className="text-3xl font-bold text-yellow-600 mb-2">
+                  {requests
+                    ? requests.filter((r) => r.status === "pending").length
+                    : 0}
                 </div>
-                <div className="text-sm text-gray-600">Pending requests</div>
+                <div className="text-sm text-gray-600">pending requests</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {studentBookings.length}
+                <div className="text-3xl font-bold text-blue-600 mb-2">
+                  {requests ? requests.length : 0}
                 </div>
-                <div className="text-sm text-gray-600">Total teachers</div>
+                <div className="text-sm text-gray-600">total bookings</div>
               </CardContent>
             </Card>
           </div>
 
+          {requestsLoading && (
+            <div className="text-center text-sm text-gray-600">
+              Loading requests...
+            </div>
+          )}
+          {requestsError && (
+            <div className="text-center text-sm text-red-600">
+              {requestsError}
+            </div>
+          )}
+
           <div className="space-y-4">
-            {studentBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden">
+            {(requests || []).map((req) => (
+              <Card key={req.id} className="overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
                     <div className="flex items-start space-x-4">
                       <Avatar className="w-16 h-16">
                         <AvatarImage
-                          src={booking.tutor.image || "/placeholder.svg"}
-                          alt={booking.tutor.name}
+                          src={req.tutor?.image || "/placeholder.svg"}
+                          alt={
+                            req.tutor?.name || req.tutor?.firstName || "Tutor"
+                          }
                         />
                         <AvatarFallback>
-                          {booking.tutor.name
+                          {(
+                            req.tutor?.name ||
+                            `${req.tutor?.firstName || ""}${
+                              req.tutor?.lastName || ""
+                            }` ||
+                            "TU"
+                          )
                             .split(" ")
                             .map((n) => n[0])
                             .join("")}
@@ -505,80 +571,73 @@ export default function DashboardPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.tutor.name}
+                            {req.tutor?.name ||
+                              `${req.tutor?.firstName || ""} ${
+                                req.tutor?.lastName || ""
+                              }`}
                           </h3>
                           <Badge
-                            className={`${getStatusColor(
-                              booking.status
-                            )} border`}
+                            className={`${getStatusColor(req.status)} border`}
                           >
                             <div className="flex items-center space-x-1">
-                              {getStatusIcon(booking.status)}
-                              <span className="capitalize">
-                                {booking.status}
-                              </span>
+                              {getStatusIcon(req.status)}
+                              <span className="capitalize">{req.status}</span>
                             </div>
                           </Badge>
                         </div>
 
                         <p className="text-blue-600 font-medium mb-2">
-                          {booking.tutor.subject}
+                          {req.subject}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>
-                              {new Date(booking.date).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>
-                              {booking.time} ({booking.duration} min)
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <DollarSign className="w-4 h-4" />
-                            <span>${booking.price}/hr</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            <span>{booking.tutor.rating}</span>
-                          </div>
+                          {req.preferredDate && (
+                            <div className="flex items-center space-x-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>
+                                {new Date(
+                                  req.preferredDate
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          {req.timeSlot && (
+                            <div className="flex items-center space-x-1">
+                              <Clock className="w-4 h-4" />
+                              <span>
+                                {req.timeSlot} ({req.durationMinutes} min)
+                              </span>
+                            </div>
+                          )}
+                          {req.proposedPrice && (
+                            <div className="flex items-center space-x-1">
+                              <DollarSign className="w-4 h-4" />
+                              <span>${req.proposedPrice}/hr</span>
+                            </div>
+                          )}
                         </div>
 
-                        {booking.message && (
+                        {req.message && (
                           <div className="bg-gray-50 rounded-lg p-3 mb-3">
                             <p className="text-sm text-gray-700">
                               <span className="font-medium">your message:</span>{" "}
-                              {booking.message}
+                              {req.message}
                             </p>
                           </div>
                         )}
 
-                        {booking.status === "canceled" &&
-                          booking.cancelReason && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                              <p className="text-sm text-red-700">
-                                <span className="font-medium">
-                                  cancellation reason:
-                                </span>{" "}
-                                {booking.cancelReason}
-                              </p>
-                            </div>
-                          )}
+                        {req.wantsNegotiation && (
+                          <Badge variant="secondary">Negotiated</Badge>
+                        )}
                       </div>
                     </div>
 
                     <div className="flex flex-col space-y-2 lg:w-48">
-                      {booking.status === "approved" && (
+                      {req.status === "approved" && (
                         <>
-                          <Link href={`/lesson/${booking.id}`}>
-                            <Button className="w-full bg-green-600 hover:bg-green-700">
-                              join lesson
-                            </Button>
-                          </Link>
+                          <Button className="w-full bg-green-600 hover:bg-green-700">
+                            join lesson
+                          </Button>
                           <Button
                             variant="outline"
                             className="w-full bg-transparent"
@@ -588,21 +647,13 @@ export default function DashboardPage() {
                           </Button>
                         </>
                       )}
-                      {booking.status === "pending" && (
+                      {req.status === "pending" && (
                         <Button
                           variant="outline"
                           className="w-full bg-transparent"
                           disabled
                         >
                           waiting for approval
-                        </Button>
-                      )}
-                      {booking.status === "canceled" && (
-                        <Button
-                          variant="outline"
-                          className="w-full bg-transparent"
-                        >
-                          book again
                         </Button>
                       )}
                     </div>
@@ -617,10 +668,10 @@ export default function DashboardPage() {
             <Card>
               <CardContent className="p-6 text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">
-                  {
-                    studentBookings.filter((b) => b.status === "approved")
-                      .length
-                  }
+                  {incomingRequests
+                    ? incomingRequests.filter((r) => r.status === "approved")
+                        .length
+                    : 0}
                 </div>
                 <div className="text-sm text-gray-600">approved lessons</div>
               </CardContent>
@@ -628,7 +679,10 @@ export default function DashboardPage() {
             <Card>
               <CardContent className="p-6 text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">
-                  {studentBookings.filter((b) => b.status === "pending").length}
+                  {incomingRequests
+                    ? incomingRequests.filter((r) => r.status === "pending")
+                        .length
+                    : 0}
                 </div>
                 <div className="text-sm text-gray-600">pending requests</div>
               </CardContent>
@@ -636,26 +690,47 @@ export default function DashboardPage() {
             <Card>
               <CardContent className="p-6 text-center">
                 <div className="text-3xl font-bold text-blue-600 mb-2">
-                  {studentBookings.length}
+                  {incomingRequests ? incomingRequests.length : 0}
                 </div>
-                <div className="text-sm text-gray-600">total bookings</div>
+                <div className="text-sm text-gray-600">total requests</div>
               </CardContent>
             </Card>
           </div>
 
+          {incomingLoading && (
+            <div className="text-center text-sm text-gray-600">
+              Loading incoming requests...
+            </div>
+          )}
+          {incomingError && (
+            <div className="text-center text-sm text-red-600">
+              {incomingError}
+            </div>
+          )}
+
           <div className="space-y-4">
-            {studentBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden">
+            {(incomingRequests || []).map((req) => (
+              <Card key={req.id} className="overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
                     <div className="flex items-start space-x-4">
                       <Avatar className="w-16 h-16">
                         <AvatarImage
-                          src={booking.tutor.image || "/placeholder.svg"}
-                          alt={booking.tutor.name}
+                          src={req.student?.image || "/placeholder.svg"}
+                          alt={
+                            req.student?.name ||
+                            req.student?.firstName ||
+                            "Student"
+                          }
                         />
                         <AvatarFallback>
-                          {booking.tutor.name
+                          {(
+                            req.student?.name ||
+                            `${req.student?.firstName || ""}${
+                              req.student?.lastName || ""
+                            }` ||
+                            "ST"
+                          )
                             .split(" ")
                             .map((n) => n[0])
                             .join("")}
@@ -665,104 +740,89 @@ export default function DashboardPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.tutor.name}
+                            {req.student?.name ||
+                              `${req.student?.firstName || ""} ${
+                                req.student?.lastName || ""
+                              }`}
                           </h3>
                           <Badge
-                            className={`${getStatusColor(
-                              booking.status
-                            )} border`}
+                            className={`${getStatusColor(req.status)} border`}
                           >
                             <div className="flex items-center space-x-1">
-                              {getStatusIcon(booking.status)}
-                              <span className="capitalize">
-                                {booking.status}
-                              </span>
+                              {getStatusIcon(req.status)}
+                              <span className="capitalize">{req.status}</span>
                             </div>
                           </Badge>
                         </div>
 
                         <p className="text-blue-600 font-medium mb-2">
-                          {booking.tutor.subject}
+                          {req.subject}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>
-                              {new Date(booking.date).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>
-                              {booking.time} ({booking.duration} min)
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <DollarSign className="w-4 h-4" />
-                            <span>${booking.price}/hr</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            <span>{booking.tutor.rating}</span>
-                          </div>
+                          {req.preferredDate && (
+                            <div className="flex items-center space-x-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>
+                                {new Date(
+                                  req.preferredDate
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          {req.timeSlot && (
+                            <div className="flex items-center space-x-1">
+                              <Clock className="w-4 h-4" />
+                              <span>
+                                {req.timeSlot} ({req.durationMinutes} min)
+                              </span>
+                            </div>
+                          )}
+                          {req.proposedPrice && (
+                            <div className="flex items-center space-x-1">
+                              <DollarSign className="w-4 h-4" />
+                              <span>${req.proposedPrice}/hr</span>
+                            </div>
+                          )}
                         </div>
 
-                        {booking.message && (
+                        {req.message && (
                           <div className="bg-gray-50 rounded-lg p-3 mb-3">
                             <p className="text-sm text-gray-700">
-                              <span className="font-medium">your message:</span>{" "}
-                              {booking.message}
+                              <span className="font-medium">message:</span>{" "}
+                              {req.message}
                             </p>
                           </div>
                         )}
 
-                        {booking.status === "canceled" &&
-                          booking.cancelReason && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                              <p className="text-sm text-red-700">
-                                <span className="font-medium">
-                                  cancellation reason:
-                                </span>{" "}
-                                {booking.cancelReason}
-                              </p>
-                            </div>
-                          )}
+                        {req.wantsNegotiation && (
+                          <Badge variant="secondary">Negotiated</Badge>
+                        )}
                       </div>
                     </div>
 
                     <div className="flex flex-col space-y-2 lg:w-48">
-                      {booking.status === "approved" && (
+                      {req.status === "approved" && (
                         <>
-                          <Link href={`/lesson/${booking.id}`}>
-                            <Button className="w-full bg-green-600 hover:bg-green-700">
-                              join lesson
-                            </Button>
-                          </Link>
+                          <Button className="w-full bg-green-600 hover:bg-green-700">
+                            join lesson
+                          </Button>
                           <Button
                             variant="outline"
                             className="w-full bg-transparent"
                           >
                             <MessageCircle className="w-4 h-4 mr-2" />
-                            message tutor
+                            message student
                           </Button>
                         </>
                       )}
-                      {booking.status === "pending" && (
+                      {req.status === "pending" && (
                         <Button
                           variant="outline"
                           className="w-full bg-transparent"
                           disabled
                         >
-                          waiting for approval
-                        </Button>
-                      )}
-                      {booking.status === "canceled" && (
-                        <Button
-                          variant="outline"
-                          className="w-full bg-transparent"
-                        >
-                          book again
+                          awaiting your approval
                         </Button>
                       )}
                     </div>

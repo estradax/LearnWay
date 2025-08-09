@@ -27,13 +27,16 @@ import TutorProfileModal from "@/components/tutor-profile-modal";
 import ContactTutorModal from "@/components/contact-tutor-modal";
 import { getFeaturedLessons, FeaturedLesson } from "@/lib/client/api/lesson";
 import Image from "next/image";
+import { useSession } from "@/lib/client/auth";
 
 export default function TutorsPage() {
+  const { data: session } = useSession();
   const [priceRange, setPriceRange] = useState([10, 100]);
   const [showFilters, setShowFilters] = useState(false);
 
   type TutorUI = {
     id: number;
+    userId: string;
     name: string;
     subject: string;
     subjects: string[];
@@ -73,6 +76,7 @@ export default function TutorsPage() {
 
           return {
             id: l.id,
+            userId: l.creator?.id || "",
             name: resolvedName,
             subject: l.primarySubject,
             subjects: (l.languages && l.languages.length > 0
@@ -376,6 +380,14 @@ export default function TutorsPage() {
                       <Button
                         className="flex-1"
                         onClick={() => handleContactTutor(tutor)}
+                        disabled={!tutor.userId || session?.user?.id === tutor.userId}
+                        title={
+                          !tutor.userId
+                            ? "Tutor profile not linked to a user"
+                            : session?.user?.id === tutor.userId
+                            ? "You cannot contact your own tutor listing"
+                            : undefined
+                        }
                       >
                         contact tutor
                       </Button>
