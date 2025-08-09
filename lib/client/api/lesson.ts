@@ -82,18 +82,58 @@ export async function getLessons(): Promise<Lesson[]> {
   return response.json();
 }
 
-export interface DeleteLessonResponse {
-  message: string;
+// New: types and API for featured lessons
+export interface Creator {
+  id: string;
+  name: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  role: string;
+  location: string | null;
+  image: string | null;
 }
 
-export async function deleteLesson(id: number | string): Promise<DeleteLessonResponse> {
-  const response = await fetch(`/api/lesson?id=${encodeURIComponent(String(id))}`, {
-    method: "DELETE",
+export interface FeaturedLesson extends Lesson {
+  creator: Creator | null;
+}
+
+export async function getFeaturedLessons(): Promise<FeaturedLesson[]> {
+  const response = await fetch("/api/get-featured-lesson", {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
   });
+
+  if (!response.ok) {
+    const errorData: CreateLessonError = await response
+      .json()
+      .catch(() => ({ error: "Failed to fetch featured lessons" }));
+    throw new Error(errorData.error || "Failed to fetch featured lessons");
+  }
+
+  return response.json();
+}
+
+export interface DeleteLessonResponse {
+  message: string;
+}
+
+export async function deleteLesson(
+  id: number | string
+): Promise<DeleteLessonResponse> {
+  const response = await fetch(
+    `/api/lesson?id=${encodeURIComponent(String(id))}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     const errorData: CreateLessonError = await response
