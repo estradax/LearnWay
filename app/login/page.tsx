@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-
+import Swal from "sweetalert2";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,11 +54,36 @@ export default function LoginPage() {
         setError(
           result.error.message || "Login failed. Please check your credentials."
         );
+        Swal.fire({
+          title: "Login Gagal!",
+          text: result.error.message || "Login failed. Please check your credentials.",
+          icon: "error",
+          draggable: true,
+          showConfirmButton: false,
+          timer: 1800
+        });
       } else {
+        Swal.fire({
+          title: "Login Berhasil!",
+          icon: "success",
+          draggable: true,
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          router.push("/dashboard");
+        });
       }
     } catch (err) {
       console.error("Login error:", err);
       setError("An unexpected error occurred. Please try again.");
+      Swal.fire({
+        title: "Terjadi Kesalahan!",
+        text: "An unexpected error occurred. Please try again.",
+        icon: "error",
+        draggable: true,
+        showConfirmButton: false,
+        timer: 1800
+      });
     } finally {
       setIsLoading(false);
     }

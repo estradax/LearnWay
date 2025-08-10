@@ -188,30 +188,30 @@ export default function HomePage() {
       subject: "Mathematics",
       rating: 5,
       comment:
-        "Amazing tutor! Made calculus so much easier to understand. My grades improved from C to A in just 2 months.",
+        "Pengajar yang luar biasa! Kalkulus jadi jauh lebih mudah dipahami. Nilai saya naik dari C ke A hanya dalam 2 bulan..",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-woman-GMVTBdhb4dpsnfRpKtiFVMJT6g8QWZ.png",
-      date: "2 weeks ago",
+      date: "2 minggu lalu",
     },
     {
       name: "David L.",
       subject: "Piano",
       rating: 5,
       comment:
-        "Learning piano with my tutor has been incredible. Very patient and adapts to my learning pace perfectly.",
+        "Belajar piano dengan tutor saya sungguh luar biasa. Sangat sabar dan beradaptasi dengan kecepatan belajar saya dengan sempurna.",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/professional-teacher-man-UYl0E1brgRMNIdpwKtcub7BEPgdF0Y.png",
-      date: "1 month ago",
+      date: "1 bulan lalu",
     },
     {
       name: "Maria K.",
       subject: "English",
       rating: 4.8,
       comment:
-        "Excellent English tutor! Helped me prepare for IELTS and I got the score I needed for university.",
+        "Pengajar bahasa Inggris yang luar biasa! Membantu saya mempersiapkan IELTS dan saya mendapatkan skor yang saya butuhkan untuk universitas.",
       avatar:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/chinese-teacher-woman-melqHKBZAmB7jTGnVLHjTkYAFiuRfH.png",
-      date: "3 weeks ago",
+      date: "3 minggu lalu",
     },
   ];
 
@@ -253,9 +253,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="w-full overflow-x-hidden bg-background px-2 sm:px-4 py-6 sm:py-12 md:py-20 text-center">
         <div className="max-w-5xl mx-auto w-full px-0 sm:px-2">
-          <h1 className="text-xl sm:text-3xl md:text-6xl font-bold mb-4 sm:mb-8 leading-snug break-words break-all max-w-full">
-            Temukan kesempurnaan dalam <span>Belajar</span>
-            <br className="hidden xs:block" />
+          <h1 className="text-xl sm:text-3xl md:text-6xl font-bold mb-4 sm:mb-8 leading-snug break-words max-w-full">
+            <span>Temukan kesempurnaan dalam Belajar</span>
             <span className="block text-base sm:text-2xl md:text-4xl mt-2 sm:mt-4">
               Belajar apa saja dan dimana saja
             </span>
@@ -339,9 +338,9 @@ export default function HomePage() {
       {/* Featured Tutors - Superprof Style */}
       <section className="container mx-auto px-2 sm:px-4 py-8 sm:py-16 md:py-20">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Featured Piano Tutors</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Beberapa guru berpengalaman</h2>
           <p className="text-base sm:text-xl max-w-3xl mx-auto">
-            Meet our top-rated piano tutors ready to help you master the keys
+            Temukan Pengajar kesukaan dan mulai perjalanan belajar Anda hari ini
           </p>
         </div>
 
@@ -409,13 +408,16 @@ export default function HomePage() {
         </div>
 
         <div className="text-center mt-8 sm:mt-12">
-          <Button
-            variant="outline"
-            size="lg"
-            className="border-2 px-6 sm:px-8 py-2.5 sm:py-3 font-semibold text-base"
-          >
-            Lihat lebih banyak pengajar
-          </Button>
+          <Link href="/tutors" passHref legacyBehavior>
+            <Button
+              as="a"
+              variant="outline"
+              size="lg"
+              className="border-2 px-6 sm:px-8 py-2.5 sm:py-3 font-semibold text-base"
+            >
+              Lihat lebih banyak pengajar
+            </Button>
+          </Link>
         </div>
       </section>
 
