@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { db } from "@/lib/server/db";
 import { auth } from "@/lib/server/auth";
 import { contactRequest as contactRequestTable } from "@/lib/server/schema/contact-request";
@@ -10,7 +9,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,7 +17,10 @@ export async function PATCH(
     const { id } = await params;
     const idNum = Number.parseInt(id, 10);
     if (Number.isNaN(idNum)) {
-      return NextResponse.json({ error: "Invalid request id" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid request id" },
+        { status: 400 }
+      );
     }
 
     const existing = await db
@@ -44,7 +46,10 @@ export async function PATCH(
       }
       const summary = (body?.summary ?? "").toString().trim();
       if (!summary) {
-        return NextResponse.json({ error: "summary is required" }, { status: 400 });
+        return NextResponse.json(
+          { error: "summary is required" },
+          { status: 400 }
+        );
       }
       await db
         .update(contactRequestTable)
@@ -58,7 +63,10 @@ export async function PATCH(
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
       if (record.status !== "approved") {
-        return NextResponse.json({ error: "Only approved requests can be paid" }, { status: 400 });
+        return NextResponse.json(
+          { error: "Only approved requests can be paid" },
+          { status: 400 }
+        );
       }
       await db
         .update(contactRequestTable)
@@ -69,7 +77,10 @@ export async function PATCH(
 
     if (action === "complete") {
       if (!record.isPaid) {
-        return NextResponse.json({ error: "Cannot complete unpaid request" }, { status: 400 });
+        return NextResponse.json(
+          { error: "Cannot complete unpaid request" },
+          { status: 400 }
+        );
       }
       const updates: Partial<typeof record> = {};
       // Student marks finish first
@@ -78,10 +89,16 @@ export async function PATCH(
       } else if (record.tutorId === session.user.id) {
         // Tutor marks finish; require summary and studentCompleted first
         if (!record.studentCompleted) {
-          return NextResponse.json({ error: "Student must mark as finished first" }, { status: 400 });
+          return NextResponse.json(
+            { error: "Student must mark as finished first" },
+            { status: 400 }
+          );
         }
         if (!record.completionSummary) {
-          return NextResponse.json({ error: "Please submit a lesson summary before completing" }, { status: 400 });
+          return NextResponse.json(
+            { error: "Please submit a lesson summary before completing" },
+            { status: 400 }
+          );
         }
         updates.tutorCompleted = true;
         updates.completedAt = new Date();
@@ -90,7 +107,8 @@ export async function PATCH(
       }
 
       const finalCompleted = updates.tutorCompleted ?? record.tutorCompleted;
-      const finalStudentCompleted = updates.studentCompleted ?? record.studentCompleted;
+      const finalStudentCompleted =
+        updates.studentCompleted ?? record.studentCompleted;
       const isCompleted = finalCompleted && finalStudentCompleted;
 
       await db
@@ -104,7 +122,10 @@ export async function PATCH(
         })
         .where(eq(contactRequestTable.id, idNum));
 
-      return NextResponse.json({ message: isCompleted ? "Completed" : "Marked" }, { status: 200 });
+      return NextResponse.json(
+        { message: isCompleted ? "Completed" : "Marked" },
+        { status: 200 }
+      );
     }
 
     // Backward-compatible decision endpoint (tutor only)
@@ -132,7 +153,10 @@ export async function PATCH(
       }
       const d = new Date(String(fixedDate));
       if (Number.isNaN(d.getTime())) {
-        return NextResponse.json({ error: "fixedDate must be a valid date" }, { status: 400 });
+        return NextResponse.json(
+          { error: "fixedDate must be a valid date" },
+          { status: 400 }
+        );
       }
       fixedDateValue = d;
     }
@@ -149,6 +173,9 @@ export async function PATCH(
     return NextResponse.json({ message: "Updated" }, { status: 200 });
   } catch (error) {
     console.error("ContactRequest PATCH error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
-} 
+}
