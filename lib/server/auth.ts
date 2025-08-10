@@ -4,6 +4,7 @@ import { db } from "./db"; // your drizzle instance
 import * as authSchema from "./schema/auth";
 
 export const auth = betterAuth({
+  trustedOrigins: [process.env.VERCEL_URL!],
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     schema: authSchema,
