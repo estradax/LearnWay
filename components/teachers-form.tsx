@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus } from "lucide-react";
+import { X, Plus, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { uploadFile } from "@/lib/client/upload-file";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Teacher {
   id: string;
@@ -33,6 +35,7 @@ interface Teacher {
   availability: string;
   location: string;
   verified: boolean;
+  image?: string;
 }
 
 interface TeacherFormProps {
@@ -85,15 +88,42 @@ export function TeacherForm({ teacher, onSubmit, onCancel }: TeacherFormProps) {
     availability: teacher?.availability || "",
     location: teacher?.location || "",
     verified: teacher?.verified || false,
+    image: teacher?.image || "",
   });
 
   const [newLanguage, setNewLanguage] = useState("");
   const [newAward, setNewAward] = useState("");
   const [newCertification, setNewCertification] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(teacher?.image || "");
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // If there's a new image file, upload it first
+    if (imageFile) {
+      setIsUploading(true);
+      try {
+        const { url, error } = await uploadFile(imageFile);
+        if (error) {
+          console.error("Image upload failed:", error);
+          return;
+        }
+        if (url) {
+          // Update form data with the uploaded image URL
+          const updatedFormData = { ...formData, image: url };
+          await onSubmit(updatedFormData);
+        }
+      } catch (error) {
+        console.error("Image upload failed:", error);
+      } finally {
+        setIsUploading(false);
+      }
+    } else {
+      // No new image, submit with existing image data
+      await onSubmit(formData);
+    }
   };
 
   const addLanguage = () => {
@@ -148,6 +178,46 @@ export function TeacherForm({ teacher, onSubmit, onCancel }: TeacherFormProps) {
       ...formData,
       certifications: formData.certifications.filter((c) => c !== cert),
     });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!imageFile) return;
+
+    setIsUploading(true);
+    try {
+      const { url, error } = await uploadFile(imageFile);
+      if (error) {
+        console.error("Image upload failed:", error);
+        return;
+      }
+      if (url) {
+        setFormData({ ...formData, image: url });
+        setImagePreview(url);
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview("");
+    setFormData({ ...formData, image: "" });
   };
 
   return (
@@ -233,6 +303,56 @@ export function TeacherForm({ teacher, onSubmit, onCancel }: TeacherFormProps) {
               placeholder="Describe your teaching experience and expertise..."
               required
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Profile Image */}
+      <Card className="shadow-xs">
+        <CardHeader>
+          <CardTitle>Profile Image</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={imagePreview} alt="Profile preview" />
+              <AvatarFallback className="bg-cream-200 text-charcoal-700">
+                <User className="h-8 w-8" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-2 flex-1">
+              <div className="flex gap-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="bg-white focus:border-brown-500"
+                />
+                {imageFile && (
+                  <Button
+                    type="button"
+                    onClick={handleImageUpload}
+                    disabled={isUploading}
+                    className="bg-brown-600 hover:bg-brown-700"
+                  >
+                    {isUploading ? "Uploading..." : "Upload"}
+                  </Button>
+                )}
+              </div>
+              {imageFile && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={removeImage}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  Remove
+                </Button>
+              )}
+              <p className="text-sm text-charcoal-600">
+                Upload a profile image (JPG, PNG, GIF up to 5MB)
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -445,8 +565,8 @@ export function TeacherForm({ teacher, onSubmit, onCancel }: TeacherFormProps) {
         <Button type="button" variant="outline" onClick={onCancel}>
           cancel
         </Button>
-        <Button type="submit">
-          {teacher ? "update lesson" : "add lesson"}
+        <Button type="submit" disabled={isUploading}>
+          {isUploading ? "Uploading..." : (teacher ? "update lesson" : "add lesson")}
         </Button>
       </div>
     </form>

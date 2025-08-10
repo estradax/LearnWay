@@ -55,6 +55,7 @@ interface Teacher {
   availability: string;
   location: string;
   verified: boolean;
+  image?: string;
 }
 
 export default function TeachersPage() {
@@ -87,6 +88,7 @@ export default function TeachersPage() {
           availability: lesson.availability,
           location: lesson.location,
           verified: false,
+          image: lesson.image || "",
         }));
         setTeachers(mappedTeachers);
       } catch (error) {
@@ -123,6 +125,7 @@ export default function TeachersPage() {
         languages: teacherData.language,
         awards: teacherData.awards,
         certifications: teacherData.certifications,
+        image: teacherData.image,
       };
 
       const { id } = await createLesson(payload);

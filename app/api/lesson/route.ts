@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
       languages,
       awards,
       certifications,
+      image,
     } = body ?? {};
 
     // Basic validation for required fields
@@ -158,6 +159,7 @@ export async function POST(request: NextRequest) {
         yearsExperience: yearsExperienceInt,
         hourlyRate: hourlyRateStr,
         availability,
+        image: image || null,
       })
       .returning({ id: lessonTable.id });
 

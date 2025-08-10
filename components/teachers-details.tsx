@@ -3,7 +3,8 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Star, MapPin, Clock, DollarSign, Award, GraduationCap, Languages, CheckCircle } from 'lucide-react'
+import { Star, MapPin, Clock, DollarSign, Award, GraduationCap, Languages, CheckCircle, User } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface Teacher {
     id: string
@@ -22,6 +23,7 @@ interface Teacher {
     availability: string
     location: string
     verified: boolean
+    image?: string
 }
 
 interface TeacherDetailsProps {
@@ -36,13 +38,21 @@ export function TeacherDetails({ teacher }: TeacherDetailsProps) {
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <h2 className="text-2xl font-bold text-charcoal-900">{teacher.name}</h2>
-                        {teacher.verified && (
-                            <Badge className="bg-brown-600 text-white">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Verified
-                            </Badge>
-                        )}
+                        <Avatar className="h-16 w-16 mr-3">
+                            <AvatarImage src={teacher.image} alt={teacher.name} />
+                            <AvatarFallback className="bg-cream-200 text-charcoal-700">
+                                <User className="h-8 w-8" />
+                            </AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <h2 className="text-2xl font-bold text-charcoal-900">{teacher.name}</h2>
+                            {teacher.verified && (
+                                <Badge className="bg-brown-600 text-white">
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Verified
+                                </Badge>
+                            )}
+                        </div>
                     </div>
                     <p className="text-charcoal-600 mb-2">{teacher.email}</p>
                     <div className="flex items-center gap-4 text-sm text-charcoal-600">

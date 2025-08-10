@@ -57,6 +57,13 @@
       "when": 1754746003825,
       "tag": "0007_magical_zodiak",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1754812466465,
+      "tag": "0008_curious_talisman",
+      "breakpoints": true
     }
   ]
 }

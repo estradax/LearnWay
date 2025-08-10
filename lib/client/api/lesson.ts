@@ -11,6 +11,7 @@ export interface CreateLessonInput {
   languages?: string[];
   awards?: string[];
   certifications?: string[];
+  image?: string;
 }
 
 export interface CreateLessonResponse {
@@ -56,6 +57,7 @@ export interface Lesson {
   yearsExperience: number;
   hourlyRate: string; // numeric serialized as string
   availability: string;
+  image?: string;
   createdAt: string;
   updatedAt: string;
   languages: string[];

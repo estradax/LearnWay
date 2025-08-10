@@ -88,7 +88,7 @@ export default function TutorsPage() {
             price: Number(l.hourlyRate) || 0,
             location: l.location || l.creator?.location || "",
             murid: 0,
-            image: l.creator?.image || "/placeholder.svg",
+            image: l.image || l.creator?.image || "/placeholder.svg",
             verified: Boolean(l.creator),
             experience:
               typeof l.yearsExperience === "number" && l.yearsExperience > 0

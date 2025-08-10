@@ -19,6 +19,7 @@ export const lesson = pgTable("lessons", {
   yearsExperience: integer("years_experience").notNull(),
   hourlyRate: decimal("hourly_rate", { precision: 10, scale: 2 }).notNull(),
   availability: text("availability").notNull(),
+  image: text("image"), // Profile image URL
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
