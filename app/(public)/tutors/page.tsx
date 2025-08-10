@@ -38,6 +38,7 @@ export default function TutorsPage() {
     id: number;
     userId: string;
     name: string;
+    creatorName: string;
     subject: string;
     subjects: string[];
     rating: number;
@@ -66,18 +67,20 @@ export default function TutorsPage() {
         if (!isMounted) return;
 
         const mappedTutors: TutorUI[] = lessons.map((l: FeaturedLesson) => {
-          const resolvedName =
-            l.fullName ||
-            l.creator?.name ||
-            [l.creator?.firstName, l.creator?.lastName]
-              .filter(Boolean)
-              .join(" ") ||
-            l.email;
+          // Use creator name if available, fallback to lesson fullName, then email
+          const creatorName = l.creator?.name || 
+            (l.creator?.firstName && l.creator?.lastName 
+              ? `${l.creator.firstName} ${l.creator.lastName}`.trim()
+              : l.creator?.email || "Unknown Creator");
+          
+          // Use lesson fullName as the main title, fallback to creator name
+          const lessonTitle = l.fullName || creatorName;
 
           return {
             id: l.id,
             userId: l.creator?.id || "",
-            name: resolvedName,
+            name: lessonTitle,
+            creatorName: creatorName,
             subject: l.primarySubject,
             subjects: (l.languages && l.languages.length > 0
               ? l.languages
@@ -295,7 +298,7 @@ export default function TutorsPage() {
                           const target = e.currentTarget as HTMLImageElement;
                           target.onerror = null;
                           target.src = "/placeholder.svg";
-                          (target as any).srcset = "";
+                          target.srcset = "";
                         }}
                       />
                     </div>
@@ -315,6 +318,9 @@ export default function TutorsPage() {
                           <h3 className="text-xl font-bold transition-colors">
                             {tutor.name}
                           </h3>
+                          <p className="text-sm text-muted-foreground mb-1">
+                            Created by: {tutor.creatorName}
+                          </p>
                           <p className="font-semibold text-lg">
                             {tutor.subject}
                           </p>

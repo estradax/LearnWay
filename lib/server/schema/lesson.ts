@@ -6,10 +6,11 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 
 export const lesson = pgTable("lessons", {
   id: serial("id").primaryKey(),
-  creatorId: text("creator_id").notNull(),
+  creatorId: text("creator_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   fullName: text("full_name").notNull(),
   email: text("email").notNull(),
   primarySubject: text("primary_subject").notNull(),
@@ -26,7 +27,7 @@ export const lesson = pgTable("lessons", {
 
 export const lessonLanguage = pgTable("lesson_language", {
   id: serial("id").primaryKey(),
-  lessonId: integer("lesson_id").notNull(),
+  lessonId: integer("lesson_id").notNull().references(() => lesson.id, { onDelete: "cascade" }),
   language: text("language").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -34,7 +35,7 @@ export const lessonLanguage = pgTable("lesson_language", {
 
 export const lessonAward = pgTable("lesson_award", {
   id: serial("id").primaryKey(),
-  lessonId: integer("lesson_id").notNull(),
+  lessonId: integer("lesson_id").notNull().references(() => lesson.id, { onDelete: "cascade" }),
   award: text("award").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -42,7 +43,7 @@ export const lessonAward = pgTable("lesson_award", {
 
 export const lessonCertification = pgTable("lesson_certification", {
   id: serial("id").primaryKey(),
-  lessonId: integer("lesson_id").notNull(),
+  lessonId: integer("lesson_id").notNull().references(() => lesson.id, { onDelete: "cascade" }),
   certification: text("certification").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
