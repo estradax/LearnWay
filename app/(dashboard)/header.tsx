@@ -11,16 +11,12 @@ export default function Header() {
   const router = useRouter();
   const { data: session, isPending: sessionLoading } = useSession();
 
-  // Determine user type from session data
-  const userType = session?.user?.role === "teacher" ? "teacher" : "student";
-
   React.useEffect(() => {
     if (!session && !sessionLoading) {
       router.push("/login");
     }
   }, [session, sessionLoading, router]);
 
-  // Redirect if not authenticated
   if (sessionLoading) {
     return null;
   }

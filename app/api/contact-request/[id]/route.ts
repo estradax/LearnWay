@@ -71,10 +71,10 @@ export async function PATCH(
       if (!record.isPaid) {
         return NextResponse.json({ error: "Cannot complete unpaid request" }, { status: 400 });
       }
-      const updates: Partial<typeof record> = {} as any;
+      const updates: Partial<typeof record> = {};
       // Student marks finish first
       if (record.studentId === session.user.id) {
-        updates.studentCompleted = true as any;
+        updates.studentCompleted = true;
       } else if (record.tutorId === session.user.id) {
         // Tutor marks finish; require summary and studentCompleted first
         if (!record.studentCompleted) {
@@ -83,14 +83,14 @@ export async function PATCH(
         if (!record.completionSummary) {
           return NextResponse.json({ error: "Please submit a lesson summary before completing" }, { status: 400 });
         }
-        updates.tutorCompleted = true as any;
-        updates.completedAt = new Date() as any;
+        updates.tutorCompleted = true;
+        updates.completedAt = new Date();
       } else {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
-      const finalCompleted = (updates as any).tutorCompleted || record.tutorCompleted;
-      const finalStudentCompleted = (updates as any).studentCompleted || record.studentCompleted;
+      const finalCompleted = updates.tutorCompleted ?? record.tutorCompleted;
+      const finalStudentCompleted = updates.studentCompleted ?? record.studentCompleted;
       const isCompleted = finalCompleted && finalStudentCompleted;
 
       await db
@@ -101,7 +101,7 @@ export async function PATCH(
           isCompleted,
           completedAt: isCompleted ? new Date() : record.completedAt,
           updatedAt: new Date(),
-        } as any)
+        })
         .where(eq(contactRequestTable.id, idNum));
 
       return NextResponse.json({ message: isCompleted ? "Completed" : "Marked" }, { status: 200 });

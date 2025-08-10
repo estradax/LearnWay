@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import ContactTutorModal from "@/components/contact-tutor-modal";
 import ChatSystem from "@/components/chat-system";
+import Image from "next/image";
 
 // Local minimal type that covers Lesson/FeaturedLesson and existing TutorUI
 interface TutorLikeCreator {
@@ -170,7 +171,7 @@ export default function TutorProfileModal({
 
   const contactTutorData = {
     ...tutor,
-    id: tutor.id,
+    id: tutor.id || "unknown",
     name: resolvedName,
     subject: resolvedSubject,
     subjects: resolvedSubjects,
@@ -200,9 +201,11 @@ export default function TutorProfileModal({
                 <CardContent>
                   <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
                     <div className="relative flex-shrink-0 flex justify-center sm:block">
-                      <img
+                      <Image
                         src={resolvedImage}
                         alt={resolvedName}
+                        width={128}
+                        height={128}
                         className="w-24 h-24 sm:w-32 sm:h-32 rounded object-cover mx-auto sm:mx-0"
                       />
                       {isVerified && (

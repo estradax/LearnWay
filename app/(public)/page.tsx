@@ -3,11 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   Search,
   Star,
   MapPin,
@@ -17,17 +12,16 @@ import {
   Palette,
   Calculator,
   Heart,
-  ChevronDown,
   Quote,
 } from "lucide-react";
 import Link from "next/link";
-import TutorProfileModal from "@/components/tutor-profile-modal";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 
 export default function HomePage() {
   const categories = [
@@ -260,9 +254,9 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="text-sm sm:text-base md:text-xl mb-6 sm:mb-12 max-w-full sm:max-w-3xl mx-auto leading-relaxed break-words break-all">
-            Terhubung dengan tutor berkualifikasi untuk pengalaman belajar yang dipersonalisasi.
-            Dari mata pelajaran akademik hingga keterampilan kreatif, temukan yang paling cocok
-            untuk perjalanan belajar Anda.
+            Terhubung dengan tutor berkualifikasi untuk pengalaman belajar yang
+            dipersonalisasi. Dari mata pelajaran akademik hingga keterampilan
+            kreatif, temukan yang paling cocok untuk perjalanan belajar Anda.
           </p>
 
           {/* Enhanced Search Bar */}
@@ -282,7 +276,10 @@ export default function HomePage() {
                   className="pl-12 border-0 focus-visible:ring-0 text-base sm:text-lg h-12 sm:h-14 shadow-none"
                 />
               </div>
-              <Button size="lg" className="h-12 sm:h-14 px-6 sm:px-10 font-semibold w-full md:w-auto text-base sm:text-lg">
+              <Button
+                size="lg"
+                className="h-12 sm:h-14 px-6 sm:px-10 font-semibold w-full md:w-auto text-base sm:text-lg"
+              >
                 Cari
               </Button>
             </div>
@@ -292,7 +289,9 @@ export default function HomePage() {
           <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 max-w-4xl mx-auto mt-8">
             <div className="text-center p-4 sm:p-6 rounded-2xl">
               <div className="text-3xl sm:text-4xl font-bold mb-2">1,000+</div>
-              <div className="font-medium text-base">Pengajar Berpengalaman</div>
+              <div className="font-medium text-base">
+                Pengajar Berpengalaman
+              </div>
             </div>
             <div className="text-center p-4 sm:p-6 rounded-2xl">
               <div className="text-3xl sm:text-4xl font-bold mb-2">20,000+</div>
@@ -309,9 +308,12 @@ export default function HomePage() {
       {/* Enhanced Categories */}
       <section className="container mx-auto px-2 sm:px-4 py-8 sm:py-16 md:py-20">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Kategori Favorit</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
+            Kategori Favorit
+          </h2>
           <p className="text-base sm:text-xl max-w-3xl mx-auto">
-            Jelajahi berbagai macam subjek kami mulai dari keterampilan akademis hingga kreatif
+            Jelajahi berbagai macam subjek kami mulai dari keterampilan akademis
+            hingga kreatif
           </p>
         </div>
 
@@ -338,7 +340,9 @@ export default function HomePage() {
       {/* Featured Tutors - Superprof Style */}
       <section className="container mx-auto px-2 sm:px-4 py-8 sm:py-16 md:py-20">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Beberapa guru berpengalaman</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
+            Beberapa guru berpengalaman
+          </h2>
           <p className="text-base sm:text-xl max-w-3xl mx-auto">
             Temukan Pengajar kesukaan dan mulai perjalanan belajar Anda hari ini
           </p>
@@ -349,10 +353,12 @@ export default function HomePage() {
             <div key={tutor.id} className="group cursor-pointer">
               <Card className="overflow-hidden border-0 shadow-xs hover:shadow-sm transition-all duration-300 group-hover:-translate-y-2 bg-background border pt-0">
                 <div className="relative h-56 sm:h-80">
-                  <img
+                  <Image
                     src={tutor.image || "/placeholder.svg"}
                     alt={tutor.name}
                     className="w-full h-full object-cover"
+                    width={300}
+                    height={300}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -377,10 +383,10 @@ export default function HomePage() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
                     <div className="flex items-center space-x-2">
                       <Star className="w-4 h-4" />
-                      <span className="font-bold text-base">{tutor.rating}</span>
-                      <span className="text-sm">
-                        ({tutor.reviews} reviews)
+                      <span className="font-bold text-base">
+                        {tutor.rating}
                       </span>
+                      <span className="text-sm">({tutor.reviews} reviews)</span>
                     </div>
                     {tutor.ambassador && (
                       <Button size="sm" className="px-4 text-sm">
@@ -389,18 +395,9 @@ export default function HomePage() {
                     )}
                   </div>
 
-                  <p className="text-sm leading-relaxed mb-4">
+                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
                     {tutor.description}
                   </p>
-
-                  <TutorProfileModal
-                    tutor={tutor}
-                    triggerButton={
-                      <Button className="w-full font-semibold py-3 text-base">
-                        Lihat Pengajar
-                      </Button>
-                    }
-                  />
                 </CardContent>
               </Card>
             </div>
@@ -408,9 +405,8 @@ export default function HomePage() {
         </div>
 
         <div className="text-center mt-8 sm:mt-12">
-          <Link href="/tutors" passHref legacyBehavior>
+          <Link href="/tutors">
             <Button
-              as="a"
               variant="outline"
               size="lg"
               className="border-2 px-6 sm:px-8 py-2.5 sm:py-3 font-semibold text-base"
@@ -424,10 +420,12 @@ export default function HomePage() {
       {/* Student Reviews Section */}
       <section className="container mx-auto px-2 sm:px-4 py-8 sm:py-16 md:py-20">
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Apa yang siswa katakan</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
+            Apa yang siswa katakan
+          </h2>
           <p className="text-base sm:text-xl max-w-3xl mx-auto">
-            Umpan balik nyata dari siswa yang telah mengubah perjalanan belajar mereka
-            bersama kami
+            Umpan balik nyata dari siswa yang telah mengubah perjalanan belajar
+            mereka bersama kami
           </p>
         </div>
 
@@ -439,10 +437,12 @@ export default function HomePage() {
             >
               <CardContent className="p-6 sm:p-8">
                 <div className="flex items-center space-x-4 mb-6">
-                  <img
+                  <Image
                     src={review.avatar || "/placeholder.svg"}
                     alt={review.name}
                     className="w-16 h-16 rounded-full object-cover"
+                    width={128}
+                    height={128}
                   />
                   <div>
                     <h4 className="font-bold text-base">{review.name}</h4>
@@ -451,7 +451,9 @@ export default function HomePage() {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${i < Math.floor(review.rating) ? "" : "opacity-30"}`}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(review.rating) ? "" : "opacity-30"
+                          }`}
                         />
                       ))}
                       <span className="text-sm ml-2">{review.rating}</span>
@@ -461,7 +463,7 @@ export default function HomePage() {
 
                 <Quote className="w-8 h-8 mb-4" />
                 <p className="leading-relaxed mb-4 italic text-sm">
-                  "{review.comment}"
+                  &ldquo;{review.comment}&rdquo;
                 </p>
                 <p className="text-sm">{review.date}</p>
               </CardContent>
@@ -477,7 +479,8 @@ export default function HomePage() {
             Frequently Asked Questions
           </h2>
           <p className="text-lg sm:text-xl max-w-3xl mx-auto">
-            Segala hal yang perlu Anda ketahui tentang menemukan dan bekerja dengan tutor
+            Segala hal yang perlu Anda ketahui tentang menemukan dan bekerja
+            dengan tutor
           </p>
         </div>
 
@@ -511,7 +514,9 @@ export default function HomePage() {
             </div>
             <h3 className="text-2xl font-bold mb-4">1. Cari dan telusuri</h3>
             <p className="leading-relaxed">
-              Temukan tutor berdasarkan mata pelajaran, lokasi, dan kisaran harga. Baca ulasan dan bandingkan profil untuk menemukan tutor yang tepat.
+              Temukan tutor berdasarkan mata pelajaran, lokasi, dan kisaran
+              harga. Baca ulasan dan bandingkan profil untuk menemukan tutor
+              yang tepat.
             </p>
           </div>
           <div className="text-center group">
@@ -520,7 +525,8 @@ export default function HomePage() {
             </div>
             <h3 className="text-2xl font-bold mb-4">2. Hubungkan & Pesan</h3>
             <p className="leading-relaxed">
-              Hubungi Pengajar pilihan Anda, diskusikan tujuan pembelajaran Anda, dan jadwalkan pelajaran pertama Anda sesuai keinginan Anda.
+              Hubungi Pengajar pilihan Anda, diskusikan tujuan pembelajaran
+              Anda, dan jadwalkan pelajaran pertama Anda sesuai keinginan Anda.
             </p>
           </div>
           <div className="text-center group">
@@ -529,7 +535,8 @@ export default function HomePage() {
             </div>
             <h3 className="text-2xl font-bold mb-4">3. Mulai Belajar</h3>
             <p className="leading-relaxed">
-              Mulailah perjalanan belajar personal Anda dengan bimbingan ahli dan raih tujuan pendidikan Anda.
+              Mulailah perjalanan belajar personal Anda dengan bimbingan ahli
+              dan raih tujuan pendidikan Anda.
             </p>
           </div>
         </div>
@@ -542,8 +549,8 @@ export default function HomePage() {
             <div>
               <div className="text-3xl font-bold mb-6">LearnWay</div>
               <p className="leading-relaxed mb-6 text-base">
-                Menghubungkan siswa dengan tutor berkualifikasi untuk pengalaman belajar yang dipersonalisasi
-                yang mengubah hidup.
+                Menghubungkan siswa dengan tutor berkualifikasi untuk pengalaman
+                belajar yang dipersonalisasi yang mengubah hidup.
               </p>
             </div>
             <div>

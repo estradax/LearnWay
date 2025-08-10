@@ -38,6 +38,7 @@ import {
 import { format } from "date-fns";
 import ChatSystem from "@/components/chat-system";
 import { createContactRequest } from "@/lib/client/api/contact-request";
+import Image from "next/image";
 
 type TutorForContact = {
   id: string | number;
@@ -157,9 +158,11 @@ export default function ContactTutorModal({
         <div className="p-2 sm:p-6">
           {/* Tutor Info Header */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-gray-50 rounded-lg">
-            <img
+            <Image
               src={tutor.image || "/placeholder.svg"}
               alt={tutor.name}
+              width={80}
+              height={80}
               className="w-20 h-20 sm:w-16 sm:h-16 rounded-full object-cover mx-auto sm:mx-0"
             />
             <div className="w-full sm:w-auto text-center sm:text-left">

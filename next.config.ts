@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "skemagxiqyicyxkieaih.supabase.co",
       },
+      {
+        hostname: "hebbkx1anhila5yf.public.blob.vercel-storage.com",
+      },
     ],
   },
 };

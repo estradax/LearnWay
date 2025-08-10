@@ -3,12 +3,11 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BookOpen, DollarSign, Clock, Users, Star, TrendingUp, CheckCircle, ArrowRight, Globe, Calendar, MessageCircle, Award, Target, Zap } from 'lucide-react'
+import { BookOpen, DollarSign, Clock, Users, Star, TrendingUp, CheckCircle, ArrowRight, Globe, Award, Target, Zap } from 'lucide-react'
 import Link from "next/link"
+import Image from "next/image"
 
 export default function BecomeTutorPage() {
     const [email, setEmail] = useState("")
@@ -174,7 +173,7 @@ export default function BecomeTutorPage() {
                         <span className="text-3xl md:text-4xl text-gray-600">Share Your Knowledge, Earn Great Money</span>
                     </h1>
                     <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                        Join thousands of tutors who are making a difference in students' lives while building a flexible, rewarding career on TutorHome.
+                        Join thousands of tutors who are making a difference in students&apos; lives while building a flexible, rewarding career on TutorHome.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -274,9 +273,11 @@ export default function BecomeTutorPage() {
                         <Card key={index} className="border-0 shadow-xl">
                             <CardContent className="p-8">
                                 <div className="flex items-center mb-6">
-                                    <img
+                                    <Image
                                         src={tutor.image || "/placeholder.svg"}
                                         alt={tutor.name}
+                                        width={64}
+                                        height={64}
                                         className="w-16 h-16 rounded-full object-cover mr-4"
                                     />
                                     <div>
@@ -300,7 +301,7 @@ export default function BecomeTutorPage() {
                                     </div>
                                 </div>
 
-                                <p className="text-gray-700 italic leading-relaxed">"{tutor.quote}"</p>
+                                <p className="text-gray-700 italic leading-relaxed">&ldquo;{tutor.quote}&rdquo;</p>
                             </CardContent>
                         </Card>
                     ))}
@@ -337,7 +338,7 @@ export default function BecomeTutorPage() {
                                         <CheckCircle className="w-5 h-5 text-green-500 mt-1" />
                                         <div>
                                             <h4 className="font-semibold">Education</h4>
-                                            <p className="text-gray-600">Bachelor's degree in relevant subject or equivalent experience</p>
+                                            <p className="text-gray-600">Bachelor&apos;s degree in relevant subject or equivalent experience</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start space-x-3">
@@ -455,7 +456,7 @@ export default function BecomeTutorPage() {
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-4xl font-bold text-gray-900 mb-6">Ready to Start Teaching?</h2>
                     <p className="text-xl text-gray-600 mb-8">
-                        Join TutorHome today and start making a difference in students' lives while earning great money.
+                        Join TutorHome today and start making a difference in students&apos; lives while earning great money.
                     </p>
 
                     <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">

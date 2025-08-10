@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import {
-  Libre_Baskerville,
-  Lora,
-  IBM_Plex_Mono,
-  Geist_Mono,
-} from "next/font/google";
+import { Libre_Baskerville, Lora, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 
 const libreBaskerville = Libre_Baskerville({
   variable: "--font-libre-baskerville",
   weight: ["400", "700"],
+  subsets: ["latin"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
   weight: ["100", "200", "300", "400", "500", "600", "700"],
+  subsets: ["cyrillic"],
 });
 
 const lora = Lora({

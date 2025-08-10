@@ -12,6 +12,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Star, MapPin, Clock, BookOpen, Award, Users, MessageCircle, CalendarIcon, DollarSign } from "lucide-react"
 import { format } from "date-fns"
+import Image from "next/image"
 
 interface TutorProfileProps {
   tutor?: {
@@ -106,9 +107,11 @@ export default function TutorProfile({ tutor }: TutorProfileProps) {
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
                   <div className="relative flex-shrink-0">
-                    <img
+                    <Image
                       src={tutorData.image || "/placeholder.svg"}
                       alt={tutorData.name}
+                      width={128}
+                      height={128}
                       className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
                     />
                     {tutorData.verified && (
@@ -364,7 +367,7 @@ export default function TutorProfile({ tutor }: TutorProfileProps) {
                 </div>
 
                 <div className="text-xs text-gray-500 text-center">
-                  You won't be charged until the tutor accepts your request
+                  You won&apos;t be charged until the tutor accepts your request
                 </div>
               </CardContent>
             </Card>

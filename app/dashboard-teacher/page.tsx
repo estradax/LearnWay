@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
-import { Calendar, Clock, DollarSign, CheckCircle, XCircle, AlertCircle, MessageCircle, Star, Phone, Mail, User, Settings, BookOpen, TrendingUp, Award, Target, Edit, Camera, Bell, Shield, CreditCard, Globe, Trash2, Download, BarChart3, CalendarIcon, ClockIcon } from 'lucide-react'
+import { Calendar, Clock, DollarSign, CheckCircle, XCircle, AlertCircle, MessageCircle, Star, Phone, Mail, User, Settings, Camera, Shield, CreditCard, Trash2, Download, BarChart3, Award } from 'lucide-react'
 import ChatSystem from "@/components/chat-system"
 import { Input } from "@/components/ui/input"
 
@@ -1292,7 +1292,7 @@ export default function DashboardPage() {
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-900">messages</h2>
                                     <p className="text-gray-600">
-                                        communicate with your {userType === "student" ? "tutors" : "students"}
+                                        communicate with your students
                                     </p>
                                 </div>
                                 <ChatSystem
@@ -1312,8 +1312,7 @@ export default function DashboardPage() {
                                     <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                                     <h3 className="text-lg font-medium text-gray-900 mb-2">start messaging</h3>
                                     <p className="text-gray-600 mb-4">
-                                        click "open chat" above to start conversations with your{" "}
-                                        {userType === "student" ? "tutors" : "students"}
+                                        click &ldquo;open chat&rdquo; above to start conversations with your students
                                     </p>
                                 </CardContent>
                             </Card>

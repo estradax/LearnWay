@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Eye,
   EyeOff,
-  BookOpen,
   User,
   GraduationCap,
   Upload,
@@ -404,7 +403,7 @@ export default function RegisterPage() {
                         <User className="w-8 h-8 text-primary" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        I'm a student
+                        I&apos;m a student
                       </h3>
                       <p className="text-gray-600 text-sm">
                         Looking for tutors to help me learn new skills and
@@ -426,7 +425,7 @@ export default function RegisterPage() {
                         <GraduationCap className="w-8 h-8 text-primary" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        I'm a teacher
+                        I&apos;m a teacher
                       </h3>
                       <p className="text-gray-600 text-sm">
                         Ready to share my expertise and help students achieve
@@ -732,7 +731,7 @@ export default function RegisterPage() {
                           </p>
                         )}
                         <p className="text-xs text-gray-500 mt-2">
-                          Select subjects you're interested in learning (minimum
+                          Select subjects you&apos;re interested in learning (minimum
                           1 required)
                         </p>
                       </div>

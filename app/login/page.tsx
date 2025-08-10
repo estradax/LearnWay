@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, BookOpen } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/client/auth";
@@ -210,7 +210,7 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center">
               <p>
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/register" className="font-medium text-primary">
                   Sign up here
                 </Link>

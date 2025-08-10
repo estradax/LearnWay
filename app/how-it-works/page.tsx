@@ -138,7 +138,7 @@ export default function HowItWorksPage() {
         {
             icon: Award,
             title: "Quality Guaranteed",
-            description: "Money-back guarantee if you're not satisfied with your first lesson",
+            description: "Money-back guarantee if you&apos;re not satisfied with your first lesson",
             color: "bg-pink-100 text-pink-600"
         },
         {
@@ -156,7 +156,7 @@ export default function HowItWorksPage() {
         },
         {
             question: "What if I'm not satisfied with my tutor?",
-            answer: "We offer a satisfaction guarantee. If you're not happy with your first lesson, we'll help you find a new tutor or provide a full refund. Your learning success is our top priority."
+            answer: "We offer a satisfaction guarantee. If you&apos;re not happy with your first lesson, we&apos;ll help you find a new tutor or provide a full refund. Your learning success is our top priority."
         },
         {
             question: "How does payment work?",
@@ -217,7 +217,7 @@ export default function HowItWorksPage() {
                     </h1>
                     <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
                         Connecting students with expert tutors for personalized learning experiences.
-                        Here's everything you need to know about getting started.
+                        Here&apos;s everything you need to know about getting started.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -265,7 +265,7 @@ export default function HowItWorksPage() {
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-gray-900 mb-6">Step-by-Step Guide</h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Whether you're a student looking to learn or a tutor ready to teach, here's how to get started
+                        Whether you&apos;re a student looking to learn or a tutor ready to teach, here&apos;s how to get started
                     </p>
                 </div>
 
@@ -344,7 +344,7 @@ export default function HowItWorksPage() {
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Choose TutorHome?</h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        We've built the most comprehensive platform for online and in-person tutoring
+                        We&apos;ve built the most comprehensive platform for online and in-person tutoring
                     </p>
                 </div>
 

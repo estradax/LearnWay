@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, use } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
-import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, MessageCircle, Send, FileText, Download, Upload, Settings, Users, Clock, BookOpen, Maximize, Minimize, Volume2, VolumeX, Share, Camera, Monitor, Hand, Star, CheckCircle, DollarSign, AlertCircle } from 'lucide-react'
+import { Video, VideoOff, Mic, MicOff, PhoneOff, Send, FileText, Download, Upload, Clock, BookOpen, Maximize, Minimize, Volume2, VolumeX, Share, Monitor, Hand, Star, CheckCircle, DollarSign, AlertCircle } from 'lucide-react'
 import Link from "next/link"
 
 interface Message {
@@ -21,10 +21,10 @@ interface Message {
     fileName?: string
 }
 
-export default function JoinLessonPage({ params }: { params: { id: string } }) {
+export default function JoinLessonPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params)
     const [isVideoOn, setIsVideoOn] = useState(true)
     const [isAudioOn, setIsAudioOn] = useState(true)
-    const [isCallActive, setIsCallActive] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [isSpeakerOn, setIsSpeakerOn] = useState(true)
     const [isScreenSharing, setIsScreenSharing] = useState(false)
@@ -52,7 +52,7 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
 
     // Mock lesson data
     const lesson = {
-        id: params.id,
+        id: id,
         title: "Calculus Fundamentals",
         tutor: {
             name: "Sarah Johnson",
@@ -142,13 +142,13 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
 
     const handleStartLesson = () => {
         setLessonStarted(true)
-        setIsCallActive(true)
+        // setIsCallActive(true) // This line is removed
     }
 
     // Update the handleEndLesson function
     const handleEndLesson = () => {
         setLessonEnded(true)
-        setIsCallActive(false)
+        // setIsCallActive(false) // This line is removed
         setLessonStarted(false)
         // For teachers, show completion form instead of direct completion
         if (lesson.userType === "tutor") {
@@ -222,7 +222,7 @@ export default function JoinLessonPage({ params }: { params: { id: string } }) {
 
                         <h1 className="text-3xl font-bold text-gray-900 mb-4">Lesson Completed!</h1>
                         <p className="text-xl text-gray-600 mb-8">
-                            Great job! You've completed your {lesson.subject} lesson with {lesson.tutor.name}.
+                            Great job! You&apos;ve completed your {lesson.subject} lesson with {lesson.tutor.name}.
                         </p>
 
                         <Card className="mb-8">

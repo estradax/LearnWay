@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       teachingDocumentData &&
       Array.isArray(teachingDocumentData)
     ) {
-      const documentRecords = teachingDocumentData.map((doc: any) => ({
+      const documentRecords = teachingDocumentData.map((doc: { document: string; fileType: string; fileName: string }) => ({
         id: nanoid(),
         userId,
         document: doc.document,

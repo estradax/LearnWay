@@ -197,7 +197,7 @@ export default function AuthModal() {
 
               <div className="text-center">
                 <p>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <Button
                     variant="link"
                     className="p-0"
@@ -215,7 +215,7 @@ export default function AuthModal() {
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-3xl font-bold mb-2">Join TutorHome</h2>
-                <p>Choose how you'd like to get started</p>
+                <p>Choose how you&apos;d like to get started</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -229,7 +229,7 @@ export default function AuthModal() {
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <User className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">I'm a Student</h3>
+                    <h3 className="text-xl font-bold mb-2">I&apos;m a Student</h3>
                     <p className="text-sm">
                       Looking for tutors to help me learn new skills and improve my knowledge
                     </p>
@@ -246,7 +246,7 @@ export default function AuthModal() {
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <GraduationCap className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">I'm a Tutor</h3>
+                    <h3 className="text-xl font-bold mb-2">I&apos;m a Tutor</h3>
                     <p className="text-sm">
                       Ready to share my expertise and help students achieve their learning goals
                     </p>
@@ -394,7 +394,7 @@ export default function AuthModal() {
                         ))}
                       </div>
                       <p className="text-xs mt-2">
-                        Select subjects you're interested in learning (minimum 1 required)
+                        Select subjects you&apos;re interested in learning (minimum 1 required)
                       </p>
                     </div>
 

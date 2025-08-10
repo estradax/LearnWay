@@ -4,7 +4,7 @@ import { auth } from "@/lib/server/auth";
 import { db } from "@/lib/server/db";
 import { chatMessage } from "@/lib/server/schema/chat-message";
 import { contactRequest as contactRequestTable } from "@/lib/server/schema/contact-request";
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 // GET /api/messages?contactRequestId=123
 export async function GET(request: NextRequest) {

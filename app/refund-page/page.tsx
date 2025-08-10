@@ -246,7 +246,7 @@ export default function RefundPage() {
                                             <SelectItem value="tutor-cancelled">Tutor cancelled the session</SelectItem>
                                             <SelectItem value="technical-issues">Technical issues during lesson</SelectItem>
                                             <SelectItem value="poor-quality">Poor lesson quality</SelectItem>
-                                            <SelectItem value="no-show">Tutor didn't show up</SelectItem>
+                                            <SelectItem value="no-show">Tutor didn&apos;t show up</SelectItem>
                                             <SelectItem value="other">Other reason</SelectItem>
                                         </SelectContent>
                                     </Select>
